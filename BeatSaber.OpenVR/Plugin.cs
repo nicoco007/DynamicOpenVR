@@ -15,6 +15,8 @@ namespace BeatSaber.OpenVR
         public const string LeftSliceAction = "LeftSlice";
         public const string RightSliceAction = "RightSlice";
 
+        public static string Name => typeof(Plugin).Namespace;
+
         public static Logger Logger { get; private set; }
 
         private HarmonyInstance harmonyInstance;
@@ -23,11 +25,11 @@ namespace BeatSaber.OpenVR
         {
             Logger = logger;
 
-            Logger.Info("Starting " + typeof(Plugin).FullName);
+            Logger.Info("Starting " + Name);
 
             if (!OpenVRApi.IsRunning)
             {
-                Logger.Warn("OpenVR not detected");
+                Logger.Warn($"OpenVR not detected. {Name} will not be activated.");
                 return;
             }
 

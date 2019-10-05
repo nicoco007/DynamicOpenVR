@@ -8,6 +8,6 @@
   "version": "0.1.0",
   "features": [],
   "dependsOn": {
-    "BSIPA": "^3.12.22"
+    "BSIPA": "^3.13.0"
   }
 }

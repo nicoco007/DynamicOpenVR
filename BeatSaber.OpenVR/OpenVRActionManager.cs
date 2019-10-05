@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
@@ -93,26 +92,15 @@ namespace BeatSaber.OpenVR
                 Localization = GetLocalizationList()
 			};
 
-			SHA256 sha256 = SHA256.Create();
-
 			byte[] jsonString = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(manifest, Formatting.Indented));
 
 			using (FileStream stream = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
 			{
-				byte[] buffer = new byte[stream.Length];
-				stream.Read(buffer, 0, buffer.Length);
+				Plugin.Logger.Info("Writing OpenVR manifest");
 
-				byte[] current = sha256.ComputeHash(buffer);
-				byte[] next = sha256.ComputeHash(jsonString);
-
-				if (!current.SequenceEqual(next))
-				{
-					Plugin.Logger.Info("Manifest needs to be updated, rewriting file");
-
-                    stream.SetLength(0);
-					stream.Seek(0, SeekOrigin.Begin);
-					stream.Write(jsonString, 0, jsonString.Length);
-				}
+                stream.SetLength(0);
+				stream.Seek(0, SeekOrigin.Begin);
+				stream.Write(jsonString, 0, jsonString.Length);
 			}
 		}
 

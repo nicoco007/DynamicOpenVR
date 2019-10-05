@@ -3,6 +3,7 @@ pipeline {
     node {
       label 'windows && vs-15'
     }
+
   }
   stages {
     stage('Build') {
@@ -11,6 +12,7 @@ pipeline {
         bat 'mkdir Packaging\\Plugins'
         bat 'copy BeatSaber.OpenVR\\bin\\Release\\BeatSaber.OpenVR.dll Packaging\\Plugins'
         bat '7z a BeatSaber.OpenVR.zip -r "./Packaging/*"'
+        archiveArtifacts 'BeatSaber.OpenVR.zip'
       }
     }
   }

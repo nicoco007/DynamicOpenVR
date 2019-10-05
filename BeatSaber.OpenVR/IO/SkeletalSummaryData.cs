@@ -1,4 +1,4 @@
-namespace BeatSaber.OpenVR.Model
+namespace BeatSaber.OpenVR.IO
 {
 	public class SkeletalSummaryData
 	{

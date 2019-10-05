@@ -7,26 +7,22 @@ namespace BeatSaber.OpenVR.IO
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class OVRAction
     {
-        [JsonProperty(PropertyName = "name")] internal string Name => $"/actions/{Parent.Key}/{direction}/{Key}";
-        [JsonProperty(PropertyName = "requirement")] internal OVRActionRequirement Requirement { get; }
-        [JsonProperty(PropertyName = "type")] internal string Type { get; }
+        public string Name { get; }
+        public OVRActionRequirement Requirement { get; }
 
-        public string Key { get; }
-
-        internal OVRActionSet Parent { get; set; }
+        internal string Type { get; }
+        internal string Direction { get; set; }
         internal ulong Handle { get; private set; }
         internal IReadOnlyDictionary<string, string> Translations => new ReadOnlyDictionary<string, string>(translations);
 
-        private string direction;
         private Dictionary<string, string> translations = new Dictionary<string, string>();
 
-        protected OVRAction(string key, OVRActionRequirement requirement, string type, string direction)
+        protected OVRAction(string name, OVRActionRequirement requirement, string type, string direction)
         {
-            Key = key;
+            Name = name;
             Requirement = requirement;
             Type = type;
-
-            this.direction = direction;
+            Direction = direction;
         }
 
         public OVRAction AddTranslation(string language, string text)
@@ -42,10 +38,15 @@ namespace BeatSaber.OpenVR.IO
 
             return this;
         }
-
-        internal void UpdateHandle()
+        
+        internal string GetActionPath(string actionSetName)
         {
-            Handle = OpenVRApi.GetActionHandle(Name);
+            return $"/actions/{actionSetName}/{Direction}/{Name}";
+        }
+
+        internal void UpdateHandle(string actionSetName)
+        {
+            Handle = OpenVRApi.GetActionHandle(GetActionPath(actionSetName));
         }
 	}
 }

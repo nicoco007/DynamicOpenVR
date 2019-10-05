@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace BeatSaber.OpenVR.Model
+namespace BeatSaber.OpenVR.Manifest
 {
-	internal class DefaultBinding
+	internal class OVRDefaultBinding
 	{
 		[JsonProperty(PropertyName = "controller_type")]
 		internal string ControllerType;

@@ -77,9 +77,11 @@
     <Compile Include="IO\Vector3Input.cs" />
     <Compile Include="IO\Vector2Input.cs" />
     <Compile Include="IO\VectorInput.cs" />
-    <Compile Include="Model\OVRActionManifest.cs" />
-    <Compile Include="Model\DefaultBinding.cs" />
-    <Compile Include="Model\SkeletalSummaryData.cs" />
+    <Compile Include="Manifest\OVRManifest.cs" />
+    <Compile Include="Manifest\OVRDefaultBinding.cs" />
+    <Compile Include="Manifest\OVRManifestAction.cs" />
+    <Compile Include="Manifest\OVRManifestActionSet.cs" />
+    <Compile Include="IO\SkeletalSummaryData.cs" />
     <Compile Include="OpenVR.cs" />
     <Compile Include="OpenVRActionManager.cs" />
     <Compile Include="OpenVRApi.cs" />

@@ -1,5 +1,5 @@
 using BeatSaber.OpenVR.IO;
-using BeatSaber.OpenVR.Model;
+using BeatSaber.OpenVR.Manifest;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,11 +14,6 @@ namespace BeatSaber.OpenVR
 	{
 		private static OpenVRActionManager instance;
 
-		private readonly string fileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
-
-        private Dictionary<string, OVRActionSet> actionSets = new Dictionary<string, OVRActionSet>();
-        private bool instantiated = false;
-
         public static OpenVRActionManager Instance
 		{
 			get
@@ -28,11 +23,16 @@ namespace BeatSaber.OpenVR
 					GameObject go = new GameObject(nameof(OpenVRActionManager));
 					DontDestroyOnLoad(go);
 					instance = go.AddComponent<OpenVRActionManager>();
-				}
+                }
 
 				return instance;
 			}
-		}
+        }
+
+        private readonly string FileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
+
+        private Dictionary<string, OVRActionSet> actionSets = new Dictionary<string, OVRActionSet>();
+        private bool instantiated = false;
 
         private void Start()
         {
@@ -40,16 +40,11 @@ namespace BeatSaber.OpenVR
 
             WriteManifest();
 
-            OpenVRApi.SetActionManifestPath(fileName);
+            OpenVRApi.SetActionManifestPath(FileName);
 
             foreach (OVRActionSet actionSet in actionSets.Values)
             {
-                actionSet.UpdateHandle();
-
-                foreach (OVRAction action in actionSet.Actions)
-                {
-                    action.UpdateHandle();
-                }
+                actionSet.UpdateHandles();
             }
         }
 
@@ -65,7 +60,7 @@ namespace BeatSaber.OpenVR
                 throw new InvalidOperationException("Cannot register new action sets once game is running");
             }
 
-            actionSets.Add(actionSet.Key, actionSet);
+            actionSets.Add(actionSet.Name, actionSet);
         }
 
         public OVRActionSet GetActionSet(string actionSetKey)
@@ -85,16 +80,11 @@ namespace BeatSaber.OpenVR
 
         private void WriteManifest()
 		{
-			OVRActionManifest manifest = new OVRActionManifest()
-			{
-				ActionSets = actionSets.Values,
-				Actions = actionSets.Values.SelectMany(set => set.Actions),
-                Localization = GetLocalizationList()
-			};
+            OVRManifest manifest = new OVRManifest(actionSets.Values);
 
-			byte[] jsonString = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(manifest, Formatting.Indented));
+			byte[] jsonString = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(manifest, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
 
-			using (FileStream stream = File.Open(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+			using (FileStream stream = File.Open(FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
 			{
 				Plugin.Logger.Info("Writing OpenVR manifest");
 
@@ -103,36 +93,5 @@ namespace BeatSaber.OpenVR
 				stream.Write(jsonString, 0, jsonString.Length);
 			}
 		}
-
-        private IEnumerable<Dictionary<string, string>> GetLocalizationList()
-        {
-            var localization = new Dictionary<string, Dictionary<string, string>>();
-
-            foreach (OVRActionSet actionSet in actionSets.Values)
-            {
-                AddTranslations(localization, actionSet.Translations, actionSet.Name);
-
-                foreach (OVRAction action in actionSet.Actions)
-                {
-                    AddTranslations(localization, action.Translations, action.Name);
-                }
-            }
-
-            return localization.Values;
-        }
-
-        private void AddTranslations(Dictionary<string, Dictionary<string, string>> localization, IReadOnlyDictionary<string, string> translations, string key)
-        {
-            foreach (KeyValuePair<string, string> translation in translations)
-            {
-                if (!localization.ContainsKey(translation.Key))
-                {
-                    localization.Add(translation.Key, new Dictionary<string, string>());
-                    localization[translation.Key].Add("language_tag", translation.Key);
-                }
-
-                localization[translation.Key].Add(key, translation.Value);
-            }
-        }
 	}
 }

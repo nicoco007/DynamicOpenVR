@@ -10,9 +10,11 @@ pipeline {
       steps {
         bat 'msbuild /p:Configuration=Release /p:Platform="Any CPU"'
         bat 'mkdir Packaging\\Plugins'
-        bat 'copy BeatSaber.OpenVR\\bin\\Release\\BeatSaber.OpenVR.dll Packaging\\Plugins'
-        bat '7z a BeatSaber.OpenVR.zip -r "./Packaging/*"'
-        archiveArtifacts 'BeatSaber.OpenVR.zip'
+        bat 'mkdir Packaging\\Libs'
+        bat 'copy DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging\\Libs'
+        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging\\Plugins'
+        bat '7z a DynamicOpenVR.BeatSaber.zip -r "./Packaging/*"'
+        archiveArtifacts 'DynamicOpenVR.BeatSaber.zip'
       }
     }
   }

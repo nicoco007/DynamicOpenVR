@@ -25,12 +25,12 @@ namespace DynamicOpenVR.Manifest
             foreach (OVRActionSet actionSet in actionSets)
             {
                 ActionSets.Add(new OVRManifestActionSet(actionSet));
-                AddTranslations(localization, actionSet.Translations, actionSet.Name);
+                AddTranslations(localization, actionSet.Translations, actionSet.GetActionSetPath());
 
                 foreach (OVRAction action in actionSet.Actions)
                 {
                     Actions.Add(new OVRManifestAction(actionSet, action));
-                    AddTranslations(localization, action.Translations, action.Name);
+                    AddTranslations(localization, action.Translations, action.GetActionPath(actionSet.Name));
                 }
             }
 

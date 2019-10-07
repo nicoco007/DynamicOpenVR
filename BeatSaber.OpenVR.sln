@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatSaber.OpenVR", "BeatSaber.OpenVR\BeatSaber.OpenVR.csproj", "{5CCAFB21-63EF-4221-AB37-03EEC2EF5364}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicOpenVR", "DynamicOpenVR\DynamicOpenVR.csproj", "{12B5BA1F-421F-4860-B27D-95A11A54E59D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicOpenVR.BeatSaber", "DynamicOpenVR.BeatSaber\DynamicOpenVR.BeatSaber.csproj", "{1A5BE41D-60B4-4185-97C1-78C4A78354B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5CCAFB21-63EF-4221-AB37-03EEC2EF5364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CCAFB21-63EF-4221-AB37-03EEC2EF5364}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CCAFB21-63EF-4221-AB37-03EEC2EF5364}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CCAFB21-63EF-4221-AB37-03EEC2EF5364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12B5BA1F-421F-4860-B27D-95A11A54E59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12B5BA1F-421F-4860-B27D-95A11A54E59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12B5BA1F-421F-4860-B27D-95A11A54E59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12B5BA1F-421F-4860-B27D-95A11A54E59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A5BE41D-60B4-4185-97C1-78C4A78354B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5BE41D-60B4-4185-97C1-78C4A78354B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5BE41D-60B4-4185-97C1-78C4A78354B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5BE41D-60B4-4185-97C1-78C4A78354B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

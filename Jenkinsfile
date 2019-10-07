@@ -6,7 +6,7 @@ pipeline {
 
   }
   stages {
-    stage('Prepare') {
+    stage('Prepare Debug') {
       steps {
         bat 'mkdir Packaging\\Plugins'
         bat 'mkdir Packaging\\Libs'
@@ -23,7 +23,7 @@ pipeline {
         archiveArtifacts 'DynamicOpenVR.BeatSaber.DEBUG.zip'
       }
     }
-    stage('Clean up') {
+    stage('Prepare Release') {
       steps {
         bat 'del /S /Q Packaging\\Plugins\\*'
         bat 'del /S /Q Packaging\\Libs\\*'
@@ -38,7 +38,7 @@ pipeline {
         archiveArtifacts 'DynamicOpenVR.BeatSaber.RELEASE.zip'
       }
     }
-    stage('Cleanup') {
+    stage('Clean up') {
       steps {
         cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
       }

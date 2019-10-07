@@ -19,13 +19,18 @@ namespace DynamicOpenVR
 		{
 			get
 			{
+                if (!OpenVRApi.IsRunning)
+                {
+                    throw new InvalidOperationException("OpenVR is not running");
+                }
+
 				if (!instance)
 				{
 					GameObject go = new GameObject(nameof(OpenVRActionManager));
 					DontDestroyOnLoad(go);
 					instance = go.AddComponent<OpenVRActionManager>();
 
-                    // set early so OpenVR doesn't think no bindings exist
+                    // set early so OpenVR doesn't think no bindings exist at startup
                     OpenVRApi.SetActionManifestPath(ActionManifestFileName);
                 }
 
@@ -52,7 +57,10 @@ namespace DynamicOpenVR
 
         public void Update()
         {
-            OpenVRApi.UpdateActionState(actionSets.Values.Select(actionSet => actionSet.Handle).ToArray());
+            if (actionSets.Count > 0)
+            {
+                OpenVRApi.UpdateActionState(actionSets.Values.Select(actionSet => actionSet.Handle).ToArray());
+            }
         }
 
         public void RegisterActionSet(OVRActionSet actionSet)
@@ -88,15 +96,9 @@ namespace DynamicOpenVR
 
 			using (FileStream stream = File.Open(ActionManifestFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
-                byte[] fileContents = new byte[stream.Length];
-                stream.Read(fileContents, 0, fileContents.Length);
-
-                if (!jsonString.SequenceEqual(fileContents))
-                {
-                    stream.SetLength(0);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    stream.Write(jsonString, 0, jsonString.Length);
-                }
+                stream.SetLength(0);
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.Write(jsonString, 0, jsonString.Length);
 			}
 		}
 	}

@@ -17,5 +17,10 @@ pipeline {
         archiveArtifacts 'DynamicOpenVR.BeatSaber.zip'
       }
     }
+    stage('') {
+      steps {
+        cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
+      }
+    }
   }
 }

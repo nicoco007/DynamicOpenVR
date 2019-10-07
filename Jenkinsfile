@@ -17,7 +17,7 @@ pipeline {
         archiveArtifacts 'DynamicOpenVR.BeatSaber.zip'
       }
     }
-    stage('') {
+    stage('Cleanup') {
       steps {
         cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, deleteDirs: true)
       }

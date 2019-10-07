@@ -16,9 +16,17 @@ pipeline {
       steps {
         bat 'msbuild /p:Configuration=Debug /p:Platform="Any CPU"'
         bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.dll Packaging\\Libs'
+        bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.pdb Packaging\\Libs'
         bat 'copy DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging\\Plugins'
+        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.pdb Packaging\\Plugins'
         bat '7z a DynamicOpenVR.BeatSaber.DEBUG.zip -r "./Packaging/*"'
         archiveArtifacts 'DynamicOpenVR.BeatSaber.DEBUG.zip'
+      }
+    }
+    stage('Clean up') {
+      steps {
+        bat 'del /S /Q Packaging\\Plugins\\*'
+        bat 'del /S /Q Packaging\\Libs\\*'
       }
     }
     stage('Build Release') {

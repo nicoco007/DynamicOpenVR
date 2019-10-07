@@ -15,6 +15,15 @@ namespace DynamicOpenVR
         public static readonly string ActionManifestFileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
         private static OpenVRActionManager instance;
 
+        static OpenVRActionManager()
+        {
+            if (OpenVRApi.IsRunning && File.Exists(ActionManifestFileName))
+            {
+                // set early so OpenVR doesn't think no bindings exist at startup
+                OpenVRApi.SetActionManifestPath(ActionManifestFileName);
+            }
+        }
+
         public static OpenVRActionManager Instance
 		{
 			get
@@ -29,9 +38,6 @@ namespace DynamicOpenVR
 					GameObject go = new GameObject(nameof(OpenVRActionManager));
 					DontDestroyOnLoad(go);
 					instance = go.AddComponent<OpenVRActionManager>();
-
-                    // set early so OpenVR doesn't think no bindings exist at startup
-                    OpenVRApi.SetActionManifestPath(ActionManifestFileName);
                 }
 
 				return instance;
@@ -46,7 +52,7 @@ namespace DynamicOpenVR
             instantiated = true;
 
             WriteManifest();
-
+                
             OpenVRApi.SetActionManifestPath(ActionManifestFileName);
 
             foreach (OVRActionSet actionSet in actionSets.Values)

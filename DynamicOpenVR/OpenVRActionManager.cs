@@ -12,7 +12,8 @@ namespace DynamicOpenVR
 {
 	public class OpenVRActionManager : MonoBehaviour
 	{
-		private static OpenVRActionManager instance;
+        public static readonly string ActionManifestFileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
+        private static OpenVRActionManager instance;
 
         public static OpenVRActionManager Instance
 		{
@@ -23,13 +24,14 @@ namespace DynamicOpenVR
 					GameObject go = new GameObject(nameof(OpenVRActionManager));
 					DontDestroyOnLoad(go);
 					instance = go.AddComponent<OpenVRActionManager>();
+
+                    // set early so OpenVR doesn't think no bindings exist
+                    OpenVRApi.SetActionManifestPath(ActionManifestFileName);
                 }
 
 				return instance;
 			}
         }
-
-        private readonly string FileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
 
         private Dictionary<string, OVRActionSet> actionSets = new Dictionary<string, OVRActionSet>();
         private bool instantiated = false;
@@ -40,7 +42,7 @@ namespace DynamicOpenVR
 
             WriteManifest();
 
-            OpenVRApi.SetActionManifestPath(FileName);
+            OpenVRApi.SetActionManifestPath(ActionManifestFileName);
 
             foreach (OVRActionSet actionSet in actionSets.Values)
             {
@@ -84,11 +86,17 @@ namespace DynamicOpenVR
 
 			byte[] jsonString = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(manifest, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
 
-			using (FileStream stream = File.Open(FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-			{
-                stream.SetLength(0);
-				stream.Seek(0, SeekOrigin.Begin);
-				stream.Write(jsonString, 0, jsonString.Length);
+			using (FileStream stream = File.Open(ActionManifestFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                byte[] fileContents = new byte[stream.Length];
+                stream.Read(fileContents, 0, fileContents.Length);
+
+                if (!jsonString.SequenceEqual(fileContents))
+                {
+                    stream.SetLength(0);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.Write(jsonString, 0, jsonString.Length);
+                }
 			}
 		}
 	}

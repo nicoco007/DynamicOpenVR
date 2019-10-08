@@ -8,33 +8,35 @@ pipeline {
   stages {
     stage('Prepare Debug') {
       steps {
-        bat 'mkdir Packaging\\Plugins'
-        bat 'mkdir Packaging\\Libs'
+        bat 'robocopy Packaging Packaging-Debug /E & exit /b 0'
+        bat 'mkdir Packaging-Debug\\Plugins'
+        bat 'mkdir Packaging-Debug\\Libs'
       }
     }
     stage('Build Debug') {
       steps {
         bat 'msbuild /p:Configuration=Debug /p:Platform="Any CPU"'
-        bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.dll Packaging\\Libs'
-        bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.pdb Packaging\\Libs'
-        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging\\Plugins'
-        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.pdb Packaging\\Plugins'
-        bat '7z a DynamicOpenVR.BeatSaber.DEBUG.zip -r "./Packaging/*"'
+        bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.dll Packaging-Debug\\Libs'
+        bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.pdb Packaging-Debug\\Libs'
+        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\Plugins'
+        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.pdb Packaging-Debug\\Plugins'
+        bat '7z a DynamicOpenVR.BeatSaber.DEBUG.zip -r "./Packaging-Debug/*"'
         archiveArtifacts 'DynamicOpenVR.BeatSaber.DEBUG.zip'
       }
     }
     stage('Prepare Release') {
       steps {
-        bat 'del /S /Q Packaging\\Plugins\\*'
-        bat 'del /S /Q Packaging\\Libs\\*'
+        bat 'robocopy Packaging Packaging-Release /E & exit /b 0'
+        bat 'mkdir Packaging-Release\\Plugins'
+        bat 'mkdir Packaging-Release\\Libs'
       }
     }
     stage('Build Release') {
       steps {
         bat 'msbuild /p:Configuration=Release /p:Platform="Any CPU"'
-        bat 'copy DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging\\Libs'
-        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging\\Plugins'
-        bat '7z a DynamicOpenVR.BeatSaber.RELEASE.zip -r "./Packaging/*"'
+        bat 'copy DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging-Release\\Libs'
+        bat 'copy DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\Plugins'
+        bat '7z a DynamicOpenVR.BeatSaber.RELEASE.zip -r "./Packaging-Release/*"'
         archiveArtifacts 'DynamicOpenVR.BeatSaber.RELEASE.zip'
       }
     }

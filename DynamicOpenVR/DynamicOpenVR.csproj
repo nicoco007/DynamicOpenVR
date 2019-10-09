@@ -53,7 +53,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControllerType.cs" />
     <Compile Include="Converters\CustomStringEnumConverter.cs" />
     <Compile Include="Converters\JsonEnumValueAttribute.cs" />
     <Compile Include="IO\ButtonInput.cs" />
@@ -62,6 +61,7 @@
     <Compile Include="IO\OVRActionRequirement.cs" />
     <Compile Include="IO\OVRActionSet.cs" />
     <Compile Include="IO\OVRActionSetUsage.cs" />
+    <Compile Include="IO\PoseInput.cs" />
     <Compile Include="IO\SkeletalInput.cs" />
     <Compile Include="IO\SkeletalSummaryData.cs" />
     <Compile Include="IO\Vector2Input.cs" />

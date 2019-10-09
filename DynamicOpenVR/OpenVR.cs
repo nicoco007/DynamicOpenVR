@@ -6593,7 +6593,7 @@ namespace DynamicOpenVR
 		public IntPtr m_pVRNotifications; // class vr::IVRNotifications *
 	}
 
-	internal class OpenVR
+	public class OpenVR
 	{
 
 		public static uint InitInternal(ref EVRInitError peError, EVRApplicationType eApplicationType)

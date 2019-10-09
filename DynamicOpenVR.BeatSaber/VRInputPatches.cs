@@ -1,9 +1,12 @@
-using DynamicOpenVR;
 using DynamicOpenVR.IO;
 using Harmony;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.XR;
 
+// ReSharper disable InconsistentNaming
 namespace DynamicOpenVR.BeatSaber
 {
 	[HarmonyPatch(typeof(VRControllersInputManager))]
@@ -93,4 +96,48 @@ namespace DynamicOpenVR.BeatSaber
 			return false;
 		}
 	}
+
+    [HarmonyPatch(typeof(InputTracking))]
+    [HarmonyPatch("GetLocalPosition", MethodType.Normal)]
+    class InputTrackingGetLocalPositionPatch
+    {
+        public static bool Prefix(XRNode node, ref Vector3 __result)
+        {
+            if (node == XRNode.LeftHand)
+            {
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.LeftHandPoseName).GetPosition();
+                return false;
+            }
+            
+            if (node == XRNode.RightHand)
+            {
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.RightHandPoseName).GetPosition();
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(InputTracking))]
+    [HarmonyPatch("GetLocalRotation", MethodType.Normal)]
+    class InputTrackingGetLocalRotationPatch
+    {
+        public static bool Prefix(XRNode node, ref Quaternion __result)
+        {
+            if (node == XRNode.LeftHand)
+            {
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.LeftHandPoseName).GetRotation();
+                return false;
+            }
+            
+            if (node == XRNode.RightHand)
+            {
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.RightHandPoseName).GetRotation();
+                return false;
+            }
+
+            return true;
+        }
+    }
 }

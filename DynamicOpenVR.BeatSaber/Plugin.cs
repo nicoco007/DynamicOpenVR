@@ -14,6 +14,8 @@ namespace DynamicOpenVR.BeatSaber
         public const string MenuAction = "Menu";
         public const string LeftSliceAction = "LeftSlice";
         public const string RightSliceAction = "RightSlice";
+        public const string LeftHandPoseName = "LeftHandPose";
+        public const string RightHandPoseName = "RightHandPose";
 
         public static string Name => typeof(Plugin).Namespace;
 
@@ -27,9 +29,9 @@ namespace DynamicOpenVR.BeatSaber
 
             Logger.Info("Starting " + Name);
 
-            if (!OpenVRApi.IsRunning)
+            if (!OpenVRActionManager.IsRunning)
             {
-                Logger.Warn($"OpenVR not detected. {Name} will not be activated.");
+                Logger.Warn($"OpenVR is not running. {Name} will not be activated.");
                 return;
             }
 
@@ -50,6 +52,8 @@ namespace DynamicOpenVR.BeatSaber
             actionSet.RegisterAction(new ButtonInput(MenuAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Menu Button").AddTranslation("fr_fr", "Bouton Menu"));
             actionSet.RegisterAction(new HapticVibrationOutput(LeftSliceAction).AddTranslation("en_us", "Left Slice Haptic Feedback").AddTranslation("fr_fr", "Retour haptique pour coupe de gauche"));
             actionSet.RegisterAction(new HapticVibrationOutput(RightSliceAction).AddTranslation("en_us", "Left Slice Haptic Feedback").AddTranslation("fr_fr", "Retour haptique pour coupe de droite"));
+            actionSet.RegisterAction(new PoseInput(LeftHandPoseName, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Left Hand Pose"));
+            actionSet.RegisterAction(new PoseInput(RightHandPoseName, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Right Hand Pose"));
 
             manager.RegisterActionSet(actionSet);
         }
@@ -58,7 +62,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             Logger.Info("Applying OpenVR patches");
 
-            harmonyInstance = HarmonyInstance.Create("com.DynamicOpenVR");
+            harmonyInstance = HarmonyInstance.Create(GetType().Namespace);
             harmonyInstance.PatchAll();
         }
 

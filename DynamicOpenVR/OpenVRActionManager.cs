@@ -13,6 +13,9 @@ namespace DynamicOpenVR
 	public class OpenVRActionManager : MonoBehaviour
 	{
         public static readonly string ActionManifestFileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
+
+        public static bool IsRunning => OpenVRApi.IsRunning;
+
         private static OpenVRActionManager instance;
 
         static OpenVRActionManager()

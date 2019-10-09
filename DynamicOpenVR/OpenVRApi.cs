@@ -1,16 +1,13 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace DynamicOpenVR
 {
-	public static class OpenVRApi
+	internal static class OpenVRApi
 	{
-		public static bool IsRunning => OpenVR.IsRuntimeInstalled();
+		internal static bool IsRunning => OpenVR.IsRuntimeInstalled();
 
-		public static void SetActionManifestPath(string manifestPath)
+		internal static void SetActionManifestPath(string manifestPath)
 		{
 			EVRInputError error = OpenVR.Input.SetActionManifestPath(manifestPath);
 
@@ -20,7 +17,7 @@ namespace DynamicOpenVR
 			}
 		}
 
-		public static ulong GetActionSetHandle(string actionSetName)
+		internal static ulong GetActionSetHandle(string actionSetName)
 		{
 			ulong handle = default;
 
@@ -34,7 +31,7 @@ namespace DynamicOpenVR
 			return handle;
 		}
 
-		public static ulong GetActionHandle(string actionName)
+		internal static ulong GetActionHandle(string actionName)
 		{
 			ulong handle = default;
 
@@ -48,7 +45,7 @@ namespace DynamicOpenVR
 			return handle;
 		}
 
-		public static void UpdateActionState(ulong[] handles)
+		internal static void UpdateActionState(ulong[] handles)
 		{
 			VRActiveActionSet_t[] activeActionSets = new VRActiveActionSet_t[handles.Length];
 
@@ -69,7 +66,7 @@ namespace DynamicOpenVR
 			}
 		}
 
-		public static InputAnalogActionData_t GetAnalogActionData(ulong actionHandle)
+		internal static InputAnalogActionData_t GetAnalogActionData(ulong actionHandle)
 		{
 			InputAnalogActionData_t actionData = default;
 
@@ -83,21 +80,35 @@ namespace DynamicOpenVR
 			return actionData;
 		}
 
-		public static InputDigitalActionData_t GetDigitalActionData(ulong actionHandle)
-		{
-			InputDigitalActionData_t actionData = default;
+        internal static InputDigitalActionData_t GetDigitalActionData(ulong actionHandle)
+        {
+            InputDigitalActionData_t actionData = default;
 
-			EVRInputError error = OpenVR.Input.GetDigitalActionData(actionHandle, ref actionData, (uint)Marshal.SizeOf(typeof(InputDigitalActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+            EVRInputError error = OpenVR.Input.GetDigitalActionData(actionHandle, ref actionData, (uint)Marshal.SizeOf(typeof(InputDigitalActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
 
-			if (error != EVRInputError.None)
-			{
-				throw new Exception(error.ToString());
-			}
+            if (error != EVRInputError.None)
+            {
+                throw new Exception(error.ToString());
+            }
 
-			return actionData;
-		}
+            return actionData;
+        }
 
-		public static VRSkeletalSummaryData_t GetSkeletalSummaryData(ulong actionHandle, EVRSummaryType summaryType = EVRSummaryType.FromDevice)
+        internal static InputPoseActionData_t GetPoseActionDataForNextFrame(ulong actionHandle, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
+        {
+            InputPoseActionData_t actionData = default;
+
+            EVRInputError error = OpenVR.Input.GetPoseActionDataForNextFrame(actionHandle, origin, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+
+            if (error != EVRInputError.None)
+            {
+                throw new Exception(error.ToString());
+            }
+
+            return actionData;
+        }
+
+		internal static VRSkeletalSummaryData_t GetSkeletalSummaryData(ulong actionHandle, EVRSummaryType summaryType = EVRSummaryType.FromDevice)
 		{
 			VRSkeletalSummaryData_t summaryData = default;
 
@@ -111,56 +122,14 @@ namespace DynamicOpenVR
 			return summaryData;
 		}
 
-		public static string[] GetTrackedDeviceSerialNumbers()
-		{
-			string[] serialNumbers = new string[OpenVR.k_unMaxTrackedDeviceCount];
+        internal static void TriggerHapticVibrationAction(ulong actionHandle, float startSecondsFromNow, float durationSeconds, float frequency, float amplitude)
+        {
+            EVRInputError error = OpenVR.Input.TriggerHapticVibrationAction(actionHandle, startSecondsFromNow, durationSeconds, frequency, amplitude, OpenVR.k_ulInvalidInputValueHandle);
 
-			for (uint i = 0; i < OpenVR.k_unMaxTrackedDeviceCount; i++)
-			{
-				serialNumbers[i] = GetStringTrackedDeviceProperty(i, ETrackedDeviceProperty.Prop_SerialNumber_String);
-			}
-
-			return serialNumbers;
-		}
-
-		public static TrackedDeviceType GetTrackedDeviceType(uint deviceIndex)
-		{
-			string name = GetStringTrackedDeviceProperty(deviceIndex, ETrackedDeviceProperty.Prop_ControllerType_String);
-
-			FieldInfo field = typeof(TrackedDeviceType).GetFields().FirstOrDefault(f => f.GetCustomAttribute<TrackedDeviceTypeAttribute>()?.Name == name);
-
-			if (field == null)
-			{
-				return TrackedDeviceType.Unknown;
-			}
-
-			return (TrackedDeviceType)field.GetValue(null);
-		}
-
-		public static void TriggerHapticVibrationAction(ulong actionHandle, float startSecondsFromNow, float durationSeconds, float frequency, float amplitude)
-		{
-			EVRInputError error = OpenVR.Input.TriggerHapticVibrationAction(actionHandle, startSecondsFromNow, durationSeconds, frequency, amplitude, OpenVR.k_ulInvalidInputValueHandle);
-
-			if (error != EVRInputError.None)
-			{
-				throw new Exception(error.ToString());
-			}
-		}
-
-		private static string GetStringTrackedDeviceProperty(uint deviceIndex, ETrackedDeviceProperty property)
-		{
-			ETrackedPropertyError error = ETrackedPropertyError.TrackedProp_Success;
-			uint length = OpenVR.System.GetStringTrackedDeviceProperty(deviceIndex, property, null, 0, ref error);
-
-			if (length > 0)
-			{
-				StringBuilder stringBuilder = new StringBuilder((int)length);
-				OpenVR.System.GetStringTrackedDeviceProperty(deviceIndex, property, stringBuilder, length, ref error);
-
-				return stringBuilder.ToString();
-			}
-
-			return null;
-		}
+            if (error != EVRInputError.None)
+            {
+                throw new Exception(error.ToString());
+            }
+        }
 	}
 }

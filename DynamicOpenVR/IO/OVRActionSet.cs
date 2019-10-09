@@ -21,7 +21,7 @@ namespace DynamicOpenVR.IO
 
         public OVRActionSet(string name, OVRActionSetUsage usage)
         {
-            Name = name;
+            Name = name.ToLowerInvariant();
             Usage = usage;
         }
 
@@ -34,6 +34,8 @@ namespace DynamicOpenVR.IO
 
         public T GetAction<T>(string name) where T : OVRAction
         {
+            name = name.ToLowerInvariant();
+
             if (!actions.ContainsKey(name))
             {
                 throw new ArgumentException($"Action '{name}' is not registered in '{Name}'");

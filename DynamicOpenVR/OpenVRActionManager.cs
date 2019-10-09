@@ -82,18 +82,22 @@ namespace DynamicOpenVR
             actionSets.Add(actionSet.Name, actionSet);
         }
 
-        public OVRActionSet GetActionSet(string actionSetKey)
+        public OVRActionSet GetActionSet(string actionSetName)
         {
-            if (!actionSets.ContainsKey(actionSetKey))
+            actionSetName = actionSetName.ToLowerInvariant();
+
+            if (!actionSets.ContainsKey(actionSetName))
             {
-                throw new ArgumentException($"Action set '{actionSetKey}' has not been registered");
+                throw new ArgumentException($"Action set '{actionSetName}' has not been registered");
             }
 
-            return actionSets[actionSetKey];
+            return actionSets[actionSetName];
         }
 
         public T GetAction<T>(string actionSetName, string actionName) where T : OVRAction
         {
+            actionSetName = actionSetName.ToLowerInvariant();
+
             return GetActionSet(actionSetName).GetAction<T>(actionName);
         }
 
@@ -101,7 +105,7 @@ namespace DynamicOpenVR
 		{
             OVRManifest manifest = new OVRManifest(actionSets.Values);
 
-			byte[] jsonString = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(manifest, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+			byte[] jsonString = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(manifest, Formatting.Indented));
 
 			using (FileStream stream = File.Open(ActionManifestFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {

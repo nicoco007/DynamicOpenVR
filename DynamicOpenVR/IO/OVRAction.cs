@@ -19,7 +19,7 @@ namespace DynamicOpenVR.IO
 
         protected OVRAction(string name, OVRActionRequirement requirement, string type, string direction)
         {
-            Name = name;
+            Name = name.ToLowerInvariant();
             Requirement = requirement;
             Type = type;
             Direction = direction;

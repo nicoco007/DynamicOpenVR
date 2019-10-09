@@ -55,8 +55,9 @@
   <ItemGroup>
     <Compile Include="Converters\CustomStringEnumConverter.cs" />
     <Compile Include="Converters\JsonEnumValueAttribute.cs" />
-    <Compile Include="IO\ButtonInput.cs" />
+    <Compile Include="IO\BooleanInput.cs" />
     <Compile Include="IO\HapticVibrationOutput.cs" />
+    <Compile Include="IO\Input.cs" />
     <Compile Include="IO\OVRAction.cs" />
     <Compile Include="IO\OVRActionRequirement.cs" />
     <Compile Include="IO\OVRActionSet.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="OpenVRApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(BEATSABERDIR)\Libs"</PostBuildEvent>

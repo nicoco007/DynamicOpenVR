@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace DynamicOpenVR.IO
 {
-    public class Vector2Input : OVRAction
+    public class Vector2Input : Input
 	{
-		public Vector2Input(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "vector2", "in") { }
+		public Vector2Input(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "vector2") { }
 
         public float GetAxisRawX()
         {

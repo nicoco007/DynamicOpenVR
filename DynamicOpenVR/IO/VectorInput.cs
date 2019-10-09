@@ -1,8 +1,8 @@
 namespace DynamicOpenVR.IO
 {
-	public class VectorInput : OVRAction
+	public class VectorInput : Input
 	{
-		public VectorInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "vector1", "in") { }
+		public VectorInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "vector1") { }
 
 		public float GetAxisRaw()
 		{

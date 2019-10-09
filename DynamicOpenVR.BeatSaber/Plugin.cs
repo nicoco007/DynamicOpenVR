@@ -49,7 +49,7 @@ namespace DynamicOpenVR.BeatSaber
 
             actionSet.RegisterAction(new VectorInput(LeftTriggerValueAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Left Trigger Pull").AddTranslation("fr_fr", "Gâchette gauche (tirer)"));
             actionSet.RegisterAction(new VectorInput(RightTriggerValueAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Right Trigger Pull").AddTranslation("fr_fr", "Gâchette droite (tirer)"));
-            actionSet.RegisterAction(new ButtonInput(MenuAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Menu Button").AddTranslation("fr_fr", "Bouton Menu"));
+            actionSet.RegisterAction(new BooleanInput(MenuAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Menu Button").AddTranslation("fr_fr", "Bouton Menu"));
             actionSet.RegisterAction(new HapticVibrationOutput(LeftSliceAction).AddTranslation("en_us", "Left Slice Haptic Feedback").AddTranslation("fr_fr", "Retour haptique pour coupe de gauche"));
             actionSet.RegisterAction(new HapticVibrationOutput(RightSliceAction).AddTranslation("en_us", "Left Slice Haptic Feedback").AddTranslation("fr_fr", "Retour haptique pour coupe de droite"));
             actionSet.RegisterAction(new PoseInput(LeftHandPoseName, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Left Hand Pose"));

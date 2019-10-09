@@ -44,7 +44,7 @@ namespace DynamicOpenVR.BeatSaber
 		{
 			try
 			{
-				__result = OpenVRActionManager.Instance.GetAction<ButtonInput>(Plugin.ActionSetName, Plugin.MenuAction).GetButtonDown();
+				__result = OpenVRActionManager.Instance.GetAction<BooleanInput>(Plugin.ActionSetName, Plugin.MenuAction).GetButtonDown();
 			}
 			catch (Exception)
 			{
@@ -63,7 +63,7 @@ namespace DynamicOpenVR.BeatSaber
 		{
 			try
 			{
-				__result = OpenVRActionManager.Instance.GetAction<ButtonInput>(Plugin.ActionSetName, Plugin.MenuAction).GetButton();
+				__result = OpenVRActionManager.Instance.GetAction<BooleanInput>(Plugin.ActionSetName, Plugin.MenuAction).GetButton();
 			}
 			catch (Exception)
 			{

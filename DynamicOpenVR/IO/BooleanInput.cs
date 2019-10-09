@@ -1,10 +1,10 @@
 namespace DynamicOpenVR.IO
 {
-	public class ButtonInput : OVRAction
+	public class BooleanInput : Input
 	{
 		private InputDigitalActionData_t Input => OpenVRApi.GetDigitalActionData(Handle);
 
-		public ButtonInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "boolean", "in") { }
+		public BooleanInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "boolean") { }
 
 		public bool GetButton()
 		{

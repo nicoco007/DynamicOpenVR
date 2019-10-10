@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Converters\CustomStringEnumConverter.cs" />
     <Compile Include="Converters\JsonEnumValueAttribute.cs" />
+    <Compile Include="IO\AnalogInput.cs" />
     <Compile Include="IO\BooleanInput.cs" />
     <Compile Include="IO\HapticVibrationOutput.cs" />
     <Compile Include="IO\Input.cs" />

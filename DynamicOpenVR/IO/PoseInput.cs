@@ -2,34 +2,54 @@
 
 namespace DynamicOpenVR.IO
 {
-    public class PoseInput : OVRAction
+    public class PoseInput : Input
     {
-        public bool IsActive => PoseData.bActive;
-        public bool IsDeviceConnected => PoseData.pose.bDeviceIsConnected;
-        public bool IsPoseValid => PoseData.pose.bPoseIsValid;
-        public bool IsTracking => PoseData.pose.eTrackingResult == ETrackingResult.Running_OK;
+        public PoseInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "pose") { }
 
-        private InputPoseActionData_t PoseData => OpenVRApi.GetPoseActionDataForNextFrame(Handle);
+        /// <summary>
+        /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
+        /// </summary>
+        public override bool IsActive()
+        {
+            return GetActionData().bActive;
+        }
 
-        public PoseInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "pose", "in") { }
+        /// <summary>
+        /// Whether the device is currently connected or not.
+        /// </summary>
+        public bool IsDeviceConnected()
+        {
+            return GetActionData().pose.bDeviceIsConnected;
+        }
 
+        public bool IsPoseValid()
+        {
+            return GetActionData().pose.bPoseIsValid;
+        }
+
+        /// <summary>
+        /// Whether the device is currently tracking properly or not.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsTracking()
+        {
+            return GetActionData().pose.eTrackingResult == ETrackingResult.Running_OK;
+        }
+
+        /// <summary>
+        /// Retrieves the current pose.
+        /// </summary>
         public Pose GetPose()
         {
-            HmdMatrix34_t rawMatrix = PoseData.pose.mDeviceToAbsoluteTracking;
+            HmdMatrix34_t rawMatrix = GetActionData().pose.mDeviceToAbsoluteTracking;
             return new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
         }
 
-        public Vector3 GetPosition()
+        private InputPoseActionData_t GetActionData()
         {
-            return GetPosition(PoseData.pose.mDeviceToAbsoluteTracking);
+            return OpenVRApi.GetPoseActionDataForNextFrame(Handle);
         }
 
-        public Quaternion GetRotation()
-        {
-            return GetRotation(PoseData.pose.mDeviceToAbsoluteTracking);
-        }
-
-        // https://github.com/wacki/Unity-VRInputModule/blob/master/Assets/SteamVR/Scripts/SteamVR_Utils.cs
         private Vector3 GetPosition(HmdMatrix34_t rawMatrix)
         {
             return new Vector3(
@@ -38,9 +58,11 @@ namespace DynamicOpenVR.IO
                 -rawMatrix.m11
             );
         }
-
+        
         private Quaternion GetRotation(HmdMatrix34_t rawMatrix)
         {
+            // this matrix transformation is based on the work from this fine person
+            // https://github.com/wacki/Unity-VRInputModule/blob/master/Assets/SteamVR/Scripts/SteamVR_Utils.cs
             float[,] matrix = {
                 {  rawMatrix.m0,  rawMatrix.m1, -rawMatrix.m2,   rawMatrix.m3 },
                 {  rawMatrix.m4,  rawMatrix.m5, -rawMatrix.m6,   rawMatrix.m7 },

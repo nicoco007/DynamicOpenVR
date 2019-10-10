@@ -94,6 +94,20 @@ namespace DynamicOpenVR
             return actionData;
         }
 
+        internal static InputSkeletalActionData_t GetSkeletalActionData(ulong actionHandle)
+        {
+            InputSkeletalActionData_t actionData = default;
+
+            EVRInputError error = OpenVR.Input.GetSkeletalActionData(actionHandle, ref actionData, (uint)Marshal.SizeOf(typeof(InputDigitalActionData_t)));
+
+            if (error != EVRInputError.None)
+            {
+                throw new Exception(error.ToString());
+            }
+
+            return actionData;
+        }
+
         internal static InputPoseActionData_t GetPoseActionDataForNextFrame(ulong actionHandle, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
         {
             InputPoseActionData_t actionData = default;

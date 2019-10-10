@@ -19,11 +19,11 @@ namespace DynamicOpenVR.BeatSaber
 			{
 				if (node == XRNode.LeftHand)
 				{
-					__result = OpenVRActionManager.Instance.GetAction<VectorInput>(Plugin.ActionSetName, Plugin.LeftTriggerValueAction).GetAxisRaw();
+					__result = OpenVRActionManager.Instance.GetAction<VectorInput>(Plugin.ActionSetName, Plugin.LeftTriggerValueAction).GetValue();
 				}
 				else if (node == XRNode.RightHand)
 				{
-					__result = OpenVRActionManager.Instance.GetAction<VectorInput>(Plugin.ActionSetName, Plugin.RightTriggerValueAction).GetAxisRaw();
+					__result = OpenVRActionManager.Instance.GetAction<VectorInput>(Plugin.ActionSetName, Plugin.RightTriggerValueAction).GetValue();
 				}
 			}
 			catch (Exception ex)
@@ -44,7 +44,7 @@ namespace DynamicOpenVR.BeatSaber
 		{
 			try
 			{
-				__result = OpenVRActionManager.Instance.GetAction<BooleanInput>(Plugin.ActionSetName, Plugin.MenuAction).GetButtonDown();
+				__result = OpenVRActionManager.Instance.GetAction<BooleanInput>(Plugin.ActionSetName, Plugin.MenuAction).GetActiveChange();
 			}
 			catch (Exception)
 			{
@@ -63,7 +63,7 @@ namespace DynamicOpenVR.BeatSaber
 		{
 			try
 			{
-				__result = OpenVRActionManager.Instance.GetAction<BooleanInput>(Plugin.ActionSetName, Plugin.MenuAction).GetButton();
+				__result = OpenVRActionManager.Instance.GetAction<BooleanInput>(Plugin.ActionSetName, Plugin.MenuAction).GetState();
 			}
 			catch (Exception)
 			{

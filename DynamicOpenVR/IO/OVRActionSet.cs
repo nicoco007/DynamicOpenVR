@@ -63,6 +63,11 @@ namespace DynamicOpenVR.IO
             return this;
         }
 
+        public IReadOnlyDictionary<string, string> GetTranslations()
+        {
+            return new ReadOnlyDictionary<string, string>(translations);
+        }
+
         internal string GetActionSetPath()
         {
             return $"/actions/{Name}";

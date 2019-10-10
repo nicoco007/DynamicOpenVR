@@ -105,13 +105,13 @@ namespace DynamicOpenVR.BeatSaber
         {
             if (node == XRNode.LeftHand)
             {
-                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.LeftHandPoseName).GetPosition();
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.LeftHandPoseName).GetPose().position;
                 return false;
             }
             
             if (node == XRNode.RightHand)
             {
-                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.RightHandPoseName).GetPosition();
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.RightHandPoseName).GetPose().position;
                 return false;
             }
 
@@ -127,13 +127,13 @@ namespace DynamicOpenVR.BeatSaber
         {
             if (node == XRNode.LeftHand)
             {
-                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.LeftHandPoseName).GetRotation();
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.LeftHandPoseName).GetPose().rotation;
                 return false;
             }
             
             if (node == XRNode.RightHand)
             {
-                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.RightHandPoseName).GetRotation();
+                __result = OpenVRActionManager.Instance.GetAction<PoseInput>(Plugin.ActionSetName, Plugin.RightHandPoseName).GetPose().rotation;
                 return false;
             }
 

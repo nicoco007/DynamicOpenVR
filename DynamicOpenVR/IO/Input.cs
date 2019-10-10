@@ -1,4 +1,7 @@
-﻿namespace DynamicOpenVR.IO
+﻿using System.Collections.Generic;
+using DynamicOpenVR.Bindings;
+
+namespace DynamicOpenVR.IO
 {
     public abstract class Input : OVRAction
     {

@@ -1,3 +1,5 @@
+using DynamicOpenVR.Bindings;
+
 namespace DynamicOpenVR.IO
 {
 	public class BooleanInput : Input
@@ -37,6 +39,11 @@ namespace DynamicOpenVR.IO
             InputDigitalActionData_t actionData = GetActionData();
 			return !actionData.bState && actionData.bChanged;
 		}
+
+        public void AddBinding(string path, string mode, string input)
+        {
+            bindings.Add(path, new SourceBinding(path, mode, input));
+        }
 
         private InputDigitalActionData_t GetActionData()
         {

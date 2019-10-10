@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using DynamicOpenVR.Bindings;
+using UnityEngine;
 
 namespace DynamicOpenVR.IO
 {
@@ -43,6 +45,11 @@ namespace DynamicOpenVR.IO
         {
             HmdMatrix34_t rawMatrix = GetActionData().pose.mDeviceToAbsoluteTracking;
             return new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
+        }
+
+        public void AddBinding(string path)
+        {
+            bindings.Add(path, new PoseBinding(path));
         }
 
         private InputPoseActionData_t GetActionData()

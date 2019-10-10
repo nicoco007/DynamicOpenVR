@@ -53,6 +53,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bindings\HapticsBinding.cs" />
+    <Compile Include="Bindings\SourceBinding.cs" />
+    <Compile Include="Bindings\OVRBinding.cs" />
+    <Compile Include="Bindings\PoseBinding.cs" />
+    <Compile Include="Bindings\SkeletonBinding.cs" />
     <Compile Include="Converters\CustomStringEnumConverter.cs" />
     <Compile Include="Converters\JsonEnumValueAttribute.cs" />
     <Compile Include="IO\AnalogInput.cs" />

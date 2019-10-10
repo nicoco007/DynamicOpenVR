@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using DynamicOpenVR.Bindings;
 
 namespace DynamicOpenVR.IO
 {
@@ -13,9 +14,9 @@ namespace DynamicOpenVR.IO
         internal string Type { get; }
         internal string Direction { get; set; }
         internal ulong Handle { get; private set; }
-        internal IReadOnlyDictionary<string, string> Translations => new ReadOnlyDictionary<string, string>(translations);
 
         private Dictionary<string, string> translations = new Dictionary<string, string>();
+        protected Dictionary<string, OVRBinding> bindings = new Dictionary<string, OVRBinding>();
 
         protected OVRAction(string name, OVRActionRequirement requirement, string type, string direction)
         {
@@ -38,6 +39,16 @@ namespace DynamicOpenVR.IO
 
             return this;
         }
+
+        public IReadOnlyDictionary<string, string> GetTranslations()
+        {
+            return new ReadOnlyDictionary<string, string>(translations);
+        }
+
+        internal IEnumerable<OVRBinding> GetBindings()
+        {
+            return bindings.Values;
+        }
         
         internal string GetActionPath(string actionSetName)
         {
@@ -48,5 +59,5 @@ namespace DynamicOpenVR.IO
         {
             Handle = OpenVRApi.GetActionHandle(GetActionPath(actionSetName));
         }
-	}
+    }
 }

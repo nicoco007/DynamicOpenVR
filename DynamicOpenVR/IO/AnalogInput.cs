@@ -1,4 +1,6 @@
-﻿namespace DynamicOpenVR.IO
+﻿using DynamicOpenVR.Bindings;
+
+namespace DynamicOpenVR.IO
 {
     public abstract class AnalogInput : Input
     {
@@ -10,6 +12,11 @@
         public override bool IsActive()
         {
             return GetActionData().bActive;
+        }
+
+        public void AddBinding(string path, string mode, string input)
+        {
+            bindings.Add(path, new SourceBinding(path, mode, input));
         }
 
         protected InputAnalogActionData_t GetActionData()

@@ -1,3 +1,5 @@
+using DynamicOpenVR.Bindings;
+
 namespace DynamicOpenVR.IO
 {
 	public class SkeletalInput : Input
@@ -24,6 +26,11 @@ namespace DynamicOpenVR.IO
 		{
 			return new SkeletalSummaryData(OpenVRApi.GetSkeletalSummaryData(Handle, summaryType));
 		}
+        
+        public void AddBinding(string path)
+        {
+            bindings.Add(path, new SkeletonBinding(path));
+        }
 
         private InputSkeletalActionData_t GetActionData()
         {

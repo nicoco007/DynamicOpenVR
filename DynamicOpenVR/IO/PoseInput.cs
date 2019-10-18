@@ -16,6 +16,7 @@
 
 using DynamicOpenVR.Bindings;
 using UnityEngine;
+using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
@@ -69,7 +70,7 @@ namespace DynamicOpenVR.IO
 
         private InputPoseActionData_t GetActionData()
         {
-            return OpenVRApi.GetPoseActionDataForNextFrame(Handle);
+            return OpenVRWrapper.GetPoseActionDataForNextFrame(Handle);
         }
 
         private Vector3 GetPosition(HmdMatrix34_t rawMatrix)

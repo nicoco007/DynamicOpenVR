@@ -78,9 +78,9 @@
     <Compile Include="Manifest\OVRManifest.cs" />
     <Compile Include="Manifest\OVRManifestAction.cs" />
     <Compile Include="Manifest\OVRManifestActionSet.cs" />
-    <Compile Include="OpenVR.cs" />
     <Compile Include="OpenVRActionManager.cs" />
-    <Compile Include="OpenVRApi.cs" />
+    <Compile Include="OpenVRWrapper.cs" />
+    <Compile Include="openvr_api.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -30,16 +30,16 @@ namespace DynamicOpenVR
 	{
         public static readonly string ActionManifestFileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
 
-        public static bool IsRunning => OpenVRApi.IsRunning;
+        public static bool IsRunning => OpenVRWrapper.IsRunning;
 
         private static OpenVRActionManager instance;
 
         static OpenVRActionManager()
         {
-            if (OpenVRApi.IsRunning && File.Exists(ActionManifestFileName))
+            if (OpenVRWrapper.IsRunning && File.Exists(ActionManifestFileName))
             {
                 // set early so OpenVR doesn't think no bindings exist at startup
-                OpenVRApi.SetActionManifestPath(ActionManifestFileName);
+                OpenVRWrapper.SetActionManifestPath(ActionManifestFileName);
             }
         }
 
@@ -47,7 +47,7 @@ namespace DynamicOpenVR
 		{
 			get
 			{
-                if (!OpenVRApi.IsRunning)
+                if (!OpenVRWrapper.IsRunning)
                 {
                     throw new InvalidOperationException("OpenVR is not running");
                 }
@@ -72,7 +72,7 @@ namespace DynamicOpenVR
 
             WriteManifest();
                 
-            OpenVRApi.SetActionManifestPath(ActionManifestFileName);
+            OpenVRWrapper.SetActionManifestPath(ActionManifestFileName);
 
             foreach (OVRActionSet actionSet in actionSets.Values)
             {
@@ -84,7 +84,7 @@ namespace DynamicOpenVR
         {
             if (actionSets.Count > 0)
             {
-                OpenVRApi.UpdateActionState(actionSets.Values.Select(actionSet => actionSet.Handle).ToArray());
+                OpenVRWrapper.UpdateActionState(actionSets.Values.Select(actionSet => actionSet.Handle).ToArray());
             }
         }
 

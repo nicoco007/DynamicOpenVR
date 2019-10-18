@@ -16,10 +16,11 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Valve.VR;
 
 namespace DynamicOpenVR
 {
-	internal static class OpenVRApi
+	internal static class OpenVRWrapper
 	{
 		internal static bool IsRunning => OpenVR.IsRuntimeInstalled();
 

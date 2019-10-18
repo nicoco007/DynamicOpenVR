@@ -15,6 +15,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using DynamicOpenVR.Bindings;
+using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
@@ -40,7 +41,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
 		public SkeletalSummaryData GetSummaryData(EVRSummaryType summaryType = EVRSummaryType.FromDevice)
 		{
-			return new SkeletalSummaryData(OpenVRApi.GetSkeletalSummaryData(Handle, summaryType));
+			return new SkeletalSummaryData(OpenVRWrapper.GetSkeletalSummaryData(Handle, summaryType));
 		}
         
         public void AddBinding(string path)
@@ -50,7 +51,7 @@ namespace DynamicOpenVR.IO
 
         private InputSkeletalActionData_t GetActionData()
         {
-            return OpenVRApi.GetSkeletalActionData(Handle);
+            return OpenVRWrapper.GetSkeletalActionData(Handle);
         }
 	}
 }

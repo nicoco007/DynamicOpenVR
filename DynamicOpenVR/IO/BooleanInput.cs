@@ -15,6 +15,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using DynamicOpenVR.Bindings;
+using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
@@ -63,7 +64,7 @@ namespace DynamicOpenVR.IO
 
         private InputDigitalActionData_t GetActionData()
         {
-            return OpenVRApi.GetDigitalActionData(Handle);
+            return OpenVRWrapper.GetDigitalActionData(Handle);
         }
 	}
 }

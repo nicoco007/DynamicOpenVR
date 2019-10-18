@@ -91,7 +91,7 @@ namespace DynamicOpenVR.IO
 
         internal void UpdateHandles()
         {
-            Handle = OpenVRApi.GetActionSetHandle(GetActionSetPath());
+            Handle = OpenVRWrapper.GetActionSetHandle(GetActionSetPath());
 
             foreach (OVRAction action in actions.Values)
             {

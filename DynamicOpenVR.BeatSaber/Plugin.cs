@@ -22,10 +22,10 @@ using System.Linq;
 using DynamicOpenVR.IO;
 using Harmony;
 using IPA;
-using IPA.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
+using Logger = IPA.Logging.Logger;
 
 namespace DynamicOpenVR.BeatSaber
 {
@@ -40,8 +40,6 @@ namespace DynamicOpenVR.BeatSaber
         public const string LeftHandPoseName = "LeftHandPose";
         public const string RightHandPoseName = "RightHandPose";
 
-        public static string Name => typeof(Plugin).Namespace;
-
         public static Logger Logger { get; private set; }
 
         private HarmonyInstance harmonyInstance;
@@ -50,11 +48,11 @@ namespace DynamicOpenVR.BeatSaber
         {
             Logger = logger;
 
-            Logger.Info("Starting " + Name);
+            Logger.Info("Starting " + typeof(Plugin).Namespace);
 
             if (!OpenVRActionManager.IsRunning)
             {
-                Logger.Warn($"OpenVR is not running. {Name} will not be activated.");
+                Logger.Warn($"OpenVR is not running. {typeof(Plugin).Namespace} will not be activated.");
                 return;
             }
 
@@ -76,8 +74,10 @@ namespace DynamicOpenVR.BeatSaber
         {
             string steamFolder = GetSteamHomeDirectory();
             string manifestPath = Path.Combine(Environment.CurrentDirectory, "beatsaber.vrmanifest");
-            string configPath = Path.Combine(steamFolder, "config", "appconfig.json");
+            string appConfigPath = Path.Combine(steamFolder, "config", "appconfig.json");
             string globalManifestPath = Path.Combine(steamFolder, "config", "steamapps.vrmanifest");
+
+            Logger.Debug("Found Steam at " + steamFolder);
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
@@ -90,13 +90,15 @@ namespace DynamicOpenVR.BeatSaber
 
             WriteBeatSaberManifest(manifestPath, vrManifest);
             
-            JObject appConfig = ReadAppConfig(configPath);
+            JObject appConfig = ReadAppConfig(appConfigPath);
             JArray manifestPaths = appConfig["manifest_paths"].Value<JArray>();
             List<JToken> existing = manifestPaths.Where(p => p.Value<string>() == manifestPath).ToList();
 
             // only rewrite if path isn't in list already or is not at the top
-            if (existing.Count != 1 || manifestPaths.IndexOf(existing.FirstOrDefault()) > 0)
+            if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0)
             {
+                Logger.Info($"Adding '{manifestPath}' to '{appConfigPath}'");
+
                 foreach (JToken token in existing)
                 {
                     appConfig["manifest_paths"].Value<JArray>().Remove(token);
@@ -104,20 +106,31 @@ namespace DynamicOpenVR.BeatSaber
 
                 appConfig["manifest_paths"].Value<JArray>().Insert(0, manifestPath);
 
-                WriteAppConfig(configPath, appConfig);
+                WriteAppConfig(appConfigPath, appConfig);
+            }
+            else
+            {
+                Logger.Info("Manifest is already registered");
             }
         }
 
         private string GetSteamHomeDirectory()
         {
-            Process steamProcess = Process.GetProcessesByName("Steam").FirstOrDefault(p => p.MainModule != null);
+            Process steamProcess = Process.GetProcessesByName("Steam").FirstOrDefault();
 
             if (steamProcess == null)
             {
                 throw new Exception("Steam process could not be found.");
             }
 
-            return Path.GetDirectoryName(steamProcess.MainModule.FileName);
+            string path = steamProcess.MainModule?.FileName;
+
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new Exception("Steam path could not be found.");
+            }
+
+            return Path.GetDirectoryName(path);
         }
 
         private JObject ReadBeatSaberManifest(string globalManifestPath)
@@ -128,6 +141,8 @@ namespace DynamicOpenVR.BeatSaber
             }
 
             JObject beatSaberManifest;
+            
+            Logger.Debug("Reading " + globalManifestPath);
 
             using (StreamReader reader = new StreamReader(globalManifestPath))
             {
@@ -151,6 +166,8 @@ namespace DynamicOpenVR.BeatSaber
             }
 
             JObject appConfig;
+            
+            Logger.Debug("Reading " + configPath);
 
             using (StreamReader reader = new StreamReader(configPath))
             {
@@ -167,7 +184,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteBeatSaberManifest(string manifestPath, JObject beatSaberManifest)
         {
-            Console.WriteLine("Writing manifest to " + manifestPath);
+            Logger.Info("Writing manifest to " + manifestPath);
 
             using (StreamWriter writer = new StreamWriter(manifestPath))
             {
@@ -177,7 +194,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteAppConfig(string configPath, JObject appConfig)
         {
-            Console.WriteLine("Writing app config to " + configPath);
+            Logger.Info("Writing app config to " + configPath);
 
             using (StreamWriter writer = new StreamWriter(configPath))
             {
@@ -215,7 +232,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void ApplyHarmonyPatches()
         {
-            Logger.Info("Applying OpenVR patches");
+            Logger.Info("Applying input patches");
 
             harmonyInstance = HarmonyInstance.Create(GetType().Namespace);
             harmonyInstance.PatchAll();

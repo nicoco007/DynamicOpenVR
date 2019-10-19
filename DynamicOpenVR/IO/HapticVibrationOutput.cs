@@ -18,7 +18,7 @@ namespace DynamicOpenVR.IO
 {
 	public class HapticVibrationOutput : OVRAction
 	{
-		public HapticVibrationOutput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "vibration", "out") { }
+		public HapticVibrationOutput(string name) : base(name) { }
 
         /// <summary>
         /// Triggers a haptic vibration action.

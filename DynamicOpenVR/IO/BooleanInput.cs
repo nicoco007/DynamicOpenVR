@@ -18,9 +18,9 @@ using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-	public class BooleanInput : Input, IBooleanOrVector
+	public class BooleanInput : Input
 	{
-		public BooleanInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "boolean") { }
+		public BooleanInput(string name) : base(name) { }
 
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.

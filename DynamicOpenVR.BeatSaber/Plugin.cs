@@ -31,16 +31,14 @@ namespace DynamicOpenVR.BeatSaber
 {
     public class Plugin : IBeatSaberPlugin
     {
-        public const string ActionSetName = "main";
-        public const string LeftTriggerValueAction = "LeftTriggerValue";
-        public const string RightTriggerValueAction = "RightTriggerValue";
-        public const string MenuAction = "Menu";
-        public const string LeftSliceAction = "LeftSlice";
-        public const string RightSliceAction = "RightSlice";
-        public const string LeftHandPoseName = "LeftHandPose";
-        public const string RightHandPoseName = "RightHandPose";
-
         public static Logger Logger { get; private set; }
+        public static VectorInput LeftTriggerValue { get; private set; }
+        public static VectorInput RightTriggerValue { get; private set; }
+        public static BooleanInput Menu { get; private set; }
+        public static HapticVibrationOutput LeftSlice { get; private set; }
+        public static HapticVibrationOutput RightSlice { get; private set; }
+        public static PoseInput LeftHandPose { get; private set; }
+        public static PoseInput RightHandPose { get; private set; }
 
         private HarmonyInstance harmonyInstance;
 
@@ -208,17 +206,13 @@ namespace DynamicOpenVR.BeatSaber
 
             OpenVRActionManager manager = OpenVRActionManager.Instance;
 
-            OVRActionSet actionSet = new OVRActionSet(ActionSetName, OVRActionSetUsage.LeftRight).AddTranslation("en_us", "Beat Saber");
-
-            actionSet.RegisterAction(new VectorInput(LeftTriggerValueAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Left Trigger Pull").AddTranslation("fr_fr", "Gâchette gauche (tirer)"));
-            actionSet.RegisterAction(new VectorInput(RightTriggerValueAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Right Trigger Pull").AddTranslation("fr_fr", "Gâchette droite (tirer)"));
-            actionSet.RegisterAction(new BooleanInput(MenuAction, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Menu Button").AddTranslation("fr_fr", "Bouton Menu"));
-            actionSet.RegisterAction(new HapticVibrationOutput(LeftSliceAction).AddTranslation("en_us", "Left Slice Haptic Feedback").AddTranslation("fr_fr", "Retour haptique pour coupe de gauche"));
-            actionSet.RegisterAction(new HapticVibrationOutput(RightSliceAction).AddTranslation("en_us", "Left Slice Haptic Feedback").AddTranslation("fr_fr", "Retour haptique pour coupe de droite"));
-            actionSet.RegisterAction(new PoseInput(LeftHandPoseName, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Left Hand Pose"));
-            actionSet.RegisterAction(new PoseInput(RightHandPoseName, OVRActionRequirement.Mandatory).AddTranslation("en_us", "Right Hand Pose"));
-
-            manager.RegisterActionSet(actionSet);
+            LeftTriggerValue = manager.RegisterAction(new VectorInput("/actions/main/in/lefttriggervalue"));
+            RightTriggerValue = manager.RegisterAction(new VectorInput("/actions/main/in/righttriggervalue"));
+            Menu = manager.RegisterAction(new BooleanInput("/actions/main/in/menu"));
+            LeftSlice = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/leftslice"));
+            RightSlice = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/rightslice"));
+            LeftHandPose = manager.RegisterAction(new PoseInput("/actions/main/in/lefthandpose"));
+            RightHandPose = manager.RegisterAction(new PoseInput("/actions/main/in/righthandpose"));
 
             /*OVRActionSet dummy = new OVRActionSet("dummy", OVRActionSetUsage.LeftRight);
             

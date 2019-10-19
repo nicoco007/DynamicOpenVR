@@ -21,7 +21,7 @@ namespace DynamicOpenVR.IO
 {
     public class Vector3Input : AnalogInput
 	{
-		public Vector3Input(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "vector3") { }
+		public Vector3Input(string name) : base(name) { }
 
         /// <summary>
         /// The current state of this axis of the analog action.

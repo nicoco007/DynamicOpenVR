@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
+using System;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DynamicOpenVR.IO
 {
@@ -24,49 +25,28 @@ namespace DynamicOpenVR.IO
     public abstract class OVRAction
     {
         public string Name { get; }
-        public OVRActionRequirement Requirement { get; }
-
-        internal string Type { get; }
-        internal string Direction { get; set; }
         internal ulong Handle { get; private set; }
 
-        private Dictionary<string, string> translations = new Dictionary<string, string>();
+        private readonly Regex nameRegex = new Regex(@"^\/actions\/[a-z0-9_-]+\/(?:in|out)\/[a-z0-9_-]+$");
 
-        protected OVRAction(string name, OVRActionRequirement requirement, string type, string direction)
+        protected OVRAction(string name)
         {
+            if (!nameRegex.IsMatch(name))
+            {
+                throw new Exception($"Unexpected action name '{name}'; name should only contain letters, numbers, dashes, and underscores.");
+            }
+
             Name = name.ToLowerInvariant();
-            Requirement = requirement;
-            Type = type;
-            Direction = direction;
-        }
-
-        public OVRAction AddTranslation(string language, string text)
-        {
-            if (translations.ContainsKey(language))
-            {
-                translations[language] = text;
-            }
-            else
-            {
-                translations.Add(language, text);
-            }
-
-            return this;
-        }
-
-        public IReadOnlyDictionary<string, string> GetTranslations()
-        {
-            return new ReadOnlyDictionary<string, string>(translations);
         }
         
-        internal string GetActionPath(string actionSetName)
+        internal string GetActionSetName()
         {
-            return $"/actions/{actionSetName}/{Direction}/{Name}";
+            return string.Join("/", Name.Split('/').Take(3));
         }
 
-        internal void UpdateHandle(string actionSetName)
+        internal void UpdateHandle()
         {
-            Handle = OpenVRWrapper.GetActionHandle(GetActionPath(actionSetName));
+            Handle = OpenVRWrapper.GetActionHandle(Name);
         }
     }
 }

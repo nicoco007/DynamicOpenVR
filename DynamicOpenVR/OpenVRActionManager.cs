@@ -55,7 +55,8 @@ namespace DynamicOpenVR
 			}
         }
 
-        private Dictionary<string, OVRActionSet> actionSets = new Dictionary<string, OVRActionSet>();
+        private Dictionary<string, OVRAction> actions = new Dictionary<string, OVRAction>();
+        private ulong[] actionSetHandles;
         private bool instantiated = false;
 
         private void Start()
@@ -67,47 +68,43 @@ namespace DynamicOpenVR
                 
             OpenVRWrapper.SetActionManifestPath(ActionManifestPath);
 
-            foreach (OVRActionSet actionSet in actionSets.Values)
+            List<string> actionSetNames = actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
+            actionSetHandles = new ulong[actionSetNames.Count];
+
+            for (int i = 0; i < actionSetNames.Count; i++)
             {
-                actionSet.UpdateHandles();
+                actionSetHandles[i] = OpenVRWrapper.GetActionSetHandle(actionSetNames[i]);
+            }
+
+            foreach (var action in actions.Values)
+            {
+                action.UpdateHandle();
             }
         }
 
         public void Update()
         {
-            if (actionSets.Count > 0)
+            if (actionSetHandles != null)
             {
-                OpenVRWrapper.UpdateActionState(actionSets.Values.Select(actionSet => actionSet.Handle).ToArray());
+                OpenVRWrapper.UpdateActionState(actionSetHandles);
             }
         }
 
-        public void RegisterActionSet(OVRActionSet actionSet)
+        public T RegisterAction<T>(T action) where T : OVRAction
         {
             if (instantiated)
             {
-                throw new InvalidOperationException("Cannot register new action sets once game is running");
+                throw new InvalidOperationException("Cannot register new actions once game is running");
             }
 
-            actionSets.Add(actionSet.Name, actionSet);
-        }
-
-        public OVRActionSet GetActionSet(string actionSetName)
-        {
-            actionSetName = actionSetName.ToLowerInvariant();
-
-            if (!actionSets.ContainsKey(actionSetName))
+            if (actions.ContainsKey(action.Name))
             {
-                throw new ArgumentException($"Action set '{actionSetName}' has not been registered");
+                throw new InvalidOperationException($"An action with the name '{action.Name}' was already registered.");
             }
 
-            return actionSets[actionSetName];
-        }
+            actions.Add(action.Name, action);
 
-        public T GetAction<T>(string actionSetName, string actionName) where T : OVRAction
-        {
-            actionSetName = actionSetName.ToLowerInvariant();
-
-            return GetActionSet(actionSetName).GetAction<T>(actionName);
+            return action;
         }
 
         private void CombineAndWriteManifest(List<ManifestDefaultBinding> defaultBindings)

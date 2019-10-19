@@ -21,7 +21,7 @@ namespace DynamicOpenVR.IO
 {
     public class PoseInput : Input
     {
-        public PoseInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "pose") { }
+        public PoseInput(string name) : base(name) { }
 
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.

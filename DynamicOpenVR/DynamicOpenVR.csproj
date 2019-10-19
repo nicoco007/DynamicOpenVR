@@ -65,13 +65,10 @@
     <Compile Include="DefaultBindings\SourceInput.cs" />
     <Compile Include="IO\AnalogInput.cs" />
     <Compile Include="IO\BooleanInput.cs" />
-    <Compile Include="IO\IBooleanOrVector.cs" />
     <Compile Include="IO\HapticVibrationOutput.cs" />
     <Compile Include="IO\Input.cs" />
     <Compile Include="IO\OVRAction.cs" />
     <Compile Include="IO\OVRActionRequirement.cs" />
-    <Compile Include="IO\OVRActionSet.cs" />
-    <Compile Include="IO\OVRActionSetUsage.cs" />
     <Compile Include="IO\PoseInput.cs" />
     <Compile Include="IO\SkeletalInput.cs" />
     <Compile Include="IO\SkeletalSummaryData.cs" />

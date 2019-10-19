@@ -53,8 +53,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\CustomStringEnumConverter.cs" />
-    <Compile Include="Converters\JsonEnumValueAttribute.cs" />
     <Compile Include="DefaultBindings\BindingCollection.cs" />
     <Compile Include="DefaultBindings\ChordBinding.cs" />
     <Compile Include="DefaultBindings\SkeletonBinding.cs" />
@@ -68,7 +66,6 @@
     <Compile Include="IO\HapticVibrationOutput.cs" />
     <Compile Include="IO\Input.cs" />
     <Compile Include="IO\OVRAction.cs" />
-    <Compile Include="IO\OVRActionRequirement.cs" />
     <Compile Include="IO\PoseInput.cs" />
     <Compile Include="IO\SkeletalInput.cs" />
     <Compile Include="IO\SkeletalSummaryData.cs" />

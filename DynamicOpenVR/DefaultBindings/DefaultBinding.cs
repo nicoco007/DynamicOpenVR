@@ -30,6 +30,9 @@ namespace DynamicOpenVR.DefaultBindings
         [JsonProperty(PropertyName = "controller_type")]
         public string ControllerType { get; set; }
 
+        [JsonProperty(PropertyName = "category")]
+        public string Category { get; set; }
+
         [JsonProperty(PropertyName = "bindings")]
         public Dictionary<string, BindingCollection> Bindings { get; set; }
     }

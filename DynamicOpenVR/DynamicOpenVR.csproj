@@ -77,6 +77,7 @@
     <Compile Include="Manifest\ManifestActionSet.cs" />
     <Compile Include="Manifest\ManifestDefaultBinding.cs" />
     <Compile Include="OpenVRActionManager.cs" />
+    <Compile Include="OpenVRInputException.cs" />
     <Compile Include="OpenVRWrapper.cs" />
     <Compile Include="openvr_api.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

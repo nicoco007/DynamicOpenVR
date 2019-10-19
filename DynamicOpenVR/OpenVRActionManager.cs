@@ -23,7 +23,9 @@ using System.IO;
 using System.Linq;
 using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
+using Valve.VR;
 using Debug = UnityEngine.Debug;
+using Input = DynamicOpenVR.IO.Input;
 
 namespace DynamicOpenVR
 {
@@ -71,10 +73,14 @@ namespace DynamicOpenVR
             List<string> actionSetNames = actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
             actionSetHandles = new ulong[actionSetNames.Count];
 
+            Console.WriteLine(string.Join(", ", actionSetNames));
+
             for (int i = 0; i < actionSetNames.Count; i++)
             {
                 actionSetHandles[i] = OpenVRWrapper.GetActionSetHandle(actionSetNames[i]);
             }
+
+            Console.WriteLine(string.Join(", ", actionSetHandles));
 
             foreach (var action in actions.Values)
             {
@@ -170,6 +176,7 @@ namespace DynamicOpenVR
                     Name = "Default Beat Saber Bindings",
                     Description = "Action bindings for Beat Saber.",
                     ControllerType = controllerType,
+                    Category = "steamvr_input",
                     Bindings = MergeBindings(defaultBindings.Where(b => b.ControllerType == controllerType))
                 };
 

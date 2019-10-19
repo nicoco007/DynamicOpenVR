@@ -14,12 +14,31 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
+using UnityEngine;
 using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
 	public class BooleanInput : Input
-	{
+    {
+        private int lastFrame;
+        private InputDigitalActionData_t actionData;
+
+        protected InputDigitalActionData_t ActionData
+        {
+            get
+            {
+                if (lastFrame != Time.frameCount)
+                {
+                    actionData = OpenVRWrapper.GetDigitalActionData(Handle);
+                }
+
+                lastFrame = Time.frameCount;
+
+                return actionData;
+            }
+        }
+
 		public BooleanInput(string name) : base(name) { }
 
         /// <summary>
@@ -27,7 +46,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public override bool IsActive()
         {
-            return GetActionData().bActive;
+            return ActionData.bActive;
         }
 
         /// <summary>
@@ -35,7 +54,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
 		public bool GetState()
 		{
-            return GetActionData().bState;
+            return ActionData.bState;
 		}
 
         /// <summary>
@@ -43,8 +62,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
 		public bool GetActiveChange()
 		{
-            InputDigitalActionData_t actionData = GetActionData();
-			return actionData.bState && actionData.bChanged;
+			return ActionData.bState && ActionData.bChanged;
 		}
 
         /// <summary>
@@ -52,13 +70,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public bool GetInactiveChange()
         {
-            InputDigitalActionData_t actionData = GetActionData();
-			return !actionData.bState && actionData.bChanged;
+			return !ActionData.bState && ActionData.bChanged;
 		}
-
-        private InputDigitalActionData_t GetActionData()
-        {
-            return OpenVRWrapper.GetDigitalActionData(Handle);
-        }
 	}
 }

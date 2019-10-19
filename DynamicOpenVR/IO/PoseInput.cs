@@ -21,6 +21,24 @@ namespace DynamicOpenVR.IO
 {
     public class PoseInput : Input
     {
+        private int lastFrame;
+        private InputPoseActionData_t actionData;
+
+        protected InputPoseActionData_t ActionData
+        {
+            get
+            {
+                if (lastFrame != Time.frameCount)
+                {
+                    actionData = OpenVRWrapper.GetPoseActionDataForNextFrame(Handle);
+                }
+
+                lastFrame = Time.frameCount;
+
+                return actionData;
+            }
+        }
+
         public PoseInput(string name) : base(name) { }
 
         /// <summary>
@@ -28,7 +46,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public override bool IsActive()
         {
-            return GetActionData().bActive;
+            return ActionData.bActive;
         }
 
         /// <summary>
@@ -36,12 +54,12 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public bool IsDeviceConnected()
         {
-            return GetActionData().pose.bDeviceIsConnected;
+            return ActionData.pose.bDeviceIsConnected;
         }
 
         public bool IsPoseValid()
         {
-            return GetActionData().pose.bPoseIsValid;
+            return ActionData.pose.bPoseIsValid;
         }
 
         /// <summary>
@@ -50,7 +68,7 @@ namespace DynamicOpenVR.IO
         /// <returns></returns>
         public bool IsTracking()
         {
-            return GetActionData().pose.eTrackingResult == ETrackingResult.Running_OK;
+            return ActionData.pose.eTrackingResult == ETrackingResult.Running_OK;
         }
 
         /// <summary>
@@ -58,13 +76,8 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public Pose GetPose()
         {
-            HmdMatrix34_t rawMatrix = GetActionData().pose.mDeviceToAbsoluteTracking;
+            HmdMatrix34_t rawMatrix = ActionData.pose.mDeviceToAbsoluteTracking;
             return new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
-        }
-
-        private InputPoseActionData_t GetActionData()
-        {
-            return OpenVRWrapper.GetPoseActionDataForNextFrame(Handle);
         }
 
         private Vector3 GetPosition(HmdMatrix34_t rawMatrix)

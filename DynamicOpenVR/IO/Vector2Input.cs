@@ -15,7 +15,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using UnityEngine;
-using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
@@ -28,8 +27,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public Vector2 GetVector()
         {
-            InputAnalogActionData_t actionData = GetActionData();
-            return new Vector2(actionData.x, actionData.y);
+            return new Vector2(ActionData.x, ActionData.y);
         }
 
         /// <summary>
@@ -37,8 +35,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public Vector2 GetVectorDelta()
         {
-            InputAnalogActionData_t actionData = GetActionData();
-            return new Vector2(actionData.deltaX, actionData.deltaY);
+            return new Vector2(ActionData.deltaX, ActionData.deltaY);
         }
     }
 }

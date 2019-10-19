@@ -14,12 +14,49 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
+using UnityEngine;
 using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
 	public class SkeletalInput : Input
-	{
+    {
+        private int lastFrame;
+        private InputSkeletalActionData_t actionData;
+        private VRSkeletalSummaryData_t summaryData;
+
+        protected InputSkeletalActionData_t ActionData
+        {
+            get
+            {
+                if (lastFrame != Time.frameCount)
+                {
+                    actionData = OpenVRWrapper.GetSkeletalActionData(Handle);
+                    summaryData = OpenVRWrapper.GetSkeletalSummaryData(Handle);
+                }
+
+                lastFrame = Time.frameCount;
+
+                return actionData;
+            }
+        }
+
+        protected VRSkeletalSummaryData_t SummaryData
+        {
+            get
+            {
+                if (lastFrame != Time.frameCount)
+                {
+                    actionData = OpenVRWrapper.GetSkeletalActionData(Handle);
+                    summaryData = OpenVRWrapper.GetSkeletalSummaryData(Handle);
+                }
+
+                lastFrame = Time.frameCount;
+
+                return summaryData;
+            }
+        }
+
 		public SkeletalInput(string name) : base(name) { }
 
         /// <summary>
@@ -27,20 +64,15 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public override bool IsActive()
         {
-            return GetActionData().bActive;
+            return ActionData.bActive;
         }
 
         /// <summary>
         /// Retrieves the summary data of the skeleton (finger curl and splay).
         /// </summary>
-		public SkeletalSummaryData GetSummaryData(EVRSummaryType summaryType = EVRSummaryType.FromDevice)
+		public SkeletalSummaryData GetSummaryData()
 		{
-			return new SkeletalSummaryData(OpenVRWrapper.GetSkeletalSummaryData(Handle, summaryType));
+			return new SkeletalSummaryData(SummaryData);
 		}
-
-        private InputSkeletalActionData_t GetActionData()
-        {
-            return OpenVRWrapper.GetSkeletalActionData(Handle);
-        }
 	}
 }

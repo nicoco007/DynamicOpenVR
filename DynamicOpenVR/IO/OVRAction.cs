@@ -27,7 +27,7 @@ namespace DynamicOpenVR.IO
         public string Name { get; }
         internal ulong Handle { get; private set; }
 
-        private readonly Regex nameRegex = new Regex(@"^\/actions\/[a-z0-9_-]+\/(?:in|out)\/[a-z0-9_-]+$");
+        private readonly Regex nameRegex = new Regex(@"^\/actions\/[a-z0-9_-]+\/(?:in|out)\/[a-z0-9_-]+$", RegexOptions.IgnoreCase);
 
         protected OVRAction(string name)
         {

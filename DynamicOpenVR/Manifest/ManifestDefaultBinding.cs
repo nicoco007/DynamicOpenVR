@@ -1,5 +1,5 @@
-﻿// DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
-// Copyright © 2019 Nicolas Gnyra
+// DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
+// Copyright � 2019 Nicolas Gnyra
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
@@ -14,10 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-namespace DynamicOpenVR.Bindings
+using Newtonsoft.Json;
+
+namespace DynamicOpenVR.Manifest
 {
-    internal class SkeletonBinding : OVRBinding
-    {
-        internal SkeletonBinding(string path) : base("skeleton", path) { }
-    }
+	internal class ManifestDefaultBinding
+	{
+		[JsonProperty(PropertyName = "controller_type")]
+		internal string ControllerType;
+
+		[JsonProperty(PropertyName = "binding_url")]
+		internal string BindingUrl;
+	}
 }

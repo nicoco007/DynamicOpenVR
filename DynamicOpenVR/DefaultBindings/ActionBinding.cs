@@ -16,9 +16,15 @@
 
 namespace DynamicOpenVR.Bindings
 {
-    internal class HapticsBinding : OVRBinding
+    public abstract class ActionBinding
     {
+        internal string Type { get; }
+        internal string Path { get; }
 
-        public HapticsBinding(string path) : base("haptics", path) { }
+        protected ActionBinding(string type, string path)
+        {
+            Type = type;
+            Path = path;
+        }
     }
 }

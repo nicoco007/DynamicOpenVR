@@ -14,10 +14,22 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-namespace DynamicOpenVR.Bindings
+using Newtonsoft.Json;
+
+namespace DynamicOpenVR.Manifest
 {
-    internal class PoseBinding : OVRBinding
+    internal class ManifestAction
     {
-        internal PoseBinding(string path) : base("poses", path) { }
+        [JsonProperty(PropertyName = "name")]
+        internal string Name { get; set; }
+
+        [JsonProperty(PropertyName = "requirement")]
+        internal string Requirement { get; set; }
+
+        [JsonProperty(PropertyName = "type")]
+        internal string Type { get; set; }
+
+        [JsonProperty(PropertyName = "skeleton", NullValueHandling = NullValueHandling.Ignore)]
+        internal string Skeleton { get; set; }
     }
 }

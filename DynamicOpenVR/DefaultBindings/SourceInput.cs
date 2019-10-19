@@ -14,17 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-namespace DynamicOpenVR.Bindings
-{
-    internal class SourceBinding : OVRBinding
-    {
-        internal string Mode { get; }
-        internal string Input { get; }
+using Newtonsoft.Json;
 
-        internal SourceBinding(string path, string mode, string input) : base("sources", path)
-        {
-            Mode = mode;
-            Input = input;
-        }
+namespace DynamicOpenVR.DefaultBindings
+{
+    internal class SourceInput
+    {
+        [JsonProperty(PropertyName = "output")]
+        public string Output { get; set; }
     }
 }

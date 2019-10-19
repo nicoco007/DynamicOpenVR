@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using DynamicOpenVR.Bindings;
 using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-	public class BooleanInput : Input
+	public class BooleanInput : Input, IBooleanOrVector
 	{
 		public BooleanInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "boolean") { }
 
@@ -56,11 +55,6 @@ namespace DynamicOpenVR.IO
             InputDigitalActionData_t actionData = GetActionData();
 			return !actionData.bState && actionData.bChanged;
 		}
-
-        public void AddBinding(string path, string mode, string input)
-        {
-            bindings.Add(path, new SourceBinding(path, mode, input));
-        }
 
         private InputDigitalActionData_t GetActionData()
         {

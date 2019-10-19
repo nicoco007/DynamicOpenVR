@@ -81,7 +81,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
-            beatSaberManifest["action_manifest_path"] = "action_manifest.json";
+            beatSaberManifest["action_manifest_path"] = OpenVRActionManager.ActionManifestPath;
 
             JObject vrManifest = new JObject
             {
@@ -220,14 +220,14 @@ namespace DynamicOpenVR.BeatSaber
 
             manager.RegisterActionSet(actionSet);
 
-            OVRActionSet dummy = new OVRActionSet("dummy", OVRActionSetUsage.LeftRight);
+            /*OVRActionSet dummy = new OVRActionSet("dummy", OVRActionSetUsage.LeftRight);
             
             dummy.RegisterAction(new BooleanInput("boolean"));
             dummy.RegisterAction(new VectorInput("vector1"));
             dummy.RegisterAction(new Vector2Input("vector2"));
             dummy.RegisterAction(new Vector3Input("vector3"));
-
-            manager.RegisterActionSet(dummy);
+            
+            manager.RegisterActionSet(dummy);*/
         }
 
         private void ApplyHarmonyPatches()

@@ -17,7 +17,6 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DynamicOpenVR.Bindings;
 
 namespace DynamicOpenVR.IO
 {
@@ -32,7 +31,6 @@ namespace DynamicOpenVR.IO
         internal ulong Handle { get; private set; }
 
         private Dictionary<string, string> translations = new Dictionary<string, string>();
-        protected Dictionary<string, OVRBinding> bindings = new Dictionary<string, OVRBinding>();
 
         protected OVRAction(string name, OVRActionRequirement requirement, string type, string direction)
         {
@@ -59,11 +57,6 @@ namespace DynamicOpenVR.IO
         public IReadOnlyDictionary<string, string> GetTranslations()
         {
             return new ReadOnlyDictionary<string, string>(translations);
-        }
-
-        internal IEnumerable<OVRBinding> GetBindings()
-        {
-            return bindings.Values;
         }
         
         internal string GetActionPath(string actionSetName)

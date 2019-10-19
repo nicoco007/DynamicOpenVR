@@ -21,27 +21,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace DynamicOpenVR
 {
 	public class OpenVRActionManager : MonoBehaviour
 	{
-        public static readonly string ActionManifestFileName = Path.Combine(Environment.CurrentDirectory, "action_manifest.json");
+        public static readonly string ActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
 
         public static bool IsRunning => OpenVRWrapper.IsRunning;
 
         private static OpenVRActionManager instance;
-
-        static OpenVRActionManager()
-        {
-            if (OpenVRWrapper.IsRunning && File.Exists(ActionManifestFileName))
-            {
-                // set early so OpenVR doesn't think no bindings exist at startup
-                OpenVRWrapper.SetActionManifestPath(ActionManifestFileName);
-            }
-        }
 
         public static OpenVRActionManager Instance
 		{
@@ -69,10 +61,11 @@ namespace DynamicOpenVR
         private void Start()
         {
             instantiated = true;
-
-            WriteManifest();
+            
+            List<ManifestDefaultBinding> defaultBindingFiles = CombineAndWriteBindings();
+            CombineAndWriteManifest(defaultBindingFiles);
                 
-            OpenVRWrapper.SetActionManifestPath(ActionManifestFileName);
+            OpenVRWrapper.SetActionManifestPath(ActionManifestPath);
 
             foreach (OVRActionSet actionSet in actionSets.Values)
             {
@@ -117,18 +110,144 @@ namespace DynamicOpenVR
             return GetActionSet(actionSetName).GetAction<T>(actionName);
         }
 
-        private void WriteManifest()
+        private void CombineAndWriteManifest(List<ManifestDefaultBinding> defaultBindings)
 		{
-            OVRManifest manifest = new OVRManifest(actionSets.Values);
+            string[] actionFiles = Directory.GetFiles("DynamicOpenVR/Actions");
+            var actionManifests = new List<ActionManifest>();
 
-			byte[] jsonString = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(manifest, Formatting.Indented));
-
-			using (FileStream stream = File.Open(ActionManifestFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            foreach (string actionFile in actionFiles)
             {
-                stream.SetLength(0);
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.Write(jsonString, 0, jsonString.Length);
-			}
+                try
+                {
+                    using (var reader = new StreamReader(actionFile))
+                    {
+                        actionManifests.Add(JsonConvert.DeserializeObject<ActionManifest>(reader.ReadToEnd()));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"An error of type {ex.GetType().FullName} occured when trying to parse {actionFile}: {ex.Message}");
+                }
+            }
+
+            using (var writer = new StreamWriter(ActionManifestPath))
+            {
+                var manifest = new ActionManifest()
+                {
+                    Actions = actionManifests.SelectMany(m => m.Actions).ToList(),
+                    ActionSets = actionManifests.SelectMany(m => m.ActionSets).ToList(),
+                    DefaultBindings = defaultBindings,
+                    Localization = CombineLocalizations(actionManifests)
+                };
+
+                writer.WriteLine(JsonConvert.SerializeObject(manifest, Formatting.Indented));
+            }
 		}
+
+        private List<ManifestDefaultBinding> CombineAndWriteBindings()
+        {
+            string[] bindingFiles = Directory.GetFiles("DynamicOpenVR/Bindings");
+            var defaultBindings = new List<DefaultBinding>();
+
+            foreach (string bindingFile in bindingFiles)
+            {
+                try
+                {
+                    using (var reader = new StreamReader(bindingFile))
+                    {
+                        defaultBindings.Add(JsonConvert.DeserializeObject<DefaultBinding>(reader.ReadToEnd()));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"An error of type {ex.GetType().FullName} occured when trying to parse {bindingFile}: {ex.Message}");
+                }
+            }
+
+            var combinedBindings = new List<ManifestDefaultBinding>();
+
+            foreach (string controllerType in defaultBindings.Select(b => b.ControllerType).Distinct())
+            {
+                var defaultBinding = new DefaultBinding
+                {
+                    Name = "Default Beat Saber Bindings",
+                    Description = "Action bindings for Beat Saber.",
+                    ControllerType = controllerType,
+                    Bindings = MergeBindings(defaultBindings.Where(b => b.ControllerType == controllerType))
+                };
+
+                string fileName = $"default_bindings_{defaultBinding.ControllerType}.json";
+                combinedBindings.Add(new ManifestDefaultBinding { ControllerType = controllerType, BindingUrl = fileName });
+
+                using (StreamWriter writer = new StreamWriter(Path.Combine("DynamicOpenVR", fileName)))
+                {
+                    writer.WriteLine(JsonConvert.SerializeObject(defaultBinding, Formatting.Indented));
+                }
+            }
+
+            return combinedBindings;
+        }
+
+        private Dictionary<string, BindingCollection> MergeBindings(IEnumerable<DefaultBinding> bindingSets)
+        {
+            var final = new Dictionary<string, BindingCollection>();
+
+            foreach (var bindingSet in bindingSets)
+            {
+                foreach (KeyValuePair<string, BindingCollection> kvp in bindingSet.Bindings)
+                {
+                    string actionSetName = kvp.Key;
+                    BindingCollection bindings = kvp.Value;
+
+                    if (!final.ContainsKey(actionSetName))
+                    {
+                        final.Add(actionSetName, new BindingCollection());
+                    }
+                    
+                    final[actionSetName].Chords.AddRange(bindings.Chords);
+                    final[actionSetName].Haptics.AddRange(bindings.Haptics);
+                    final[actionSetName].Poses.AddRange(bindings.Poses);
+                    final[actionSetName].Skeleton.AddRange(bindings.Skeleton);
+                    final[actionSetName].Sources.AddRange(bindings.Sources);
+                }
+            }
+
+            return final;
+        }
+
+        private List<Dictionary<string, string>> CombineLocalizations(IEnumerable<ActionManifest> manifests)
+        {
+            var combinedLocalizations = new Dictionary<string, Dictionary<string, string>>();
+
+            foreach (var manifest in manifests)
+            {
+                foreach (var language in manifest.Localization)
+                {
+                    if (!language.ContainsKey("language_tag"))
+                    {
+                        continue;
+                    }
+
+                    if (!combinedLocalizations.ContainsKey(language["language_tag"]))
+                    {
+                        combinedLocalizations.Add(language["language_tag"], new Dictionary<string, string>() { {"language_tag", language["language_tag"] } });
+                    }
+
+                    foreach (var kvp in language.Where(kvp => kvp.Key != "language_tag"))
+                    {
+                        if (combinedLocalizations.ContainsKey(kvp.Key))
+                        {
+                            Debug.LogWarning($"Duplicate entry {kvp.Key}");
+                        }
+                        else
+                        {
+                            combinedLocalizations[language["language_tag"]].Add(kvp.Key, kvp.Value);
+                        }
+                    }
+                }
+            }
+
+            return combinedLocalizations.Values.ToList();
+        }
 	}
 }

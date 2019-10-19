@@ -14,23 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using DynamicOpenVR.IO;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace DynamicOpenVR.Manifest
+namespace DynamicOpenVR.DefaultBindings
 {
-    internal class OVRManifestActionSet
+    internal class ChordBinding
     {
-        [JsonProperty(PropertyName = "name")]
-        internal readonly string Name;
+        [JsonProperty(PropertyName = "output")]
+        public string Output { get; set; }
 
-        [JsonProperty(PropertyName = "usage")]
-        internal readonly OVRActionSetUsage Usage;
-
-        internal OVRManifestActionSet(OVRActionSet actionSet)
-        {
-            Name = actionSet.GetActionSetPath();
-            Usage = actionSet.Usage;
-        }
+        [JsonProperty(PropertyName = "inputs")]
+        public List<List<string>> Inputs { get; set; }
     }
 }

@@ -14,31 +14,23 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using DynamicOpenVR.IO;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace DynamicOpenVR.Manifest
+namespace DynamicOpenVR.DefaultBindings
 {
-    internal class OVRManifestAction
+    internal class DefaultBinding
     {
         [JsonProperty(PropertyName = "name")]
-        internal readonly string Name;
+        public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "requirement")]
-        internal readonly OVRActionRequirement Requirement;
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
 
-        [JsonProperty(PropertyName = "type")]
-        internal readonly string Type;
+        [JsonProperty(PropertyName = "controller_type")]
+        public string ControllerType { get; set; }
 
-        [JsonProperty(PropertyName = "skeleton", NullValueHandling = NullValueHandling.Ignore)]
-        internal readonly string Skeleton;
-
-        internal OVRManifestAction(OVRActionSet actionSet, OVRAction action)
-        {
-            Name = action.GetActionPath(actionSet.Name);
-            Requirement = action.Requirement;
-            Type = action.Type;
-            Skeleton = (action as SkeletalInput)?.Skeleton;
-        }
+        [JsonProperty(PropertyName = "bindings")]
+        public Dictionary<string, BindingCollection> Bindings { get; set; }
     }
 }

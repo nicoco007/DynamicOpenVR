@@ -14,25 +14,26 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using Valve.VR;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace DynamicOpenVR.IO
+namespace DynamicOpenVR.DefaultBindings
 {
-    public abstract class AnalogInput : Input
+    internal class BindingCollection
     {
-        protected AnalogInput(string name, OVRActionRequirement requirement, string type) : base(name, requirement, type) { }
+        [JsonProperty(PropertyName = "sources")]
+        public List<SourceBinding> Sources { get; set; } = new List<SourceBinding>();
 
-        /// <summary>
-        /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
-        /// </summary>
-        public override bool IsActive()
-        {
-            return GetActionData().bActive;
-        }
+        [JsonProperty(PropertyName = "haptics")]
+        public List<HapticBinding> Haptics { get; set; } = new List<HapticBinding>();
 
-        protected InputAnalogActionData_t GetActionData()
-        {
-            return OpenVRWrapper.GetAnalogActionData(Handle);
-        }
+        [JsonProperty(PropertyName = "poses")]
+        public List<PoseBinding> Poses { get; set; } = new List<PoseBinding>();
+
+        [JsonProperty(PropertyName = "skeleton")]
+        public List<SkeletonBinding> Skeleton { get; set; } = new List<SkeletonBinding>();
+
+        [JsonProperty(PropertyName = "chords")]
+        public List<ChordBinding> Chords { get; set; } = new List<ChordBinding>();
     }
 }

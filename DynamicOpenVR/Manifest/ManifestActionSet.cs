@@ -14,25 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using Valve.VR;
+using Newtonsoft.Json;
 
-namespace DynamicOpenVR.IO
+namespace DynamicOpenVR.Manifest
 {
-    public abstract class AnalogInput : Input
+    internal class ManifestActionSet
     {
-        protected AnalogInput(string name, OVRActionRequirement requirement, string type) : base(name, requirement, type) { }
+        [JsonProperty(PropertyName = "name")]
+        internal string Name { get; set; }
 
-        /// <summary>
-        /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
-        /// </summary>
-        public override bool IsActive()
-        {
-            return GetActionData().bActive;
-        }
-
-        protected InputAnalogActionData_t GetActionData()
-        {
-            return OpenVRWrapper.GetAnalogActionData(Handle);
-        }
+        [JsonProperty(PropertyName = "usage")]
+        internal string Usage { get; set; }
     }
 }

@@ -53,15 +53,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bindings\HapticsBinding.cs" />
-    <Compile Include="Bindings\SourceBinding.cs" />
-    <Compile Include="Bindings\OVRBinding.cs" />
-    <Compile Include="Bindings\PoseBinding.cs" />
-    <Compile Include="Bindings\SkeletonBinding.cs" />
     <Compile Include="Converters\CustomStringEnumConverter.cs" />
     <Compile Include="Converters\JsonEnumValueAttribute.cs" />
+    <Compile Include="DefaultBindings\BindingCollection.cs" />
+    <Compile Include="DefaultBindings\ChordBinding.cs" />
+    <Compile Include="DefaultBindings\SkeletonBinding.cs" />
+    <Compile Include="DefaultBindings\DefaultBinding.cs" />
+    <Compile Include="DefaultBindings\HapticBinding.cs" />
+    <Compile Include="DefaultBindings\PoseBinding.cs" />
+    <Compile Include="DefaultBindings\SourceBinding.cs" />
+    <Compile Include="DefaultBindings\SourceInput.cs" />
     <Compile Include="IO\AnalogInput.cs" />
     <Compile Include="IO\BooleanInput.cs" />
+    <Compile Include="IO\IBooleanOrVector.cs" />
     <Compile Include="IO\HapticVibrationOutput.cs" />
     <Compile Include="IO\Input.cs" />
     <Compile Include="IO\OVRAction.cs" />
@@ -74,10 +78,10 @@
     <Compile Include="IO\Vector2Input.cs" />
     <Compile Include="IO\Vector3Input.cs" />
     <Compile Include="IO\VectorInput.cs" />
-    <Compile Include="Manifest\OVRDefaultBinding.cs" />
-    <Compile Include="Manifest\OVRManifest.cs" />
-    <Compile Include="Manifest\OVRManifestAction.cs" />
-    <Compile Include="Manifest\OVRManifestActionSet.cs" />
+    <Compile Include="Manifest\ActionManifest.cs" />
+    <Compile Include="Manifest\ManifestAction.cs" />
+    <Compile Include="Manifest\ManifestActionSet.cs" />
+    <Compile Include="Manifest\ManifestDefaultBinding.cs" />
     <Compile Include="OpenVRActionManager.cs" />
     <Compile Include="OpenVRWrapper.cs" />
     <Compile Include="openvr_api.cs" />

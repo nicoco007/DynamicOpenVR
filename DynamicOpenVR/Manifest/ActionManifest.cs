@@ -14,26 +14,23 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-namespace DynamicOpenVR.IO
+using Newtonsoft.Json;
+using System.Collections.Generic;
+
+namespace DynamicOpenVR.Manifest
 {
-	public class VectorInput : AnalogInput, IBooleanOrVector
-	{
-		public VectorInput(string name, OVRActionRequirement requirement = OVRActionRequirement.Suggested) : base(name, requirement, "vector1") { }
+    internal class ActionManifest
+    {
+        [JsonProperty(PropertyName = "actions")]
+        internal List<ManifestAction> Actions { get; set; } = new List<ManifestAction>();
 
-        /// <summary>
-        /// The current state of this axis of the analog action.
-        /// </summary>
-        public float GetValue()
-        {
-            return GetActionData().x;
-        }
+        [JsonProperty(PropertyName = "action_sets")]
+        internal List<ManifestActionSet> ActionSets { get; set; } = new List<ManifestActionSet>();
 
-        /// <summary>
-        /// The change in this axis for this action since the previous frame.
-        /// </summary>
-        public float GetValueDelta()
-        {
-            return GetActionData().deltaX;
-        }
-	}
+        [JsonProperty(PropertyName = "default_bindings")]
+        internal List<ManifestDefaultBinding> DefaultBindings { get; set; } = new List<ManifestDefaultBinding>();
+
+        [JsonProperty(PropertyName = "localization")]
+        internal List<Dictionary<string, string>> Localization { get; set; } = new List<Dictionary<string, string>>();
+    }
 }

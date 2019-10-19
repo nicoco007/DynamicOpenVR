@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using DynamicOpenVR.Bindings;
 using Valve.VR;
 
 namespace DynamicOpenVR.IO
@@ -43,11 +42,6 @@ namespace DynamicOpenVR.IO
 		{
 			return new SkeletalSummaryData(OpenVRWrapper.GetSkeletalSummaryData(Handle, summaryType));
 		}
-        
-        public void AddBinding(string path)
-        {
-            bindings.Add(path, new SkeletonBinding(path));
-        }
 
         private InputSkeletalActionData_t GetActionData()
         {

@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using DynamicOpenVR.Bindings;
 using UnityEngine;
 using Valve.VR;
 
@@ -61,11 +60,6 @@ namespace DynamicOpenVR.IO
         {
             HmdMatrix34_t rawMatrix = GetActionData().pose.mDeviceToAbsoluteTracking;
             return new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
-        }
-
-        public void AddBinding(string path)
-        {
-            bindings.Add(path, new PoseBinding(path));
         }
 
         private InputPoseActionData_t GetActionData()

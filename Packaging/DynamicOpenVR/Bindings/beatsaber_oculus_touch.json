@@ -47,7 +47,7 @@
                   }
                },
                "mode" : "button",
-               "path" : "/user/hand/left/input/b"
+               "path" : "/user/hand/right/input/b"
             },
             {
                "inputs" : {
@@ -56,10 +56,10 @@
                   }
                },
                "mode" : "button",
-               "path" : "/user/hand/right/input/b"
+               "path" : "/user/hand/left/input/y"
             }
          ]
       }
    },
-   "controller_type" : "knuckles"
+   "controller_type" : "oculus_touch"
 }

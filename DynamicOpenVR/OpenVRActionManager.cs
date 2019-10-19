@@ -23,9 +23,6 @@ using System.IO;
 using System.Linq;
 using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
-using Valve.VR;
-using Debug = UnityEngine.Debug;
-using Input = DynamicOpenVR.IO.Input;
 
 namespace DynamicOpenVR
 {

@@ -91,8 +91,8 @@ namespace DynamicOpenVR.IO
         
         private Quaternion GetRotation(HmdMatrix34_t rawMatrix)
         {
-            // this matrix transformation is based on the work from this fine person
-            // https://github.com/wacki/Unity-VRInputModule/blob/master/Assets/SteamVR/Scripts/SteamVR_Utils.cs
+            // based on SteamVR's Unity plugin
+            // https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/Assets/SteamVR/Scripts/SteamVR_Utils.cs
             float[,] matrix = {
                 {  rawMatrix.m0,  rawMatrix.m1, -rawMatrix.m2,   rawMatrix.m3 },
                 {  rawMatrix.m4,  rawMatrix.m5, -rawMatrix.m6,   rawMatrix.m7 },

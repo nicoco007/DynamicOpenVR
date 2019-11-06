@@ -14,18 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using DynamicOpenVR.IO;
 using Harmony;
 using System;
-using UnityEngine;
 using UnityEngine.XR;
 
+// ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 namespace DynamicOpenVR.BeatSaber
 {
 	[HarmonyPatch(typeof(VRControllersInputManager))]
 	[HarmonyPatch("TriggerValue", MethodType.Normal)]
-	class TriggerValuePatch
+    internal class TriggerValuePatch
 	{
 		public static bool Prefix(XRNode node, ref float __result)
 		{
@@ -52,9 +51,10 @@ namespace DynamicOpenVR.BeatSaber
 
 	[HarmonyPatch(typeof(VRControllersInputManager))]
 	[HarmonyPatch("MenuButtonDown", MethodType.Normal)]
-	class MenuButtonDownPatch
+    internal class MenuButtonDownPatch
 	{
-		public static bool Prefix(ref bool __result)
+        // ReSharper disable once RedundantAssignment
+        public static bool Prefix(ref bool __result)
 		{
 			try
 			{
@@ -71,8 +71,9 @@ namespace DynamicOpenVR.BeatSaber
 
 	[HarmonyPatch(typeof(VRControllersInputManager))]
 	[HarmonyPatch("MenuButton", MethodType.Normal)]
-	class MenuButtonPatch
+    internal class MenuButtonPatch
 	{
+        // ReSharper disable once RedundantAssignment
 		public static bool Prefix(ref bool __result)
 		{
 			try
@@ -90,7 +91,7 @@ namespace DynamicOpenVR.BeatSaber
 
 	[HarmonyPatch(typeof(OpenVRHelper))]
 	[HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
-	class TriggerHapticPulsePatch
+    internal class TriggerHapticPulsePatch
 	{
 		public static bool Prefix(XRNode node, float strength)
 		{
@@ -110,48 +111,4 @@ namespace DynamicOpenVR.BeatSaber
 			return false;
 		}
 	}
-
-    [HarmonyPatch(typeof(InputTracking))]
-    [HarmonyPatch("GetLocalPosition", MethodType.Normal)]
-    class InputTrackingGetLocalPositionPatch
-    {
-        public static bool Prefix(XRNode node, ref Vector3 __result)
-        {
-            if (node == XRNode.LeftHand)
-            {
-                __result = Plugin.LeftHandPose.GetPose().position;
-                return false;
-            }
-            
-            if (node == XRNode.RightHand)
-            {
-                __result = Plugin.RightHandPose.GetPose().position;
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-    [HarmonyPatch(typeof(InputTracking))]
-    [HarmonyPatch("GetLocalRotation", MethodType.Normal)]
-    class InputTrackingGetLocalRotationPatch
-    {
-        public static bool Prefix(XRNode node, ref Quaternion __result)
-        {
-            if (node == XRNode.LeftHand)
-            {
-                __result = Plugin.LeftHandPose.GetPose().rotation;
-                return false;
-            }
-            
-            if (node == XRNode.RightHand)
-            {
-                __result = Plugin.RightHandPose.GetPose().rotation;
-                return false;
-            }
-
-            return true;
-        }
-    }
 }

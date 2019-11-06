@@ -67,7 +67,8 @@
   <ItemGroup>
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VRInputPatches.cs" />
+    <Compile Include="BeatSaberInputPatches.cs" />
+    <Compile Include="XRInputPatches.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />

@@ -3,7 +3,6 @@ pipeline {
     node {
       label 'windows && vs-15'
     }
-
   }
   stages {
     stage('Prepare Debug') {
@@ -15,7 +14,7 @@ pipeline {
     }
     stage('Build Debug') {
       steps {
-        bat 'msbuild /p:Configuration=Debug /p:Platform="Any CPU"'
+        bat 'msbuild /p:Configuration=Debug /p:Platform="Any CPU" /p:AutomatedBuild=true'
         bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.dll Packaging-Debug\\Libs'
         bat 'copy DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.pdb Packaging-Debug\\Libs'
         bat 'copy DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\Plugins'
@@ -33,7 +32,7 @@ pipeline {
     }
     stage('Build Release') {
       steps {
-        bat 'msbuild /p:Configuration=Release /p:Platform="Any CPU"'
+        bat 'msbuild /p:Configuration=Release /p:Platform="Any CPU" /p:AutomatedBuild=true'
         bat 'copy DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging-Release\\Libs'
         bat 'copy DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\Plugins'
         bat '7z a DynamicOpenVR.BeatSaber.RELEASE.zip -r "./Packaging-Release/*"'

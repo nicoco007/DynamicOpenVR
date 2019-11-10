@@ -81,6 +81,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(BEATSABERDIR)\Plugins"</PostBuildEvent>
+    <AutomatedBuild>false</AutomatedBuild>
+    <PostBuildEvent>if $(AutomatedBuild) neq true (
+  if "$(BeatSaberDir)" neq "" (
+    copy "$(TargetDir)\DynamicOpenVR.dll" "$(BeatSaberDir)\Libs"
+    copy "$(TargetPath)" "$(BeatSaberDir)\Plugins"
+  )
+)</PostBuildEvent>
   </PropertyGroup>
 </Project>

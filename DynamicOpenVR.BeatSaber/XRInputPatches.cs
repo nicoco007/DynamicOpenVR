@@ -87,7 +87,8 @@ namespace DynamicOpenVR.BeatSaber
                             rotation = Plugin.LeftHandPose.Pose.rotation,
                             tracked = Plugin.LeftHandPose.IsTracking,
                             velocity = Plugin.LeftHandPose.Velocity,
-                            angularVelocity = Plugin.LeftHandPose.AngularVelocity
+                            angularVelocity = Plugin.LeftHandPose.AngularVelocity,
+                            uniqueID = nodeState.uniqueID
                         });
                         break;
 
@@ -100,7 +101,8 @@ namespace DynamicOpenVR.BeatSaber
                             rotation = Plugin.RightHandPose.Pose.rotation,
                             tracked = Plugin.RightHandPose.IsTracking,
                             velocity = Plugin.RightHandPose.Velocity,
-                            angularVelocity = Plugin.RightHandPose.AngularVelocity
+                            angularVelocity = Plugin.RightHandPose.AngularVelocity,
+                            uniqueID = nodeState.uniqueID
                         });
                         break;
                 }

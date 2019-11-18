@@ -6,6 +6,9 @@ Unity scripts to allow dynamic creation of OpenVR actions at runtime. Intended t
 
 More information coming soon.
 
+## Troubleshooting
+See [the troubleshooting guide](https://github.com/nicoco007/DynamicOpenVR/blob/master/TROUBLESHOOTING.md).
+
 ## DynamicOpenVR.BeatSaber
 An implementation of DynamicOpenVR as a [Beat Saber](https://beatsaber.com/) plugin. Get the latest (unstable!) [debug](https://ci.gnyra.com/job/DynamicOpenVR/job/master/lastSuccessfulBuild/artifact/DynamicOpenVR.BeatSaber.DEBUG.zip) or [release](https://ci.gnyra.com/job/DynamicOpenVR/job/master/lastSuccessfulBuild/artifact/DynamicOpenVR.BeatSaber.RELEASE.zip) build.
 

@@ -26,15 +26,15 @@ using UnityEngine;
 
 namespace DynamicOpenVR
 {
-	public class OpenVrActionManager : MonoBehaviour
+	public class OpenVRActionManager : MonoBehaviour
 	{
         public static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
 
         public static bool isRunning => OpenVrWrapper.isRunning;
 
-        private static OpenVrActionManager _instance;
+        private static OpenVRActionManager _instance;
 
-        public static OpenVrActionManager instance
+        public static OpenVRActionManager instance
 		{
 			get
 			{
@@ -45,9 +45,9 @@ namespace DynamicOpenVR
 
 				if (!_instance)
 				{
-					GameObject go = new GameObject(nameof(OpenVrActionManager));
+					GameObject go = new GameObject(nameof(OpenVRActionManager));
 					DontDestroyOnLoad(go);
-					_instance = go.AddComponent<OpenVrActionManager>();
+					_instance = go.AddComponent<OpenVRActionManager>();
                 }
 
 				return _instance;

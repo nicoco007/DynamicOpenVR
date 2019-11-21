@@ -21,6 +21,6 @@ namespace DynamicOpenVR.DefaultBindings
     internal class SourceInput
     {
         [JsonProperty(PropertyName = "output")]
-        public string Output { get; set; }
+        public string output { get; set; }
     }
 }

@@ -21,21 +21,21 @@ namespace DynamicOpenVR.IO
 {
 	public class BooleanInput : Input
     {
-        private int lastFrame;
-        private InputDigitalActionData_t actionData;
+        private int _lastFrame;
+        private InputDigitalActionData_t _actionData;
 
-        protected InputDigitalActionData_t ActionData
+        private InputDigitalActionData_t actionData
         {
             get
             {
-                if (lastFrame != Time.frameCount)
+                if (_lastFrame != Time.frameCount)
                 {
-                    actionData = OpenVRWrapper.GetDigitalActionData(Handle);
+                    _actionData = OpenVrWrapper.GetDigitalActionData(handle);
                 }
 
-                lastFrame = Time.frameCount;
+                _lastFrame = Time.frameCount;
 
-                return actionData;
+                return _actionData;
             }
         }
 
@@ -46,7 +46,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public override bool IsActive()
         {
-            return ActionData.bActive;
+            return actionData.bActive;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
 		public bool GetState()
 		{
-            return ActionData.bState;
+            return actionData.bState;
 		}
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
 		public bool GetActiveChange()
 		{
-			return ActionData.bState && ActionData.bChanged;
+			return actionData.bState && actionData.bChanged;
 		}
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public bool GetInactiveChange()
         {
-			return !ActionData.bState && ActionData.bChanged;
+			return !actionData.bState && actionData.bChanged;
 		}
 	}
 }

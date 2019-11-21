@@ -22,18 +22,18 @@ namespace DynamicOpenVR.DefaultBindings
     internal class DefaultBinding
     {
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        public string name { get; set; }
 
         [JsonProperty(PropertyName = "description")]
-        public string Description { get; set; }
+        public string description { get; set; }
 
         [JsonProperty(PropertyName = "controller_type")]
-        public string ControllerType { get; set; }
+        public string controllerType { get; set; }
 
         [JsonProperty(PropertyName = "category")]
-        public string Category { get; set; }
+        public string category { get; set; }
 
         [JsonProperty(PropertyName = "bindings")]
-        public Dictionary<string, BindingCollection> Bindings { get; set; }
+        public Dictionary<string, BindingCollection> bindings { get; set; }
     }
 }

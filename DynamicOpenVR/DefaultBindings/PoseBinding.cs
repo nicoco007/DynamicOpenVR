@@ -21,9 +21,9 @@ namespace DynamicOpenVR.DefaultBindings
     internal class PoseBinding
     {
         [JsonProperty(PropertyName = "output")]
-        public string Output { get; set; }
+        public string output { get; set; }
 
         [JsonProperty(PropertyName = "path")]
-        public string Path { get; set; }
+        public string path { get; set; }
     }
 }

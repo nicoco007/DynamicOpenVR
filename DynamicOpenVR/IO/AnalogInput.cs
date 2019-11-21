@@ -21,21 +21,21 @@ namespace DynamicOpenVR.IO
 {
     public abstract class AnalogInput : Input
     {
-        private int lastFrame;
-        private InputAnalogActionData_t actionData;
+        private int _lastFrame;
+        private InputAnalogActionData_t _actionData;
 
-        protected InputAnalogActionData_t ActionData
+        protected InputAnalogActionData_t actionData
         {
             get
             {
-                if (lastFrame != Time.frameCount)
+                if (_lastFrame != Time.frameCount)
                 {
-                    actionData = OpenVRWrapper.GetAnalogActionData(Handle);
+                    _actionData = OpenVrWrapper.GetAnalogActionData(handle);
                 }
 
-                lastFrame = Time.frameCount;
+                _lastFrame = Time.frameCount;
 
-                return actionData;
+                return _actionData;
             }
         }
 
@@ -46,7 +46,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public override bool IsActive()
         {
-            return ActionData.bActive;
+            return actionData.bActive;
         }
     }
 }

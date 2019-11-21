@@ -26,60 +26,60 @@ using UnityEngine;
 
 namespace DynamicOpenVR
 {
-	public class OpenVRActionManager : MonoBehaviour
+	public class OpenVrActionManager : MonoBehaviour
 	{
-        public static readonly string ActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
+        public static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
 
-        public static bool IsRunning => OpenVRWrapper.IsRunning;
+        public static bool isRunning => OpenVrWrapper.isRunning;
 
-        private static OpenVRActionManager instance;
+        private static OpenVrActionManager _instance;
 
-        public static OpenVRActionManager Instance
+        public static OpenVrActionManager instance
 		{
 			get
 			{
-                if (!OpenVRWrapper.IsRunning)
+                if (!OpenVrWrapper.isRunning)
                 {
                     throw new InvalidOperationException("OpenVR is not running");
                 }
 
-				if (!instance)
+				if (!_instance)
 				{
-					GameObject go = new GameObject(nameof(OpenVRActionManager));
+					GameObject go = new GameObject(nameof(OpenVrActionManager));
 					DontDestroyOnLoad(go);
-					instance = go.AddComponent<OpenVRActionManager>();
+					_instance = go.AddComponent<OpenVrActionManager>();
                 }
 
-				return instance;
+				return _instance;
 			}
         }
 
-        private Dictionary<string, OVRAction> actions = new Dictionary<string, OVRAction>();
-        private ulong[] actionSetHandles;
-        private bool instantiated = false;
+        private Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
+        private ulong[] _actionSetHandles;
+        private bool _instantiated = false;
 
         private void Start()
         {
-            instantiated = true;
+            _instantiated = true;
             
             List<ManifestDefaultBinding> defaultBindingFiles = CombineAndWriteBindings();
             CombineAndWriteManifest(defaultBindingFiles);
                 
-            OpenVRWrapper.SetActionManifestPath(ActionManifestPath);
+            OpenVrWrapper.SetActionManifestPath(kActionManifestPath);
 
-            List<string> actionSetNames = actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
-            actionSetHandles = new ulong[actionSetNames.Count];
+            List<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
+            _actionSetHandles = new ulong[actionSetNames.Count];
 
             Console.WriteLine(string.Join(", ", actionSetNames));
 
             for (int i = 0; i < actionSetNames.Count; i++)
             {
-                actionSetHandles[i] = OpenVRWrapper.GetActionSetHandle(actionSetNames[i]);
+                _actionSetHandles[i] = OpenVrWrapper.GetActionSetHandle(actionSetNames[i]);
             }
 
-            Console.WriteLine(string.Join(", ", actionSetHandles));
+            Console.WriteLine(string.Join(", ", _actionSetHandles));
 
-            foreach (var action in actions.Values)
+            foreach (var action in _actions.Values)
             {
                 action.UpdateHandle();
             }
@@ -87,25 +87,25 @@ namespace DynamicOpenVR
 
         public void Update()
         {
-            if (actionSetHandles != null)
+            if (_actionSetHandles != null)
             {
-                OpenVRWrapper.UpdateActionState(actionSetHandles);
+                OpenVrWrapper.UpdateActionState(_actionSetHandles);
             }
         }
 
         public T RegisterAction<T>(T action) where T : OVRAction
         {
-            if (instantiated)
+            if (_instantiated)
             {
                 throw new InvalidOperationException("Cannot register new actions once game is running");
             }
 
-            if (actions.ContainsKey(action.Name))
+            if (_actions.ContainsKey(action.name))
             {
-                throw new InvalidOperationException($"An action with the name '{action.Name}' was already registered.");
+                throw new InvalidOperationException($"An action with the name '{action.name}' was already registered.");
             }
 
-            actions.Add(action.Name, action);
+            _actions.Add(action.name, action);
 
             return action;
         }
@@ -130,7 +130,7 @@ namespace DynamicOpenVR
                 }
             }
 
-            using (var writer = new StreamWriter(ActionManifestPath))
+            using (var writer = new StreamWriter(kActionManifestPath))
             {
                 var manifest = new ActionManifest()
                 {
@@ -166,18 +166,18 @@ namespace DynamicOpenVR
 
             var combinedBindings = new List<ManifestDefaultBinding>();
 
-            foreach (string controllerType in defaultBindings.Select(b => b.ControllerType).Distinct())
+            foreach (string controllerType in defaultBindings.Select(b => b.controllerType).Distinct())
             {
                 var defaultBinding = new DefaultBinding
                 {
-                    Name = "Default Beat Saber Bindings",
-                    Description = "Action bindings for Beat Saber.",
-                    ControllerType = controllerType,
-                    Category = "steamvr_input",
-                    Bindings = MergeBindings(defaultBindings.Where(b => b.ControllerType == controllerType))
+                    name = "Default Beat Saber Bindings",
+                    description = "Action bindings for Beat Saber.",
+                    controllerType = controllerType,
+                    category = "steamvr_input",
+                    bindings = MergeBindings(defaultBindings.Where(b => b.controllerType == controllerType))
                 };
 
-                string fileName = $"default_bindings_{defaultBinding.ControllerType}.json";
+                string fileName = $"default_bindings_{defaultBinding.controllerType}.json";
                 combinedBindings.Add(new ManifestDefaultBinding { ControllerType = controllerType, BindingUrl = fileName });
 
                 using (StreamWriter writer = new StreamWriter(Path.Combine("DynamicOpenVR", fileName)))
@@ -195,7 +195,7 @@ namespace DynamicOpenVR
 
             foreach (var bindingSet in bindingSets)
             {
-                foreach (KeyValuePair<string, BindingCollection> kvp in bindingSet.Bindings)
+                foreach (KeyValuePair<string, BindingCollection> kvp in bindingSet.bindings)
                 {
                     string actionSetName = kvp.Key;
                     BindingCollection bindings = kvp.Value;
@@ -205,11 +205,11 @@ namespace DynamicOpenVR
                         final.Add(actionSetName, new BindingCollection());
                     }
                     
-                    final[actionSetName].Chords.AddRange(bindings.Chords);
-                    final[actionSetName].Haptics.AddRange(bindings.Haptics);
-                    final[actionSetName].Poses.AddRange(bindings.Poses);
-                    final[actionSetName].Skeleton.AddRange(bindings.Skeleton);
-                    final[actionSetName].Sources.AddRange(bindings.Sources);
+                    final[actionSetName].chords.AddRange(bindings.chords);
+                    final[actionSetName].haptics.AddRange(bindings.haptics);
+                    final[actionSetName].poses.AddRange(bindings.poses);
+                    final[actionSetName].skeleton.AddRange(bindings.skeleton);
+                    final[actionSetName].sources.AddRange(bindings.sources);
                 }
             }
 

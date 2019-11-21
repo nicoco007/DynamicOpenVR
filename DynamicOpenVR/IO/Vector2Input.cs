@@ -27,7 +27,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public Vector2 GetVector()
         {
-            return new Vector2(ActionData.x, ActionData.y);
+            return new Vector2(actionData.x, actionData.y);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public Vector2 GetVectorDelta()
         {
-            return new Vector2(ActionData.deltaX, ActionData.deltaY);
+            return new Vector2(actionData.deltaX, actionData.deltaY);
         }
     }
 }

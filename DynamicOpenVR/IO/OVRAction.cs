@@ -15,38 +15,36 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using System;
-using Newtonsoft.Json;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DynamicOpenVR.IO
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public abstract class OVRAction
     {
-        public string Name { get; }
-        internal ulong Handle { get; private set; }
+        private static readonly Regex kNameRegex = new Regex(@"^\/actions\/[a-z0-9_-]+\/(?:in|out)\/[a-z0-9_-]+$", RegexOptions.IgnoreCase);
 
-        private readonly Regex nameRegex = new Regex(@"^\/actions\/[a-z0-9_-]+\/(?:in|out)\/[a-z0-9_-]+$", RegexOptions.IgnoreCase);
+        public string name { get; }
+        internal ulong handle { get; private set; }
 
         protected OVRAction(string name)
         {
-            if (!nameRegex.IsMatch(name))
+            if (!kNameRegex.IsMatch(name))
             {
                 throw new Exception($"Unexpected action name '{name}'; name should only contain letters, numbers, dashes, and underscores.");
             }
 
-            Name = name.ToLowerInvariant();
+            this.name = name.ToLowerInvariant();
         }
         
         internal string GetActionSetName()
         {
-            return string.Join("/", Name.Split('/').Take(3));
+            return string.Join("/", name.Split('/').Take(3));
         }
 
         internal void UpdateHandle()
         {
-            Handle = OpenVRWrapper.GetActionHandle(Name);
+            handle = OpenVrWrapper.GetActionHandle(name);
         }
     }
 }

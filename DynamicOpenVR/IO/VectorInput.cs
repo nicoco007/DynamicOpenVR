@@ -25,7 +25,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public float GetValue()
         {
-            return ActionData.x;
+            return actionData.x;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public float GetValueDelta()
         {
-            return ActionData.deltaX;
+            return actionData.deltaX;
         }
 	}
 }

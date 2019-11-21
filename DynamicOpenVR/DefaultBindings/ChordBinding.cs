@@ -22,9 +22,9 @@ namespace DynamicOpenVR.DefaultBindings
     internal class ChordBinding
     {
         [JsonProperty(PropertyName = "output")]
-        public string Output { get; set; }
+        public string output { get; set; }
 
         [JsonProperty(PropertyName = "inputs")]
-        public List<List<string>> Inputs { get; set; }
+        public List<List<string>> inputs { get; set; }
     }
 }

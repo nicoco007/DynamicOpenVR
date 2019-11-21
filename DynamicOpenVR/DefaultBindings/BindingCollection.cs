@@ -22,18 +22,18 @@ namespace DynamicOpenVR.DefaultBindings
     internal class BindingCollection
     {
         [JsonProperty(PropertyName = "sources")]
-        public List<SourceBinding> Sources { get; set; } = new List<SourceBinding>();
+        public List<SourceBinding> sources { get; set; } = new List<SourceBinding>();
 
         [JsonProperty(PropertyName = "haptics")]
-        public List<HapticBinding> Haptics { get; set; } = new List<HapticBinding>();
+        public List<HapticBinding> haptics { get; set; } = new List<HapticBinding>();
 
         [JsonProperty(PropertyName = "poses")]
-        public List<PoseBinding> Poses { get; set; } = new List<PoseBinding>();
+        public List<PoseBinding> poses { get; set; } = new List<PoseBinding>();
 
         [JsonProperty(PropertyName = "skeleton")]
-        public List<SkeletonBinding> Skeleton { get; set; } = new List<SkeletonBinding>();
+        public List<SkeletonBinding> skeleton { get; set; } = new List<SkeletonBinding>();
 
         [JsonProperty(PropertyName = "chords")]
-        public List<ChordBinding> Chords { get; set; } = new List<ChordBinding>();
+        public List<ChordBinding> chords { get; set; } = new List<ChordBinding>();
     }
 }

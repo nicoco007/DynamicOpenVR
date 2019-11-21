@@ -48,7 +48,7 @@ namespace DynamicOpenVR.BeatSaber
 
             Logger.Info("Starting " + typeof(Plugin).Namespace);
 
-            if (!OpenVRActionManager.IsRunning)
+            if (!OpenVrActionManager.isRunning)
             {
                 Logger.Warn($"OpenVR is not running. {typeof(Plugin).Namespace} will not be activated.");
                 return;
@@ -79,7 +79,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
-            beatSaberManifest["action_manifest_path"] = OpenVRActionManager.ActionManifestPath;
+            beatSaberManifest["action_manifest_path"] = OpenVrActionManager.kActionManifestPath;
 
             JObject vrManifest = new JObject
             {
@@ -204,7 +204,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             Logger.Info("Registering actions");
 
-            OpenVRActionManager manager = OpenVRActionManager.Instance;
+            OpenVrActionManager manager = OpenVrActionManager.instance;
 
             LeftTriggerValue  = manager.RegisterAction(new VectorInput("/actions/main/in/lefttriggervalue"));
             RightTriggerValue = manager.RegisterAction(new VectorInput("/actions/main/in/righttriggervalue"));

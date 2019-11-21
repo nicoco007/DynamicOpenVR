@@ -21,39 +21,39 @@ namespace DynamicOpenVR.IO
 {
 	public class SkeletalInput : Input
     {
-        private int lastFrame;
-        private InputSkeletalActionData_t actionData;
-        private VRSkeletalSummaryData_t summaryData;
+        private int _lastFrame;
+        private InputSkeletalActionData_t _actionData;
+        private VRSkeletalSummaryData_t _summaryData;
 
-        protected InputSkeletalActionData_t ActionData
+        protected InputSkeletalActionData_t actionData
         {
             get
             {
-                if (lastFrame != Time.frameCount)
+                if (_lastFrame != Time.frameCount)
                 {
-                    actionData = OpenVRWrapper.GetSkeletalActionData(Handle);
-                    summaryData = OpenVRWrapper.GetSkeletalSummaryData(Handle);
+                    _actionData = OpenVrWrapper.GetSkeletalActionData(handle);
+                    _summaryData = OpenVrWrapper.GetSkeletalSummaryData(handle);
                 }
 
-                lastFrame = Time.frameCount;
+                _lastFrame = Time.frameCount;
 
-                return actionData;
+                return _actionData;
             }
         }
 
-        protected VRSkeletalSummaryData_t SummaryData
+        protected VRSkeletalSummaryData_t summaryData
         {
             get
             {
-                if (lastFrame != Time.frameCount)
+                if (_lastFrame != Time.frameCount)
                 {
-                    actionData = OpenVRWrapper.GetSkeletalActionData(Handle);
-                    summaryData = OpenVRWrapper.GetSkeletalSummaryData(Handle);
+                    _actionData = OpenVrWrapper.GetSkeletalActionData(handle);
+                    _summaryData = OpenVrWrapper.GetSkeletalSummaryData(handle);
                 }
 
-                lastFrame = Time.frameCount;
+                _lastFrame = Time.frameCount;
 
-                return summaryData;
+                return _summaryData;
             }
         }
 
@@ -64,7 +64,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public override bool IsActive()
         {
-            return ActionData.bActive;
+            return actionData.bActive;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace DynamicOpenVR.IO
         /// </summary>
 		public SkeletalSummaryData GetSummaryData()
 		{
-			return new SkeletalSummaryData(SummaryData);
+			return new SkeletalSummaryData(summaryData);
 		}
 	}
 }

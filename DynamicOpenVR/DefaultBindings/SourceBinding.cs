@@ -22,12 +22,12 @@ namespace DynamicOpenVR.DefaultBindings
     internal class SourceBinding
     {
         [JsonProperty(PropertyName = "path")]
-        public string Path { get; set; }
+        public string path { get; set; }
 
         [JsonProperty(PropertyName = "mode")]
-        public string Mode { get; set; }
+        public string mode { get; set; }
 
         [JsonProperty(PropertyName = "inputs")]
-        public Dictionary<string, SourceInput> Inputs { get; set; }
+        public Dictionary<string, SourceInput> inputs { get; set; }
     }
 }

@@ -5,7 +5,8 @@
   "gameVersion": "1.5.0",
   "id": "DynamicOpenVR.BeatSaber",
   "name": "DynamicOpenVR.BeatSaber",
-  "version": "0.1.0-beta.1",
+  "icon": "DynamicOpenVR.BeatSaber.Resources.icon.png",
+  "version": "0.1.0-beta.2",
   "features": [],
   "dependsOn": {
     "BSIPA": "^3.13.0"

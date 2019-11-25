@@ -25,6 +25,7 @@ using IPA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 using Logger = IPA.Logging.Logger;
 
 namespace DynamicOpenVR.BeatSaber
@@ -60,8 +61,8 @@ namespace DynamicOpenVR.BeatSaber
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to configure manifest: " + ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                Debug.LogError("Failed to configure manifest");
+                Debug.LogError(ex);
             }
 
             RegisterActionSet();

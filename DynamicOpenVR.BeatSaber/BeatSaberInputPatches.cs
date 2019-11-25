@@ -41,7 +41,6 @@ namespace DynamicOpenVR.BeatSaber
 			}
 			catch (Exception ex)
 			{
-                Console.WriteLine(ex);
 				__result = 0;
 			}
 

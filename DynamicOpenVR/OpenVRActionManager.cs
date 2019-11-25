@@ -70,14 +70,10 @@ namespace DynamicOpenVR
             List<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
             _actionSetHandles = new ulong[actionSetNames.Count];
 
-            Console.WriteLine(string.Join(", ", actionSetNames));
-
             for (int i = 0; i < actionSetNames.Count; i++)
             {
                 _actionSetHandles[i] = OpenVrWrapper.GetActionSetHandle(actionSetNames[i]);
             }
-
-            Console.WriteLine(string.Join(", ", _actionSetHandles));
 
             foreach (var action in _actions.Values)
             {

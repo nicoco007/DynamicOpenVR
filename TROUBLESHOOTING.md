@@ -1,6 +1,6 @@
 # Troubleshooting
-## Buttons and/or tracking isn't working properly
-If this happens after uninstalling DynamicOpenVR, please see [Removing DynamicOpenVR](https://github.com/nicoco007/DynamicOpenVR/blob/master/TROUBLESHOOTING.md#removing-dynamicopenvr).
+## Buttons and/or tracking aren't working properly
+*If this happens after uninstalling DynamicOpenVR, please see [Removing DynamicOpenVR](https://github.com/nicoco007/DynamicOpenVR/blob/master/TROUBLESHOOTING.md#removing-dynamicopenvr).*
 
 Make sure the right controller bindings are selected by going into your controller settings and selecting 
 the bindings called "Default Beat Saber Bindings &ndash; Action Bindings for Beat Saber". Follow the steps below to do so. Please note that you may encounter error messages when opening Controller Settings &ndash; this might happen the first time you open the window, but should no longer be an issue afterewards. If you are constantly getting an error message, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).

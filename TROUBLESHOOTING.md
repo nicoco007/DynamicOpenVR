@@ -19,7 +19,7 @@ the bindings called "Default Beat Saber Bindings &ndash; Action Bindings for Bea
 ![](https://i.imgur.com/FJmjP7C.png)
 
 ## Removing DynamicOpenVR
-DynamicOpenVR generates files specific to your computer to prevent certain issues with bindings which may cause issues after removing the DynamicOpenVR DLL. To completely uninstall DynamicOpenVR, make sure these files/folders no longer exist in Beat Saber's installation folder:
+DynamicOpenVR generates files specific to your computer to improve user experience in SteamVR's interface. These files may cause issues after partially removing DynamicOpenVR. To completely uninstall DynamicOpenVR, make sure these files/folders no longer exist in Beat Saber's installation folder:
 
 * Libs\DynamicOpenVR.dll
 * Plugins\DynamicOpenVR.BeatSaber.dll

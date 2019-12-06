@@ -88,7 +88,7 @@ namespace DynamicOpenVR.BeatSaber
 		}
 	}
 
-	[HarmonyPatch(typeof(OpenVRHelper))]
+	[HarmonyPatch(typeof(VRPlatformHelper))]
 	[HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
     internal class TriggerHapticPulsePatch
 	{

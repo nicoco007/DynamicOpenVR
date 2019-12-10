@@ -32,13 +32,13 @@ namespace DynamicOpenVR.BeatSaber
         {
             if (node == XRNode.LeftHand)
             {
-                __result = Plugin.LeftHandPose.pose.position;
+                __result = Plugin.leftHandPose.pose.position;
                 return false;
             }
             
             if (node == XRNode.RightHand)
             {
-                __result = Plugin.RightHandPose.pose.position;
+                __result = Plugin.rightHandPose.pose.position;
                 return false;
             }
 
@@ -54,13 +54,13 @@ namespace DynamicOpenVR.BeatSaber
         {
             if (node == XRNode.LeftHand)
             {
-                __result = Plugin.LeftHandPose.pose.rotation;
+                __result = Plugin.leftHandPose.pose.rotation;
                 return false;
             }
             
             if (node == XRNode.RightHand)
             {
-                __result = Plugin.RightHandPose.pose.rotation;
+                __result = Plugin.rightHandPose.pose.rotation;
                 return false;
             }
 
@@ -83,11 +83,11 @@ namespace DynamicOpenVR.BeatSaber
                         nodeStates.Add(new XRNodeState()
                         {
                             nodeType = XRNode.LeftHand,
-                            position = Plugin.LeftHandPose.pose.position,
-                            rotation = Plugin.LeftHandPose.pose.rotation,
-                            tracked = Plugin.LeftHandPose.isTracking,
-                            velocity = Plugin.LeftHandPose.velocity,
-                            angularVelocity = Plugin.LeftHandPose.angularVelocity,
+                            position = Plugin.leftHandPose.pose.position,
+                            rotation = Plugin.leftHandPose.pose.rotation,
+                            tracked = Plugin.leftHandPose.isTracking,
+                            velocity = Plugin.leftHandPose.velocity,
+                            angularVelocity = Plugin.leftHandPose.angularVelocity,
                             uniqueID = nodeState.uniqueID
                         });
                         break;
@@ -97,11 +97,11 @@ namespace DynamicOpenVR.BeatSaber
                         nodeStates.Add(new XRNodeState
                         {
                             nodeType = XRNode.RightHand,
-                            position = Plugin.RightHandPose.pose.position,
-                            rotation = Plugin.RightHandPose.pose.rotation,
-                            tracked = Plugin.RightHandPose.isTracking,
-                            velocity = Plugin.RightHandPose.velocity,
-                            angularVelocity = Plugin.RightHandPose.angularVelocity,
+                            position = Plugin.rightHandPose.pose.position,
+                            rotation = Plugin.rightHandPose.pose.rotation,
+                            tracked = Plugin.rightHandPose.isTracking,
+                            velocity = Plugin.rightHandPose.velocity,
+                            angularVelocity = Plugin.rightHandPose.angularVelocity,
                             uniqueID = nodeState.uniqueID
                         });
                         break;

@@ -25,6 +25,7 @@ using IPA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 using Debug = UnityEngine.Debug;
 using Logger = IPA.Logging.Logger;
 
@@ -48,6 +49,12 @@ namespace DynamicOpenVR.BeatSaber
             Logger = logger;
 
             Logger.Info("Starting " + typeof(Plugin).Namespace);
+
+            if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0)
+            {
+                Logger.Warn($"Current VR SDK is not OpenVR ({XRSettings.loadedDeviceName}). {typeof(Plugin).Namespace} will not be activated.");
+                return;
+            }
 
             if (!OpenVRActionManager.isRunning)
             {

@@ -32,11 +32,11 @@ namespace DynamicOpenVR.BeatSaber
 			{
 				if (node == XRNode.LeftHand)
 				{
-					__result = Plugin.LeftTriggerValue.GetValue();
+					__result = Plugin.leftTriggerValue.GetValue();
 				}
 				else if (node == XRNode.RightHand)
 				{
-					__result = Plugin.RightTriggerValue.GetValue();
+					__result = Plugin.rightTriggerValue.GetValue();
 				}
 			}
 			catch (Exception ex)
@@ -57,7 +57,7 @@ namespace DynamicOpenVR.BeatSaber
 		{
 			try
 			{
-				__result = Plugin.Menu.GetActiveChange();
+				__result = Plugin.menu.GetActiveChange();
 			}
 			catch (Exception)
 			{
@@ -77,7 +77,7 @@ namespace DynamicOpenVR.BeatSaber
 		{
 			try
 			{
-				__result = Plugin.Menu.GetState();
+				__result = Plugin.menu.GetState();
 			}
 			catch (Exception)
 			{
@@ -98,11 +98,11 @@ namespace DynamicOpenVR.BeatSaber
 			{
 				if (node == XRNode.LeftHand)
 				{
-					Plugin.LeftSlice.TriggerHapticVibration(0.05f, strength);
+					Plugin.leftSlice.TriggerHapticVibration(0.05f, strength);
 				}
 				else if (node == XRNode.RightHand)
 				{
-					Plugin.RightSlice.TriggerHapticVibration(0.05f, strength);
+					Plugin.rightSlice.TriggerHapticVibration(0.05f, strength);
 				}
 			}
 			catch (Exception) { }

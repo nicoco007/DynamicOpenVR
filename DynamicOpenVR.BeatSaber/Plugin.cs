@@ -25,6 +25,7 @@ using IPA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 using Debug = UnityEngine.Debug;
 using Logger = IPA.Logging.Logger;
 
@@ -32,26 +33,32 @@ namespace DynamicOpenVR.BeatSaber
 {
     public class Plugin : IBeatSaberPlugin
     {
-        public static Logger Logger { get; private set; }
-        public static VectorInput LeftTriggerValue { get; private set; }
-        public static VectorInput RightTriggerValue { get; private set; }
-        public static BooleanInput Menu { get; private set; }
-        public static HapticVibrationOutput LeftSlice { get; private set; }
-        public static HapticVibrationOutput RightSlice { get; private set; }
-        public static PoseInput LeftHandPose { get; private set; }
-        public static PoseInput RightHandPose { get; private set; }
+        public static Logger logger { get; private set; }
+        public static VectorInput leftTriggerValue { get; private set; }
+        public static VectorInput rightTriggerValue { get; private set; }
+        public static BooleanInput menu { get; private set; }
+        public static HapticVibrationOutput leftSlice { get; private set; }
+        public static HapticVibrationOutput rightSlice { get; private set; }
+        public static PoseInput leftHandPose { get; private set; }
+        public static PoseInput rightHandPose { get; private set; }
 
-        private HarmonyInstance harmonyInstance;
+        private HarmonyInstance _harmonyInstance;
 
         public void Init(Logger logger)
         {
-            Logger = logger;
+            Plugin.logger = logger;
 
-            Logger.Info("Starting " + typeof(Plugin).Namespace);
+            Plugin.logger.Info("Starting " + typeof(Plugin).Namespace);
+
+            if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0)
+            {
+                Plugin.logger.Warn($"Current VR SDK is not OpenVR ({XRSettings.loadedDeviceName}). {typeof(Plugin).Namespace} will not be activated.");
+                return;
+            }
 
             if (!OpenVRActionManager.isRunning)
             {
-                Logger.Warn($"OpenVR is not running. {typeof(Plugin).Namespace} will not be activated.");
+                Plugin.logger.Warn($"OpenVR is not running. {typeof(Plugin).Namespace} will not be activated.");
                 return;
             }
 
@@ -76,7 +83,7 @@ namespace DynamicOpenVR.BeatSaber
             string appConfigPath = Path.Combine(steamFolder, "config", "appconfig.json");
             string globalManifestPath = Path.Combine(steamFolder, "config", "steamapps.vrmanifest");
 
-            Logger.Debug("Found Steam at " + steamFolder);
+            logger.Debug("Found Steam at " + steamFolder);
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
@@ -96,7 +103,7 @@ namespace DynamicOpenVR.BeatSaber
             // only rewrite if path isn't in list already or is not at the top
             if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0)
             {
-                Logger.Info($"Adding '{manifestPath}' to '{appConfigPath}'");
+                logger.Info($"Adding '{manifestPath}' to '{appConfigPath}'");
 
                 foreach (JToken token in existing)
                 {
@@ -109,7 +116,7 @@ namespace DynamicOpenVR.BeatSaber
             }
             else
             {
-                Logger.Info("Manifest is already registered");
+                logger.Info("Manifest is already registered");
             }
         }
 
@@ -141,7 +148,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest;
             
-            Logger.Debug("Reading " + globalManifestPath);
+            logger.Debug("Reading " + globalManifestPath);
 
             using (StreamReader reader = new StreamReader(globalManifestPath))
             {
@@ -166,7 +173,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject appConfig;
             
-            Logger.Debug("Reading " + configPath);
+            logger.Debug("Reading " + configPath);
 
             using (StreamReader reader = new StreamReader(configPath))
             {
@@ -183,7 +190,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteBeatSaberManifest(string manifestPath, JObject beatSaberManifest)
         {
-            Logger.Info("Writing manifest to " + manifestPath);
+            logger.Info("Writing manifest to " + manifestPath);
 
             using (StreamWriter writer = new StreamWriter(manifestPath))
             {
@@ -193,7 +200,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteAppConfig(string configPath, JObject appConfig)
         {
-            Logger.Info("Writing app config to " + configPath);
+            logger.Info("Writing app config to " + configPath);
 
             using (StreamWriter writer = new StreamWriter(configPath))
             {
@@ -203,25 +210,25 @@ namespace DynamicOpenVR.BeatSaber
 
         private void RegisterActionSet()
         {
-            Logger.Info("Registering actions");
+            logger.Info("Registering actions");
 
             OpenVRActionManager manager = OpenVRActionManager.instance;
 
-            LeftTriggerValue  = manager.RegisterAction(new VectorInput("/actions/main/in/lefttriggervalue"));
-            RightTriggerValue = manager.RegisterAction(new VectorInput("/actions/main/in/righttriggervalue"));
-            Menu              = manager.RegisterAction(new BooleanInput("/actions/main/in/menu"));
-            LeftSlice         = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/leftslice"));
-            RightSlice        = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/rightslice"));
-            LeftHandPose      = manager.RegisterAction(new PoseInput("/actions/main/in/lefthandpose"));
-            RightHandPose     = manager.RegisterAction(new PoseInput("/actions/main/in/righthandpose"));
+            leftTriggerValue  = manager.RegisterAction(new VectorInput("/actions/main/in/lefttriggervalue"));
+            rightTriggerValue = manager.RegisterAction(new VectorInput("/actions/main/in/righttriggervalue"));
+            menu              = manager.RegisterAction(new BooleanInput("/actions/main/in/menu"));
+            leftSlice         = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/leftslice"));
+            rightSlice        = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/rightslice"));
+            leftHandPose      = manager.RegisterAction(new PoseInput("/actions/main/in/lefthandpose"));
+            rightHandPose     = manager.RegisterAction(new PoseInput("/actions/main/in/righthandpose"));
         }
 
         private void ApplyHarmonyPatches()
         {
-            Logger.Info("Applying input patches");
+            logger.Info("Applying input patches");
 
-            harmonyInstance = HarmonyInstance.Create(GetType().Namespace);
-            harmonyInstance.PatchAll();
+            _harmonyInstance = HarmonyInstance.Create(GetType().Namespace);
+            _harmonyInstance.PatchAll();
         }
 
         public void OnApplicationStart() { }

@@ -31,7 +31,7 @@ namespace DynamicOpenVR
 	{
         public static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
 
-        public static bool isRunning => OpenVrWrapper.isRunning && string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0;
+        public static bool isRunning => OpenVrWrapper.isRunning && string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) == 0;
 
         private static OpenVRActionManager _instance;
 

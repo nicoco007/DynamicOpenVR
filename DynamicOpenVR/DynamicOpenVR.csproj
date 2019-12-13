@@ -48,6 +48,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\Libraries\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>..\..\CustomAvatarsPlugin\Libraries\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.XRModule">
       <HintPath>..\Libraries\UnityEngine.XRModule.dll</HintPath>
     </Reference>

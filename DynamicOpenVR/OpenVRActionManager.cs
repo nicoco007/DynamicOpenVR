@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace DynamicOpenVR
 {
@@ -30,7 +31,7 @@ namespace DynamicOpenVR
 	{
         public static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
 
-        public static bool isRunning => OpenVrWrapper.isRunning;
+        public static bool isRunning => OpenVrWrapper.isRunning && string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0;
 
         private static OpenVRActionManager _instance;
 

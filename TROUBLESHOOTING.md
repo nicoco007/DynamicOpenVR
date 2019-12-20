@@ -21,7 +21,7 @@
    * If it is called "Default bindings for legacy applications for &lt;Your Controllers&gt;," DynamicOpenVR did not register properly. Try completely closing SteamVR and starting Beat Saber again. If the same binding is still there, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
    * If the window is stuck on "Loading current binding..." or something else, then there are most likely no default bindings for the controllers you are currently using.
 
-   If you can see the "Edit this Binding" button, continue to step 8. If not, continue to the next step.
+   If you can see the "Edit this Binding" button, skip to step 8. If not, proceed to the next step.
 
    ![](Documentation/Images/binding-possibilities.png)
 
@@ -103,7 +103,7 @@
 
     ![](Documentation/Images/replace-default-binding.png)
 
-5. A new file whose name starts with `steam_app_620980_binding_` followed by your controller name have been created in the `DynamicOpenVR` folder in your Beat Saber installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber`). Attach that file to an issue, and you're good to go!
+5. A new file whose name starts with `steam_app_620980_binding_` followed by your controller name should have been created in the `DynamicOpenVR` folder in your Beat Saber installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber`). Attach that file to an issue, and you're good to go!
 
    ![](Documentation/Images/files.png)
    

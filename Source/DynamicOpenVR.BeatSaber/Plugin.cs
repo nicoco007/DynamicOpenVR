@@ -50,6 +50,12 @@ namespace DynamicOpenVR.BeatSaber
 
             Plugin.logger.Info("Starting " + typeof(Plugin).Namespace);
 
+            if (NativeMethods.LoadLibrary("openvr_api.dll") == IntPtr.Zero)
+            {
+                Plugin.logger.Warn($"OpenVR API DLL is missing. {typeof(Plugin).Namespace} will not be activated.");
+                return;
+            }
+
             if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0)
             {
                 Plugin.logger.Warn($"Current VR SDK is not OpenVR ({XRSettings.loadedDeviceName}). {typeof(Plugin).Namespace} will not be activated.");

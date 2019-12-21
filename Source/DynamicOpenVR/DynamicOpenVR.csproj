@@ -80,6 +80,7 @@
     <Compile Include="Manifest\ManifestAction.cs" />
     <Compile Include="Manifest\ManifestActionSet.cs" />
     <Compile Include="Manifest\ManifestDefaultBinding.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="OpenVRActionManager.cs" />
     <Compile Include="OpenVRInputException.cs" />
     <Compile Include="OpenVRWrapper.cs" />

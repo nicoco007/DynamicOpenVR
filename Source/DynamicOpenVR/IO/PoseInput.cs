@@ -119,7 +119,7 @@ namespace DynamicOpenVR.IO
         {
             if (_lastFrame != Time.frameCount)
             {
-                _actionData = OpenVrWrapper.GetPoseActionDataForNextFrame(handle);
+                _actionData = OpenVRWrapper.GetPoseActionDataForNextFrame(handle);
                 HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
                 _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
             }

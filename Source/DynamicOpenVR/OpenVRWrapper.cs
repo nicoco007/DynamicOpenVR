@@ -19,9 +19,9 @@ using Valve.VR;
 
 namespace DynamicOpenVR
 {
-	internal static class OpenVrWrapper
+	internal static class OpenVRWrapper
 	{
-		internal static bool isRunning => OpenVR.IsRuntimeInstalled();
+		internal static bool isRuntimeInstalled => OpenVR.IsRuntimeInstalled();
 
 		internal static void SetActionManifestPath(string manifestPath)
 		{

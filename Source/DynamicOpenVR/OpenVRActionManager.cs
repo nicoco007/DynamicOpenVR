@@ -27,11 +27,22 @@ using UnityEngine.XR;
 
 namespace DynamicOpenVR
 {
-	public class OpenVRActionManager : MonoBehaviour
-	{
+    public class OpenVRActionManager : MonoBehaviour
+    {
         public static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
 
-        public static bool isRunning => OpenVrWrapper.isRunning && string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) == 0;
+        // TODO maybe move this to another more general class since it's checking for OpenVR's status, not OpenVRActionManager's status
+        public static bool isRunning
+        {
+            get
+            {
+                if (NativeMethods.LoadLibrary("openvr_api.dll") == IntPtr.Zero) return false;
+                if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0) return false;
+                if (!OpenVRWrapper.isRuntimeInstalled) return false;
+
+                return true;
+            }
+        }
 
         private static OpenVRActionManager _instance;
 
@@ -39,7 +50,7 @@ namespace DynamicOpenVR
 		{
 			get
 			{
-                if (!OpenVrWrapper.isRunning)
+                if (!isRunning)
                 {
                     throw new InvalidOperationException("OpenVR is not running");
                 }
@@ -66,14 +77,14 @@ namespace DynamicOpenVR
             List<ManifestDefaultBinding> defaultBindingFiles = CombineAndWriteBindings();
             CombineAndWriteManifest(defaultBindingFiles);
                 
-            OpenVrWrapper.SetActionManifestPath(kActionManifestPath);
+            OpenVRWrapper.SetActionManifestPath(kActionManifestPath);
 
             List<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
             _actionSetHandles = new ulong[actionSetNames.Count];
 
             for (int i = 0; i < actionSetNames.Count; i++)
             {
-                _actionSetHandles[i] = OpenVrWrapper.GetActionSetHandle(actionSetNames[i]);
+                _actionSetHandles[i] = OpenVRWrapper.GetActionSetHandle(actionSetNames[i]);
             }
 
             foreach (var action in _actions.Values)
@@ -86,7 +97,7 @@ namespace DynamicOpenVR
         {
             if (_actionSetHandles != null)
             {
-                OpenVrWrapper.UpdateActionState(_actionSetHandles);
+                OpenVRWrapper.UpdateActionState(_actionSetHandles);
             }
         }
 

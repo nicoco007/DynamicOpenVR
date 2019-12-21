@@ -28,7 +28,7 @@ namespace DynamicOpenVR.IO
         /// <param name="frequency">The frequency in cycles per second of the haptic event.</param>
 		public void TriggerHapticVibration(float durationSeconds, float magnitude, float frequency = 150f)
 		{
-			OpenVrWrapper.TriggerHapticVibrationAction(handle, 0, durationSeconds, frequency, magnitude);
+			OpenVRWrapper.TriggerHapticVibrationAction(handle, 0, durationSeconds, frequency, magnitude);
 		}
 	}
 }

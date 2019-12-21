@@ -31,8 +31,8 @@ namespace DynamicOpenVR.IO
             {
                 if (_lastFrame != Time.frameCount)
                 {
-                    _actionData = OpenVrWrapper.GetSkeletalActionData(handle);
-                    _summaryData = OpenVrWrapper.GetSkeletalSummaryData(handle);
+                    _actionData = OpenVRWrapper.GetSkeletalActionData(handle);
+                    _summaryData = OpenVRWrapper.GetSkeletalSummaryData(handle);
                 }
 
                 _lastFrame = Time.frameCount;
@@ -47,8 +47,8 @@ namespace DynamicOpenVR.IO
             {
                 if (_lastFrame != Time.frameCount)
                 {
-                    _actionData = OpenVrWrapper.GetSkeletalActionData(handle);
-                    _summaryData = OpenVrWrapper.GetSkeletalSummaryData(handle);
+                    _actionData = OpenVRWrapper.GetSkeletalActionData(handle);
+                    _summaryData = OpenVRWrapper.GetSkeletalSummaryData(handle);
                 }
 
                 _lastFrame = Time.frameCount;

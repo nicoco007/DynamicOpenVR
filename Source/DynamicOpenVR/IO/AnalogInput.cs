@@ -30,7 +30,7 @@ namespace DynamicOpenVR.IO
             {
                 if (_lastFrame != Time.frameCount)
                 {
-                    _actionData = OpenVrWrapper.GetAnalogActionData(handle);
+                    _actionData = OpenVRWrapper.GetAnalogActionData(handle);
                 }
 
                 _lastFrame = Time.frameCount;

@@ -1,6 +1,8 @@
 # Troubleshooting
 ## Buttons and/or tracking aren't working properly
-*If this happens after uninstalling DynamicOpenVR, please see [Removing DynamicOpenVR](TROUBLESHOOTING.md#removing-dynamicopenvr).*
+*If this happens after uninstalling DynamicOpenVR, please see [Completely Removing DynamicOpenVR](TROUBLESHOOTING.md#completely-removing-dynamicopenvr).*
+
+Input or tracking not working are usually a symptom of missing or broken input bindings. Follow the instructions below to diagnose this kind of issue.
 
 ### Diagnosing issues with bindings
 1. Start Beat Saber.
@@ -17,7 +19,7 @@
    ![](Documentation/Images/manage-bindings-default.png)
 
 5. You should now see which binding is currently being used by Beat Saber.
-   * If it is called "Default Beat Saber Bindings," you should be getting input so something might not be right elsewhere.
+   * If it is called "Default Beat Saber Bindings," your game should technically be working. Try completely closing SteamVR and starting Beat Saber again. If input still doesn't work, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
    * If it is called "Default bindings for legacy applications for &lt;Your Controllers&gt;," DynamicOpenVR did not register properly. Try completely closing SteamVR and starting Beat Saber again. If the same binding is still there, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
    * If the window is stuck on "Loading current binding..." or something else, then there are most likely no default bindings for the controllers you are currently using.
 
@@ -29,7 +31,7 @@
 
    ![](Documentation/Images/enable-advanced-settings.png)
 
-7. In the window that opens, select "Beat Saber." It should be at the top of the list. Note that this step can be skipped if you already see the window from the next step.
+7. In the window that opens, select "Beat Saber." Since you have the game already open, it should be at the top of the list.
 
    ![](Documentation/Images/select-game.png)
 
@@ -41,47 +43,79 @@
 
    ![](Documentation/Images/create-binding.png)
 
-10. You should now see the screen below. If you only see the "Add Chords" button (or if any of the buttons are missing), proceed to the next step. If not, skip to step 13.
+10. You should now see the screen below. If you can see all 3 buttons, skip to step 14. If you only see the "Add Chords" button (or if any of the buttons are missing), proceed to the next step.
 
-   ![](Documentation/Images/verify-buttons.png)
+    ![](Documentation/Images/verify-buttons.png)
 
 11. Press the back button in the top right corner and select one of the following controllers:
     * Index Controller
     * Oculus Touch
     * Vive Controller
    
-    For this guide, we will choose the Index Controller.
+    You **must** choose one of the above controllers because they come with default bindings. For this guide, we will choose the Index Controller.
 
     ![](Documentation/Images/select-different-controller.png)
 
-12. Press the "Edit" button under "Current Binding," then immediately go back, choose your own controller again, and scroll down to press the "Create New Binding" button once more.
+12. Press the "Edit" button under "Current Binding."
 
     ![](Documentation/Images/edit-existing-binding.png)
 
+13. Immediately go back, choose your own controller again, and scroll down to press the "Create New Binding" button once more.
+
     ![](Documentation/Images/go-back.png)
 
-13. Start configuring the binding. To add pose bindings, press the "Edit Action Poses" button. To add haptic bindings, press the "Edit Haptics" button.
- 
-    The default bindings use the following (note that the naming may be different depending on the controller type):
+    ![](Documentation/Images/select-right-controller.png)
+
+    ![](Documentation/Images/create-binding.png)
+
+14. Start configuring the binding. Start with buttons and triggers.
     * "Menu Button" &rarr; Menu Click
     * "Left Trigger Pull" &rarr; Left Trigger Pull
     * "Right Trigger Pull" &rarr; Right Trigger Pull
-    * "Left Hand Pose" &rarr; Left Hand Raw
-    * "Right Hand Pose" &rarr; Right Hand Raw
-    * "Left Slice Haptic Feedback" &rarr; "Left Hand Haptics"
-    * "Right Slice Haptic Feedback" &rarr; "Right Hand Haptics"
+
+    Below is an example of adding the Left Trigger Pull action.
+
+    1. Press the "+" button next to the input to which you want to bind an action. For this example, we will add the action to the left trigger.
+
+        ![](Documentation/Images/plus.png)
+
+    2. Next, select the mode in which the input will be used. Since we want to use the trigger as, well, a trigger, select "Trigger."
+
+       ![](Documentation/Images/use-input-as.png)
+
+    3. Select the value to be used for the action. Since we want the trigger's value between 0 and 1, select "Pull."
+
+       ![](Documentation/Images/pull.png)
+
+    4. Finally, select the action to bind to the value. Since this is the left hand trigger, select "Left Trigger Pull."
+
+       ![](Documentation/Images/vector1-actions.png)
+    
+    Repeat these steps for the right trigger and the menu button. Note that for the menu button, you should be choosing "Button" as the mode and "Click" as the value to be used.
+
+15. Once you are done adding the button bindings, your screen should look like this.
 
     ![](Documentation/Images/bindings.png)
 
+16. After you've done the buttons, add the following action poses by pressing the "Edit Action Poses" button.
+
+    * "Left Hand Pose" &rarr; Left Hand Raw
+    * "Right Hand Pose" &rarr; Right Hand Raw
+
     ![](Documentation/Images/poses.png)
+
+17. Finally, you can add the haptics.
+    
+    * "Left Slice Haptic Feedback" &rarr; "Left Hand Haptics"
+    * "Right Slice Haptic Feedback" &rarr; "Right Hand Haptics"
 
     ![](Documentation/Images/haptics.png)
 
-14. Once you are done, you can save your bindings by pressing "Save Personal Binding" at the bottom of the screen, entering a name and a description, and pressing the "Save" button. Note that it may take a few seconds for the binding to save and for the popup to close (don't press cancel!).
+18. Once you are done, you can save your bindings by pressing "Save Personal Binding" at the bottom of the screen, entering a name and a description, and pressing the "Save" button. Note that it may take a few seconds for the binding to save and for the popup to close (don't press cancel!).
 
     ![](Documentation/Images/save.png)
 
-15. And there you go! Your bindings are now configured and you should be able to use in-game input properly. You can now close the settings windows and enjoy your game! If you would like to submit the bindings you just created to be included by default in DynamicOpenVR, go to the section below.
+19. And there you go! Your bindings are now configured and you should be able to use in-game input properly. You can now close the settings windows and enjoy your game! If you would like to submit the bindings you just created to be included by default in DynamicOpenVR, continue on to the section below.
 
     ![](Documentation/Images/done.png)
 
@@ -108,7 +142,7 @@
    ![](Documentation/Images/files.png)
    
 
-## Removing DynamicOpenVR
+## Completely Removing DynamicOpenVR
 DynamicOpenVR generates files specific to your computer to improve user experience in SteamVR's interface. These files may cause issues after partially removing DynamicOpenVR. To completely uninstall DynamicOpenVR, make sure these files/folders no longer exist in Beat Saber's installation folder:
 
 * Libs\DynamicOpenVR.dll

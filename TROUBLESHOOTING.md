@@ -1,10 +1,15 @@
 # Troubleshooting
-## Buttons and/or tracking aren't working properly
+## Table of Contents
+1. [Buttons and/or tracking aren't working properly](TROUBLESHOOTING.md#buttons-andor-tracking-arent-working-properly)
+2. [Sabers/hands disappear when brought up to the face](TROUBLESHOOTING.md#sabershands-disappear-when-brought-up-to-the-face)
+3. [Completely Removing DynamicOpenVR](TROUBLESHOOTING.md#completely-removing-dynamicopenvr)
+
+## 1. Buttons and/or tracking aren't working properly
 *If this happens after uninstalling DynamicOpenVR, please see [Completely Removing DynamicOpenVR](TROUBLESHOOTING.md#completely-removing-dynamicopenvr).*
 
 Input or tracking not working are usually a symptom of missing or broken input bindings. Follow the instructions below to diagnose this kind of issue.
 
-### Diagnosing issues with bindings
+### 1.1 Diagnosing issues with bindings
 1. Start Beat Saber.
 2. Open Controller Settings by clicking on the SteamVR menu button and choosing Devices > Controller Settings.
    
@@ -119,7 +124,7 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
     ![](Documentation/Images/done.png)
 
-### Exporting bindings so they can be included by default in DynamicOpenVR
+### 1.2 Exporting bindings so they can be included by default in DynamicOpenVR
 
 1. Open Controller Settings and make sure Advanced Settings are set to show (see above if necessary). Select "Developer" in the left-hand pane, turn "Enable debugging options in the input binding user interface" to ON, and press the "Restart SteamVR" button that appears afterwards.
 
@@ -141,8 +146,12 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
    ![](Documentation/Images/files.png)
    
+## 2. Sabers/hands disappear when brought up to the face
 
-## Completely Removing DynamicOpenVR
+After running the game at least once, there should be a file called `CustomAvatars.json` in the `UserData` folder inside Beat Saber's installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber` for Steam). Open that file in any text editor (e.g. Notepad) and change the number beside `cameraNearClipPlane` (which should be 0.3 by default) to anything down to 0.01. A smaller number means stuff will be visible closer to your eyes but may affect performance negatively.
+
+
+## 3. Completely Removing DynamicOpenVR
 DynamicOpenVR generates files specific to your computer to improve user experience in SteamVR's interface. These files may cause issues after partially removing DynamicOpenVR. To completely uninstall DynamicOpenVR, make sure these files/folders no longer exist in Beat Saber's installation folder:
 
 * Libs\DynamicOpenVR.dll

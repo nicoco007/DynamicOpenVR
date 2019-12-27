@@ -142,9 +142,10 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
     ![](Documentation/Images/replace-default-binding.png)
 
-5. A new file whose name starts with `steam_app_620980_binding_` followed by your controller name should have been created in the `DynamicOpenVR` folder in your Beat Saber installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber`). Attach that file to an issue, and you're good to go!
+5. A new file whose name starts with `steam_app_620980_binding_` followed by your controller name should have been created in the `DynamicOpenVR` folder in your Beat Saber installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber`). Compress that file into a ZIP, attach it to a [new issue](https://github.com/nicoco007/DynamicOpenVR/issues/new) (GitHub unfortunately does not allow attaching JSON files directly), and you're good to go!
 
    ![](Documentation/Images/files.png)
+   
    
 ## 2. Sabers/hands disappear when brought up to the face
 

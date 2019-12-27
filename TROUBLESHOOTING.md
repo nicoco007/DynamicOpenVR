@@ -1,8 +1,8 @@
 # Troubleshooting
 ## Table of Contents
-1. [Buttons and/or tracking aren't working properly](TROUBLESHOOTING.md#buttons-andor-tracking-arent-working-properly)
-2. [Sabers/hands disappear when brought up to the face](TROUBLESHOOTING.md#sabershands-disappear-when-brought-up-to-the-face)
-3. [Completely Removing DynamicOpenVR](TROUBLESHOOTING.md#completely-removing-dynamicopenvr)
+1. [Buttons and/or tracking aren't working properly](#1-buttons-andor-tracking-arent-working-properly)
+2. [Sabers/hands disappear when brought up to the face](#2-sabershands-disappear-when-brought-up-to-the-face)
+3. [Completely Removing DynamicOpenVR](#3-completely-removing-dynamicopenvr)
 
 ## 1. Buttons and/or tracking aren't working properly
 *If this happens after uninstalling DynamicOpenVR, please see [Completely Removing DynamicOpenVR](TROUBLESHOOTING.md#completely-removing-dynamicopenvr).*

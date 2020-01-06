@@ -160,4 +160,12 @@ DynamicOpenVR generates files specific to your computer to improve user experien
 * DynamicOpenVR\
 * beatsaber.vrmanifest
 
-If you're still having issues after removing all of these, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
+After you have deleted the above, restart SteamVR, go back to Manage Controller Settings for Beat Saber, and make sure that the "Default" option is selected (not "Custom"). If you get an error saying something about the action manifest missing, double-check that you deleted **all** the files and folders listed above, and try following the steps below:
+
+1. Close SteamVR.
+2. Go to the `config` folder inside your Steam installation folder (usually `C:\Program Files (x86)\Steam`)
+3. Open the `appconfig.json` file in any text editor (e.g. Notepad).
+4. Remove the line `"D:\\SteamLibrary\\steamapps\\common\\Beat Saber\\beatsaber.vrmanifest",` (should be the first line under `manifest_paths: [`) and save the file.
+5. Restart SteamVR once again and make sure that "Default" is selected in Manage Controller Bindings for Beat Saber.
+
+If you're still having issues after following all of these steps, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).

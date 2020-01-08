@@ -9,6 +9,8 @@
 ## 1. Buttons and/or tracking aren't working properly
 *If this happens after uninstalling DynamicOpenVR, please see [Completely Removing DynamicOpenVR](TROUBLESHOOTING.md#completely-removing-dynamicopenvr).*
 
+*If you have previously selected a community-created binding, **it will not work**. Please revert to the default bindings (follow the instructions below if you don't know how).
+
 Input or tracking not working are usually a symptom of missing or broken input bindings. Follow the instructions below to diagnose this kind of issue.
 
 ### 1.1 Diagnosing issues with bindings
@@ -28,6 +30,7 @@ Input or tracking not working are usually a symptom of missing or broken input b
 5. You should now see which binding is currently being used by Beat Saber.
    * If it is called "Default Beat Saber Bindings," your game should technically be working. Try completely closing SteamVR and starting Beat Saber again. If input still doesn't work, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
    * If it is called "Default bindings for legacy applications for &lt;Your Controllers&gt;," DynamicOpenVR did not register properly. Try completely closing SteamVR and starting Beat Saber again. If the same binding is still there, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
+   * If it is called anything else, you have most likely previously selected a community created binding. These will not work with DynamicOpenVR since it switches the game to the new input system. You will need to revert to the default bindings for input to work properly (follow the instructions below if you don't know how).
    * If the window is stuck on "Loading current binding..." or something else, then there are most likely no default bindings for the controllers you are currently using.
 
    If you can see the "Edit this Binding" button, skip to step 8. If not, proceed to the next step.

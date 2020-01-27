@@ -38,7 +38,7 @@ namespace DynamicOpenVR
         {
             get
             {
-                if (NativeMethods.LoadLibrary("openvr_api.dll") == IntPtr.Zero) return false;
+                if (NativeMethods.LoadLibrary("openvr_api") == IntPtr.Zero) return false;
                 if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0) return false;
                 if (!OpenVRWrapper.isRuntimeInstalled) return false;
 

@@ -50,9 +50,9 @@ namespace DynamicOpenVR.BeatSaber
 
             Plugin.logger.Info("Starting " + typeof(Plugin).Namespace);
 
-            if (NativeMethods.LoadLibrary("openvr_api.dll") == IntPtr.Zero)
+            if (NativeMethods.LoadLibrary("openvr_api") == IntPtr.Zero)
             {
-                Plugin.logger.Warn($"OpenVR API DLL is missing. {typeof(Plugin).Namespace} will not be activated.");
+                Plugin.logger.Warn($"OpenVR API assembly could not be loaded. {typeof(Plugin).Namespace} will not be activated.");
                 return;
             }
 
@@ -71,15 +71,14 @@ namespace DynamicOpenVR.BeatSaber
             try
             {
                 AddManifestToSteamConfig();
+                RegisterActionSet();
+                ApplyHarmonyPatches();
             }
             catch (Exception ex)
             {
-                Debug.LogError("Failed to configure manifest");
-                Debug.LogError(ex);
+                logger.Error($"Failed to initialize {typeof(Plugin).Namespace}.");
+                logger.Error(ex);
             }
-
-            RegisterActionSet();
-            ApplyHarmonyPatches();
         }
 
         private void AddManifestToSteamConfig()

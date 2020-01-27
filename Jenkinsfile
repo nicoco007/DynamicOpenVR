@@ -32,7 +32,7 @@ pipeline {
         bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.pdb Packaging-Debug\\Libs'
         bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\Plugins'
         bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.pdb Packaging-Debug\\Plugins'
-        bat '7z a DynamicOpenVR.BeatSaber.DEBUG.zip -r "./Packaging-Debug/*"'
+        bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-DEBUG.zip -r \"./Packaging-Debug/*\""
         archiveArtifacts "DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-DEBUG.zip"
       }
     }
@@ -48,7 +48,7 @@ pipeline {
         bat 'msbuild Source\\DynamicOpenVR.sln /p:Configuration=Release /p:Platform="Any CPU" /p:AutomatedBuild=true'
         bat 'copy Source\\DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging-Release\\Libs'
         bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\Plugins'
-        bat '7z a DynamicOpenVR.BeatSaber.RELEASE.zip -r "./Packaging-Release/*"'
+        bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-RELEASE.zip -r \"./Packaging-Release/*\""
         archiveArtifacts "DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-RELEASE.zip"
       }
     }

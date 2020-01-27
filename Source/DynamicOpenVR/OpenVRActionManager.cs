@@ -120,8 +120,16 @@ namespace DynamicOpenVR
         }
 
         private void CombineAndWriteManifest()
-		{
-            string[] actionFiles = Directory.GetFiles("DynamicOpenVR/Actions");
+        {
+            string actionsFolder = Path.Combine("DynamicOpenVR", "Actions");
+
+            if (!Directory.Exists(actionsFolder))
+            {
+                Debug.LogWarning("Actions folder does not exist!");
+                return;
+            }
+
+            string[] actionFiles = Directory.GetFiles(actionsFolder);
             var actionManifests = new List<ActionManifest>();
             ushort version = 0;
 
@@ -161,7 +169,15 @@ namespace DynamicOpenVR
 
         private List<ManifestDefaultBinding> CombineAndWriteBindings(int manifestVersion)
         {
-            string[] bindingFiles = Directory.GetFiles("DynamicOpenVR/Bindings");
+            string bindingsFolder = Path.Combine("DynamicOpenVR", "Bindings");
+
+            if (!Directory.Exists(bindingsFolder))
+            {
+                Debug.LogWarning("Bindings folder does not exist!");
+                return new List<ManifestDefaultBinding>();
+            }
+
+            string[] bindingFiles = Directory.GetFiles(bindingsFolder);
             var defaultBindings = new List<DefaultBinding>();
 
             foreach (string bindingFile in bindingFiles)

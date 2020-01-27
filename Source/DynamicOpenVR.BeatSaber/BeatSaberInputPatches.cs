@@ -26,6 +26,7 @@ namespace DynamicOpenVR.BeatSaber
 	[HarmonyPatch("TriggerValue", MethodType.Normal)]
     internal class TriggerValuePatch
 	{
+        [HarmonyPriority(Priority.First)]
 		public static bool Prefix(XRNode node, ref float __result)
 		{
 			try
@@ -53,6 +54,7 @@ namespace DynamicOpenVR.BeatSaber
     internal class MenuButtonDownPatch
 	{
         // ReSharper disable once RedundantAssignment
+        [HarmonyPriority(Priority.First)]
         public static bool Prefix(ref bool __result)
 		{
 			try
@@ -73,6 +75,7 @@ namespace DynamicOpenVR.BeatSaber
     internal class MenuButtonPatch
 	{
         // ReSharper disable once RedundantAssignment
+        [HarmonyPriority(Priority.First)]
 		public static bool Prefix(ref bool __result)
 		{
 			try
@@ -92,6 +95,7 @@ namespace DynamicOpenVR.BeatSaber
 	[HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
     internal class TriggerHapticPulsePatch
 	{
+        [HarmonyPriority(Priority.First)]
 		public static bool Prefix(XRNode node, float strength)
 		{
 			try

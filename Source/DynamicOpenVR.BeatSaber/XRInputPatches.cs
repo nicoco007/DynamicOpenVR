@@ -28,6 +28,7 @@ namespace DynamicOpenVR.BeatSaber
     [HarmonyPatch("GetLocalPosition", MethodType.Normal)]
     class InputTrackingGetLocalPositionPatch
     {
+        [HarmonyPriority(Priority.First)]
         public static bool Prefix(XRNode node, ref Vector3 __result)
         {
             if (node == XRNode.LeftHand)
@@ -50,6 +51,7 @@ namespace DynamicOpenVR.BeatSaber
     [HarmonyPatch("GetLocalRotation", MethodType.Normal)]
     class InputTrackingGetLocalRotationPatch
     {
+        [HarmonyPriority(Priority.First)]
         public static bool Prefix(XRNode node, ref Quaternion __result)
         {
             if (node == XRNode.LeftHand)
@@ -72,6 +74,7 @@ namespace DynamicOpenVR.BeatSaber
     [HarmonyPatch("GetNodeStates", MethodType.Normal)]
     class InputTrackingGetNodeStatesPatch
     {
+        [HarmonyPriority(Priority.First)]
         public static void Postfix(List<XRNodeState> nodeStates)
         {
             foreach (XRNodeState nodeState in nodeStates.ToList())

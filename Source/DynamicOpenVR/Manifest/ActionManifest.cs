@@ -21,16 +21,19 @@ namespace DynamicOpenVR.Manifest
 {
     internal class ActionManifest
     {
+        [JsonProperty(PropertyName = "version")]
+        internal ulong version { get; set; } = 1;
+
         [JsonProperty(PropertyName = "actions")]
-        internal List<ManifestAction> Actions { get; set; } = new List<ManifestAction>();
+        internal List<ManifestAction> actions { get; set; } = new List<ManifestAction>();
 
         [JsonProperty(PropertyName = "action_sets")]
-        internal List<ManifestActionSet> ActionSets { get; set; } = new List<ManifestActionSet>();
+        internal List<ManifestActionSet> actionSets { get; set; } = new List<ManifestActionSet>();
 
         [JsonProperty(PropertyName = "default_bindings")]
-        internal List<ManifestDefaultBinding> DefaultBindings { get; set; } = new List<ManifestDefaultBinding>();
+        internal List<ManifestDefaultBinding> defaultBindings { get; set; } = new List<ManifestDefaultBinding>();
 
         [JsonProperty(PropertyName = "localization")]
-        internal List<Dictionary<string, string>> Localization { get; set; } = new List<Dictionary<string, string>>();
+        internal List<Dictionary<string, string>> localization { get; set; } = new List<Dictionary<string, string>>();
     }
 }

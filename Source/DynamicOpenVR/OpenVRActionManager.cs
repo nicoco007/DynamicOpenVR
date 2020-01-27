@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
 using UnityEngine.XR;
@@ -74,8 +76,7 @@ namespace DynamicOpenVR
         {
             _instantiated = true;
             
-            List<ManifestDefaultBinding> defaultBindingFiles = CombineAndWriteBindings();
-            CombineAndWriteManifest(defaultBindingFiles);
+            CombineAndWriteManifest();
                 
             OpenVRWrapper.SetActionManifestPath(kActionManifestPath);
 
@@ -118,10 +119,11 @@ namespace DynamicOpenVR
             return action;
         }
 
-        private void CombineAndWriteManifest(List<ManifestDefaultBinding> defaultBindings)
+        private void CombineAndWriteManifest()
 		{
             string[] actionFiles = Directory.GetFiles("DynamicOpenVR/Actions");
             var actionManifests = new List<ActionManifest>();
+            ushort version = 0;
 
             foreach (string actionFile in actionFiles)
             {
@@ -129,7 +131,9 @@ namespace DynamicOpenVR
                 {
                     using (var reader = new StreamReader(actionFile))
                     {
-                        actionManifests.Add(JsonConvert.DeserializeObject<ActionManifest>(reader.ReadToEnd()));
+                        string data = reader.ReadToEnd();
+                        actionManifests.Add(JsonConvert.DeserializeObject<ActionManifest>(data));
+                        version += BitConverter.ToUInt16(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(data)), 0);
                     }
                 }
                 catch (Exception ex)
@@ -138,21 +142,24 @@ namespace DynamicOpenVR
                 }
             }
 
+            List<ManifestDefaultBinding> defaultBindings = CombineAndWriteBindings(version);
+
             using (var writer = new StreamWriter(kActionManifestPath))
             {
                 var manifest = new ActionManifest()
                 {
-                    Actions = actionManifests.SelectMany(m => m.Actions).ToList(),
-                    ActionSets = actionManifests.SelectMany(m => m.ActionSets).ToList(),
-                    DefaultBindings = defaultBindings,
-                    Localization = CombineLocalizations(actionManifests)
+                    version = version,
+                    actions = actionManifests.SelectMany(m => m.actions).ToList(),
+                    actionSets = actionManifests.SelectMany(m => m.actionSets).ToList(),
+                    defaultBindings = defaultBindings,
+                    localization = CombineLocalizations(actionManifests)
                 };
 
                 writer.WriteLine(JsonConvert.SerializeObject(manifest, Formatting.Indented));
             }
 		}
 
-        private List<ManifestDefaultBinding> CombineAndWriteBindings()
+        private List<ManifestDefaultBinding> CombineAndWriteBindings(int manifestVersion)
         {
             string[] bindingFiles = Directory.GetFiles("DynamicOpenVR/Bindings");
             var defaultBindings = new List<DefaultBinding>();
@@ -178,6 +185,7 @@ namespace DynamicOpenVR
             {
                 var defaultBinding = new DefaultBinding
                 {
+                    actionManifestVersion = manifestVersion,
                     name = "Default Beat Saber Bindings",
                     description = "Action bindings for Beat Saber.",
                     controllerType = controllerType,
@@ -230,7 +238,7 @@ namespace DynamicOpenVR
 
             foreach (var manifest in manifests)
             {
-                foreach (var language in manifest.Localization)
+                foreach (var language in manifest.localization)
                 {
                     if (!language.ContainsKey("language_tag"))
                     {

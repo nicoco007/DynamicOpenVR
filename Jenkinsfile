@@ -4,6 +4,19 @@ pipeline {
       label 'windows && vs-15'
     }
   }
+  environment {
+    GIT_HASH = """${bat(
+                  returnStdout: true,
+                  script: "@git log -n 1 --pretty=%%h"
+               )}""".trim()
+    
+    GIT_REV = """${bat(
+                  returnStdout: true,
+                  script: "@git tag -l --points-at HEAD"
+               )}""".split("\n").last().trim()
+    
+    GIT_VERSION = """${GIT_REV.length() > 0 ? GIT_REV : GIT_HASH}"""
+  }
   stages {
     stage('Prepare Debug') {
       steps {
@@ -20,7 +33,7 @@ pipeline {
         bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\Plugins'
         bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.pdb Packaging-Debug\\Plugins'
         bat '7z a DynamicOpenVR.BeatSaber.DEBUG.zip -r "./Packaging-Debug/*"'
-        archiveArtifacts 'DynamicOpenVR.BeatSaber.DEBUG.zip'
+        archiveArtifacts "DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-DEBUG.zip"
       }
     }
     stage('Prepare Release') {
@@ -36,7 +49,7 @@ pipeline {
         bat 'copy Source\\DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging-Release\\Libs'
         bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\Plugins'
         bat '7z a DynamicOpenVR.BeatSaber.RELEASE.zip -r "./Packaging-Release/*"'
-        archiveArtifacts 'DynamicOpenVR.BeatSaber.RELEASE.zip'
+        archiveArtifacts "DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-RELEASE.zip"
       }
     }
     stage('Clean up') {

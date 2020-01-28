@@ -82,6 +82,8 @@ namespace DynamicOpenVR
                 {
                     Debug.LogError($"An error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
                     Debug.LogError(ex);
+
+                    DeregisterAction(action);
                 }
             }
         }
@@ -103,6 +105,8 @@ namespace DynamicOpenVR
                 {
                     Debug.LogError($"An error occurred when fetching data for action '{action.name}'. Action has been disabled.");
                     Debug.LogError(ex);
+
+                    DeregisterAction(action);
                 }
             }
         }

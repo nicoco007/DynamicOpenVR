@@ -19,7 +19,7 @@ using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-    public class PoseInput : Input
+    public class PoseInput : OVRInput
     {
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
@@ -29,47 +29,38 @@ namespace DynamicOpenVR.IO
         /// <summary>
         /// Whether the device is currently connected or not.
         /// </summary>
-        public bool deviceConnected => actionData.pose.bDeviceIsConnected;
+        public bool deviceConnected => _actionData.pose.bDeviceIsConnected;
 
-        public bool isPoseValid => actionData.pose.bPoseIsValid;
+        public bool isPoseValid => _actionData.pose.bPoseIsValid;
 
-        public Vector3 velocity => ToVector3(actionData.pose.vVelocity);
+        public Pose pose => _pose;
 
-        public Vector3 angularVelocity => ToVector3(actionData.pose.vAngularVelocity);
+        public Vector3 position => _pose.position;
+
+        public Quaternion rotation => _pose.rotation;
+
+        public Vector3 velocity => ToVector3(_actionData.pose.vVelocity);
+
+        public Vector3 angularVelocity => ToVector3(_actionData.pose.vAngularVelocity);
 
         /// <summary>
         /// Whether the device is currently tracking properly or not.
         /// </summary>
         /// <returns></returns>
-        public bool isTracking => actionData.pose.eTrackingResult == ETrackingResult.Running_OK;
+        public bool isTracking => _actionData.pose.eTrackingResult == ETrackingResult.Running_OK;
 
-        public Pose pose
-        {
-            get
-            {
-                GetActionData();
-                return _pose;
-            }
-        }
-
-        private InputPoseActionData_t actionData
-        {
-            get
-            {
-                GetActionData();
-                return _actionData;
-            }
-        }
-
-        private int _lastFrame;
         private InputPoseActionData_t _actionData;
         private Pose _pose;
 
         public PoseInput(string name) : base(name) { }
 
-        public override bool IsActive()
+        public override bool isActive => _actionData.bActive;
+
+        internal override void UpdateData()
         {
-            return _actionData.bActive;
+            _actionData = OpenVRWrapper.GetPoseActionDataForNextFrame(handle);
+            HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
+            _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
         }
 
         private Vector3 GetPosition(HmdMatrix34_t rawMatrix)
@@ -113,18 +104,6 @@ namespace DynamicOpenVR.IO
         private Vector3 ToVector3(HmdVector3_t vector)
         {
             return new Vector3(vector.v0, vector.v1, vector.v2);
-        }
-
-        private void GetActionData()
-        {
-            if (_lastFrame != Time.frameCount)
-            {
-                _actionData = OpenVRWrapper.GetPoseActionDataForNextFrame(handle);
-                HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
-                _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
-            }
-
-            _lastFrame = Time.frameCount;
         }
     }
 }

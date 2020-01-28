@@ -14,63 +14,39 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using UnityEngine;
 using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-	public class BooleanInput : Input
+	public class BooleanInput : OVRInput
     {
-        private int _lastFrame;
         private InputDigitalActionData_t _actionData;
-
-        private InputDigitalActionData_t actionData
-        {
-            get
-            {
-                if (_lastFrame != Time.frameCount)
-                {
-                    _actionData = OpenVRWrapper.GetDigitalActionData(handle);
-                }
-
-                _lastFrame = Time.frameCount;
-
-                return _actionData;
-            }
-        }
 
 		public BooleanInput(string name) : base(name) { }
 
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
         /// </summary>
-        public override bool IsActive()
-        {
-            return actionData.bActive;
-        }
+        public override bool isActive => _actionData.bActive;
 
         /// <summary>
         /// The current state of this digital action. True means the user wants to perform this action.
         /// </summary>
-		public bool GetState()
-		{
-            return actionData.bState;
-		}
+		public bool state => _actionData.bState;
 
         /// <summary>
         /// If the state changed from disabled to enabled since it was last checked.
         /// </summary>
-		public bool GetActiveChange()
-		{
-			return actionData.bState && actionData.bChanged;
-		}
+		public bool activeChange => _actionData.bState && _actionData.bChanged;
 
         /// <summary>
         /// If the state changed from enabled to disabled since it was last checked.
         /// </summary>
-        public bool GetInactiveChange()
+        public bool inactiveChange => !_actionData.bState && _actionData.bChanged;
+
+        internal override void UpdateData()
         {
-			return !actionData.bState && actionData.bChanged;
-		}
-	}
+            _actionData = OpenVRWrapper.GetDigitalActionData(handle);
+        }
+    }
 }

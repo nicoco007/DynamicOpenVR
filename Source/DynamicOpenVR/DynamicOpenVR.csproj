@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -68,7 +68,7 @@
     <Compile Include="IO\AnalogInput.cs" />
     <Compile Include="IO\BooleanInput.cs" />
     <Compile Include="IO\HapticVibrationOutput.cs" />
-    <Compile Include="IO\Input.cs" />
+    <Compile Include="IO\OVRInput.cs" />
     <Compile Include="IO\OVRAction.cs" />
     <Compile Include="IO\PoseInput.cs" />
     <Compile Include="IO\SkeletalInput.cs" />
@@ -83,6 +83,7 @@
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OpenVRActionManager.cs" />
     <Compile Include="OpenVRInputException.cs" />
+    <Compile Include="OpenVRStatus.cs" />
     <Compile Include="OpenVRWrapper.cs" />
     <Compile Include="openvr_api.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

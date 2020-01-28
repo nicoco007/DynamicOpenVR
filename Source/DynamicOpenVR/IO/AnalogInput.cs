@@ -14,39 +14,24 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using UnityEngine;
 using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-    public abstract class AnalogInput : Input
+    public abstract class AnalogInput : OVRInput
     {
-        private int _lastFrame;
-        private InputAnalogActionData_t _actionData;
-
-        protected InputAnalogActionData_t actionData
-        {
-            get
-            {
-                if (_lastFrame != Time.frameCount)
-                {
-                    _actionData = OpenVRWrapper.GetAnalogActionData(handle);
-                }
-
-                _lastFrame = Time.frameCount;
-
-                return _actionData;
-            }
-        }
+        protected InputAnalogActionData_t _actionData;
 
         protected AnalogInput(string name) : base(name) { }
 
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
         /// </summary>
-        public override bool IsActive()
+        public override bool isActive => _actionData.bActive;
+
+        internal override void UpdateData()
         {
-            return actionData.bActive;
+            _actionData = OpenVRWrapper.GetAnalogActionData(handle);
         }
     }
 }

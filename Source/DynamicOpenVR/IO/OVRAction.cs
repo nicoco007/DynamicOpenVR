@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace DynamicOpenVR.IO
 {
@@ -35,8 +36,9 @@ namespace DynamicOpenVR.IO
             }
 
             this.name = name.ToLowerInvariant();
+            OpenVRActionManager.instance.RegisterAction(this);
         }
-        
+
         internal string GetActionSetName()
         {
             return string.Join("/", name.Split('/').Take(3));
@@ -45,6 +47,12 @@ namespace DynamicOpenVR.IO
         internal void UpdateHandle()
         {
             handle = OpenVRWrapper.GetActionHandle(name);
+
+            if (handle <= 0)
+            {
+                Debug.LogError($"Got invalid handle for action '{name}'. Make sure it is defined in the action manifest and try again.");
+                OpenVRActionManager.instance.DeregisterAction(this);
+            }
         }
     }
 }

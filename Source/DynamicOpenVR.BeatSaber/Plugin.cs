@@ -50,21 +50,9 @@ namespace DynamicOpenVR.BeatSaber
 
             Plugin.logger.Info("Starting " + typeof(Plugin).Namespace);
 
-            if (NativeMethods.LoadLibrary("openvr_api") == IntPtr.Zero)
+            if (!OpenVRStatus.isRunning)
             {
-                Plugin.logger.Warn($"OpenVR API assembly could not be loaded. {typeof(Plugin).Namespace} will not be activated.");
-                return;
-            }
-
-            if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0)
-            {
-                Plugin.logger.Warn($"Current VR SDK is not OpenVR ({XRSettings.loadedDeviceName}). {typeof(Plugin).Namespace} will not be activated.");
-                return;
-            }
-
-            if (!OpenVRActionManager.isRunning)
-            {
-                Plugin.logger.Warn($"OpenVR is not running. {typeof(Plugin).Namespace} will not be activated.");
+                Plugin.logger.Warn(OpenVRStatus.errorMessage + "; Exiting.");
                 return;
             }
 
@@ -92,7 +80,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
-            beatSaberManifest["action_manifest_path"] = OpenVRActionManager.kActionManifestPath;
+            beatSaberManifest["action_manifest_path"] = OpenVRStatus.kActionManifestPath;
 
             JObject vrManifest = new JObject
             {
@@ -217,15 +205,13 @@ namespace DynamicOpenVR.BeatSaber
         {
             logger.Info("Registering actions");
 
-            OpenVRActionManager manager = OpenVRActionManager.instance;
-
-            leftTriggerValue  = manager.RegisterAction(new VectorInput("/actions/main/in/lefttriggervalue"));
-            rightTriggerValue = manager.RegisterAction(new VectorInput("/actions/main/in/righttriggervalue"));
-            menu              = manager.RegisterAction(new BooleanInput("/actions/main/in/menu"));
-            leftSlice         = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/leftslice"));
-            rightSlice        = manager.RegisterAction(new HapticVibrationOutput("/actions/main/out/rightslice"));
-            leftHandPose      = manager.RegisterAction(new PoseInput("/actions/main/in/lefthandpose"));
-            rightHandPose     = manager.RegisterAction(new PoseInput("/actions/main/in/righthandpose"));
+            leftTriggerValue  = new VectorInput("/actions/main/in/lefttriggervalue");
+            rightTriggerValue = new VectorInput("/actions/main/in/righttriggervalue");
+            menu              = new BooleanInput("/actions/main/in/menu");
+            leftSlice         = new HapticVibrationOutput("/actions/main/out/leftslice");
+            rightSlice        = new HapticVibrationOutput("/actions/main/out/rightslice");
+            leftHandPose      = new PoseInput("/actions/main/in/lefthandpose");
+            rightHandPose     = new PoseInput("/actions/main/in/righthandpose");
         }
 
         private void ApplyHarmonyPatches()

@@ -16,13 +16,18 @@
 
 namespace DynamicOpenVR.IO
 {
-    public abstract class Input : OVRAction
+    public abstract class OVRInput : OVRAction
     {
-        protected Input(string name) : base(name) { }
+        protected OVRInput(string name) : base(name) { }
 
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
         /// </summary>
-        public abstract bool IsActive();
+        public abstract bool isActive { get; }
+
+        /// <summary>
+        /// Update data from OpenVR. Called every frame.
+        /// </summary>
+        internal abstract void UpdateData();
     }
 }

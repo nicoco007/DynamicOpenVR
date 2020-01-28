@@ -14,65 +14,31 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using UnityEngine;
 using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-	public class SkeletalInput : Input
+	public class SkeletalInput : OVRInput
     {
-        private int _lastFrame;
         private InputSkeletalActionData_t _actionData;
         private VRSkeletalSummaryData_t _summaryData;
 
-        protected InputSkeletalActionData_t actionData
-        {
-            get
-            {
-                if (_lastFrame != Time.frameCount)
-                {
-                    _actionData = OpenVRWrapper.GetSkeletalActionData(handle);
-                    _summaryData = OpenVRWrapper.GetSkeletalSummaryData(handle);
-                }
-
-                _lastFrame = Time.frameCount;
-
-                return _actionData;
-            }
-        }
-
-        protected VRSkeletalSummaryData_t summaryData
-        {
-            get
-            {
-                if (_lastFrame != Time.frameCount)
-                {
-                    _actionData = OpenVRWrapper.GetSkeletalActionData(handle);
-                    _summaryData = OpenVRWrapper.GetSkeletalSummaryData(handle);
-                }
-
-                _lastFrame = Time.frameCount;
-
-                return _summaryData;
-            }
-        }
-
-		public SkeletalInput(string name) : base(name) { }
+        public SkeletalInput(string name) : base(name) { }
 
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
         /// </summary>
-        public override bool IsActive()
-        {
-            return actionData.bActive;
-        }
+        public override bool isActive => _actionData.bActive;
 
         /// <summary>
         /// Retrieves the summary data of the skeleton (finger curl and splay).
         /// </summary>
-		public SkeletalSummaryData GetSummaryData()
-		{
-			return new SkeletalSummaryData(summaryData);
-		}
-	}
+        public SkeletalSummaryData summaryData => new SkeletalSummaryData(_summaryData);
+
+        internal override void UpdateData()
+        {
+            _actionData = OpenVRWrapper.GetSkeletalActionData(handle);
+            _summaryData = OpenVRWrapper.GetSkeletalSummaryData(handle);
+        }
+    }
 }

@@ -25,34 +25,18 @@ using System.Security.Cryptography;
 using System.Text;
 using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace DynamicOpenVR
 {
-    public class OpenVRActionManager : MonoBehaviour
+    internal class OpenVRActionManager : MonoBehaviour
     {
-        public static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
-
-        // TODO maybe move this to another more general class since it's checking for OpenVR's status, not OpenVRActionManager's status
-        public static bool isRunning
-        {
-            get
-            {
-                if (NativeMethods.LoadLibrary("openvr_api") == IntPtr.Zero) return false;
-                if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0) return false;
-                if (!OpenVRWrapper.isRuntimeInstalled) return false;
-
-                return true;
-            }
-        }
-
         private static OpenVRActionManager _instance;
 
         public static OpenVRActionManager instance
 		{
 			get
 			{
-                if (!isRunning)
+                if (!OpenVRStatus.isRunning)
                 {
                     throw new InvalidOperationException("OpenVR is not running");
                 }
@@ -78,7 +62,7 @@ namespace DynamicOpenVR
             
             CombineAndWriteManifest();
                 
-            OpenVRWrapper.SetActionManifestPath(kActionManifestPath);
+            OpenVRWrapper.SetActionManifestPath(OpenVRStatus.kActionManifestPath);
 
             List<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
             _actionSetHandles = new ulong[actionSetNames.Count];
@@ -90,7 +74,15 @@ namespace DynamicOpenVR
 
             foreach (var action in _actions.Values)
             {
-                action.UpdateHandle();
+                try
+                {
+                    action.UpdateHandle();
+                }
+                catch (OpenVRInputException ex)
+                {
+                    Debug.LogError($"An error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
+                    Debug.LogError(ex);
+                }
             }
         }
 
@@ -100,9 +92,22 @@ namespace DynamicOpenVR
             {
                 OpenVRWrapper.UpdateActionState(_actionSetHandles);
             }
+
+            foreach (var action in _actions.Values.OfType<OVRInput>())
+            {
+                try
+                {
+                    action.UpdateData();
+                }
+                catch (OpenVRInputException ex)
+                {
+                    Debug.LogError($"An error occurred when fetching data for action '{action.name}'. Action has been disabled.");
+                    Debug.LogError(ex);
+                }
+            }
         }
 
-        public T RegisterAction<T>(T action) where T : OVRAction
+        public void RegisterAction(OVRAction action)
         {
             if (_instantiated)
             {
@@ -115,8 +120,11 @@ namespace DynamicOpenVR
             }
 
             _actions.Add(action.name, action);
+        }
 
-            return action;
+        public void DeregisterAction(OVRAction action)
+        {
+            _actions.Remove(action.name);
         }
 
         private void CombineAndWriteManifest()
@@ -152,7 +160,7 @@ namespace DynamicOpenVR
 
             List<ManifestDefaultBinding> defaultBindings = CombineAndWriteBindings(version);
 
-            using (var writer = new StreamWriter(kActionManifestPath))
+            using (var writer = new StreamWriter(OpenVRStatus.kActionManifestPath))
             {
                 var manifest = new ActionManifest()
                 {

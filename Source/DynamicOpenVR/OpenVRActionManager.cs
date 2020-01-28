@@ -25,6 +25,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace DynamicOpenVR
 {
@@ -52,9 +53,10 @@ namespace DynamicOpenVR
 			}
         }
 
-        private Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
-        private ulong[] _actionSetHandles;
+        private Dictionary<int, OVRAction> _actions = new Dictionary<int, OVRAction>();
+        private List<ulong> _actionSetHandles;
         private bool _instantiated = false;
+        private HashSet<string> _actionSetNames;
 
         private void Start()
         {
@@ -64,27 +66,17 @@ namespace DynamicOpenVR
                 
             OpenVRWrapper.SetActionManifestPath(OpenVRStatus.kActionManifestPath);
 
-            List<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct().ToList();
-            _actionSetHandles = new ulong[actionSetNames.Count];
+            _actionSetNames = new HashSet<string>(_actions.Values.Select(action => action.GetActionSetName()).Distinct());
+            _actionSetHandles = new List<ulong>(_actionSetNames.Count);
 
-            for (int i = 0; i < actionSetNames.Count; i++)
+            foreach (string actionSetName in _actionSetNames)
             {
-                _actionSetHandles[i] = OpenVRWrapper.GetActionSetHandle(actionSetNames[i]);
+                TryAddActionSet(actionSetName);
             }
 
-            foreach (var action in _actions.Values)
+            foreach (var action in _actions.Values.ToList())
             {
-                try
-                {
-                    action.UpdateHandle();
-                }
-                catch (OpenVRInputException ex)
-                {
-                    Debug.LogError($"An error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
-                    Debug.LogError(ex);
-
-                    DeregisterAction(action);
-                }
+                TryUpdateHandle(action);
             }
         }
 
@@ -95,7 +87,7 @@ namespace DynamicOpenVR
                 OpenVRWrapper.UpdateActionState(_actionSetHandles);
             }
 
-            foreach (var action in _actions.Values.OfType<OVRInput>())
+            foreach (var action in _actions.Values.OfType<OVRInput>().ToList())
             {
                 try
                 {
@@ -113,22 +105,29 @@ namespace DynamicOpenVR
 
         public void RegisterAction(OVRAction action)
         {
+            if (_actions.ContainsKey(action.GetHashCode()))
+            {
+                throw new InvalidOperationException("Action was already registered.");
+            }
+
+            _actions.Add(action.GetHashCode(), action);
+
             if (_instantiated)
             {
-                throw new InvalidOperationException("Cannot register new actions once game is running");
-            }
+                TryUpdateHandle(action);
 
-            if (_actions.ContainsKey(action.name))
-            {
-                throw new InvalidOperationException($"An action with the name '{action.name}' was already registered.");
-            }
+                string actionSetName = action.GetActionSetName();
 
-            _actions.Add(action.name, action);
+                if (!_actionSetNames.Contains(actionSetName))
+                {
+                    TryAddActionSet(actionSetName);
+                }
+            }
         }
 
         public void DeregisterAction(OVRAction action)
         {
-            _actions.Remove(action.name);
+            _actions.Remove(action.GetHashCode());
         }
 
         private void CombineAndWriteManifest()
@@ -178,6 +177,34 @@ namespace DynamicOpenVR
                 writer.WriteLine(JsonConvert.SerializeObject(manifest, Formatting.Indented));
             }
 		}
+
+        private void TryUpdateHandle(OVRAction action)
+        {
+            try
+            {
+                action.UpdateHandle();
+            }
+            catch (OpenVRInputException ex)
+            {
+                Debug.LogError($"An error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
+                Debug.LogError(ex);
+
+                DeregisterAction(action);
+            }
+        }
+
+        private void TryAddActionSet(string actionSetName)
+        {
+            try
+            {
+                _actionSetHandles.Add(OpenVRWrapper.GetActionSetHandle(actionSetName));
+            }
+            catch (OpenVRInputException ex)
+            {
+                Debug.LogError($"An error occurred when fetching handle for action set '{actionSetName}'.");
+                Debug.LogError(ex);
+            }
+        }
 
         private List<ManifestDefaultBinding> CombineAndWriteBindings(int manifestVersion)
         {

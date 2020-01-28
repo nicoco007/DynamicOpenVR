@@ -25,8 +25,6 @@ using IPA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
-using UnityEngine.XR;
-using Debug = UnityEngine.Debug;
 using Logger = IPA.Logging.Logger;
 
 namespace DynamicOpenVR.BeatSaber

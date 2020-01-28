@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Valve.VR;
 
@@ -61,11 +62,11 @@ namespace DynamicOpenVR
 			return handle;
 		}
 
-		internal static void UpdateActionState(ulong[] handles)
+		internal static void UpdateActionState(List<ulong> handles)
 		{
-			VRActiveActionSet_t[] activeActionSets = new VRActiveActionSet_t[handles.Length];
+			VRActiveActionSet_t[] activeActionSets = new VRActiveActionSet_t[handles.Count];
 
-			for (int i = 0; i < handles.Length; i++)
+			for (int i = 0; i < handles.Count; i++)
 			{
 				activeActionSets[i] = new VRActiveActionSet_t
 				{

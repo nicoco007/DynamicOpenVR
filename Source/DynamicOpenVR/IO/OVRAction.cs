@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace DynamicOpenVR.IO
 {
-    public abstract class OVRAction
+    public abstract class OVRAction : IDisposable
     {
         private static readonly Regex kNameRegex = new Regex(@"^\/actions\/[a-z0-9_-]+\/(?:in|out)\/[a-z0-9_-]+$", RegexOptions.IgnoreCase);
 
@@ -30,6 +30,8 @@ namespace DynamicOpenVR.IO
 
         protected OVRAction(string name)
         {
+            Debug.LogWarning(name + " IS ALIVE");
+
             if (!kNameRegex.IsMatch(name))
             {
                 throw new Exception($"Unexpected action name '{name}'; name should only contain letters, numbers, dashes, and underscores.");
@@ -37,6 +39,11 @@ namespace DynamicOpenVR.IO
 
             this.name = name.ToLowerInvariant();
             OpenVRActionManager.instance.RegisterAction(this);
+        }
+
+        ~OVRAction()
+        {
+            Debug.LogWarning(name + " IS DEAD");
         }
 
         internal string GetActionSetName()
@@ -53,6 +60,11 @@ namespace DynamicOpenVR.IO
                 Debug.LogError($"Got invalid handle for action '{name}'. Make sure it is defined in the action manifest and try again.");
                 OpenVRActionManager.instance.DeregisterAction(this);
             }
+        }
+
+        public void Dispose()
+        {
+            OpenVRActionManager.instance.DeregisterAction(this);
         }
     }
 }

@@ -220,8 +220,19 @@ namespace DynamicOpenVR.BeatSaber
             _harmonyInstance.PatchAll();
         }
 
+        public void OnApplicationQuit()
+        {
+            // not really necessary here, just following good practices
+            leftTriggerValue.Dispose();
+            rightTriggerValue.Dispose();
+            menu.Dispose();
+            leftSlice.Dispose();
+            rightSlice.Dispose();
+            leftHandPose.Dispose();
+            rightHandPose.Dispose();
+        }
+
         public void OnApplicationStart() { }
-        public void OnApplicationQuit() { }
         public void OnFixedUpdate() { }
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }

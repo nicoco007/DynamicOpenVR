@@ -17,7 +17,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEngine;
+using DynamicOpenVR.Logging;
 
 namespace DynamicOpenVR.IO
 {
@@ -30,8 +30,6 @@ namespace DynamicOpenVR.IO
 
         protected OVRAction(string name)
         {
-            Debug.LogWarning(name + " IS ALIVE");
-
             if (!kNameRegex.IsMatch(name))
             {
                 throw new Exception($"Unexpected action name '{name}'; name should only contain letters, numbers, dashes, and underscores.");
@@ -39,11 +37,6 @@ namespace DynamicOpenVR.IO
 
             this.name = name.ToLowerInvariant();
             OpenVRActionManager.instance.RegisterAction(this);
-        }
-
-        ~OVRAction()
-        {
-            Debug.LogWarning(name + " IS DEAD");
         }
 
         internal string GetActionSetName()
@@ -57,7 +50,7 @@ namespace DynamicOpenVR.IO
 
             if (handle <= 0)
             {
-                Debug.LogError($"Got invalid handle for action '{name}'. Make sure it is defined in the action manifest and try again.");
+                Logger.Error($"Got invalid handle for action '{name}'. Make sure it is defined in the action manifest and try again.");
                 OpenVRActionManager.instance.DeregisterAction(this);
             }
         }

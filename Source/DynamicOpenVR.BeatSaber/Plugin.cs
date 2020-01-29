@@ -45,12 +45,16 @@ namespace DynamicOpenVR.BeatSaber
         public void Init(Logger logger)
         {
             Plugin.logger = logger;
+            Logging.Logger.handler = new IPALogHandler();
+        }
 
-            Plugin.logger.Info("Starting " + typeof(Plugin).Namespace);
+        public void OnApplicationStart()
+        {
+            logger.Info("Starting " + typeof(Plugin).Namespace);
 
             if (!OpenVRStatus.isRunning)
             {
-                Plugin.logger.Warn(OpenVRStatus.errorMessage + "; Exiting.");
+                logger.Warn(OpenVRStatus.errorMessage + "; Exiting.");
                 return;
             }
 
@@ -65,6 +69,18 @@ namespace DynamicOpenVR.BeatSaber
                 logger.Error($"Failed to initialize {typeof(Plugin).Namespace}.");
                 logger.Error(ex);
             }
+        }
+
+        public void OnApplicationQuit()
+        {
+            // not really necessary here, just following good practices
+            leftTriggerValue.Dispose();
+            rightTriggerValue.Dispose();
+            menu.Dispose();
+            leftSlice.Dispose();
+            rightSlice.Dispose();
+            leftHandPose.Dispose();
+            rightHandPose.Dispose();
         }
 
         private void AddManifestToSteamConfig()
@@ -220,19 +236,6 @@ namespace DynamicOpenVR.BeatSaber
             _harmonyInstance.PatchAll();
         }
 
-        public void OnApplicationQuit()
-        {
-            // not really necessary here, just following good practices
-            leftTriggerValue.Dispose();
-            rightTriggerValue.Dispose();
-            menu.Dispose();
-            leftSlice.Dispose();
-            rightSlice.Dispose();
-            leftHandPose.Dispose();
-            rightHandPose.Dispose();
-        }
-
-        public void OnApplicationStart() { }
         public void OnFixedUpdate() { }
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }

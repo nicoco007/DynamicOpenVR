@@ -25,7 +25,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DynamicOpenVR.DefaultBindings;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
+using Logger = DynamicOpenVR.Logging.Logger;
 
 namespace DynamicOpenVR
 {
@@ -95,8 +95,8 @@ namespace DynamicOpenVR
                 }
                 catch (OpenVRInputException ex)
                 {
-                    Debug.LogError($"An error occurred when fetching data for action '{action.name}'. Action has been disabled.");
-                    Debug.LogError(ex);
+                    Logger.Error($"An error occurred when fetching data for action '{action.name}'. Action has been disabled.");
+                    Logger.Error(ex);
 
                     DeregisterAction(action);
                 }
@@ -136,7 +136,7 @@ namespace DynamicOpenVR
 
             if (!Directory.Exists(actionsFolder))
             {
-                Debug.LogWarning("Actions folder does not exist!");
+                Logger.Warn("Actions folder does not exist!");
                 return;
             }
 
@@ -157,7 +157,7 @@ namespace DynamicOpenVR
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"An error of type {ex.GetType().FullName} occured when trying to parse {actionFile}: {ex.Message}");
+                    Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse {actionFile}: {ex.Message}");
                 }
             }
 
@@ -186,8 +186,8 @@ namespace DynamicOpenVR
             }
             catch (OpenVRInputException ex)
             {
-                Debug.LogError($"An error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
-                Debug.LogError(ex);
+                Logger.Error($"An error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
+                Logger.Error(ex);
 
                 DeregisterAction(action);
             }
@@ -201,8 +201,8 @@ namespace DynamicOpenVR
             }
             catch (OpenVRInputException ex)
             {
-                Debug.LogError($"An error occurred when fetching handle for action set '{actionSetName}'.");
-                Debug.LogError(ex);
+                Logger.Error($"An error occurred when fetching handle for action set '{actionSetName}'.");
+                Logger.Error(ex);
             }
         }
 
@@ -212,7 +212,7 @@ namespace DynamicOpenVR
 
             if (!Directory.Exists(bindingsFolder))
             {
-                Debug.LogWarning("Bindings folder does not exist!");
+                Logger.Warn("Bindings folder does not exist!");
                 return new List<ManifestDefaultBinding>();
             }
 
@@ -230,7 +230,7 @@ namespace DynamicOpenVR
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"An error of type {ex.GetType().FullName} occured when trying to parse {bindingFile}: {ex.Message}");
+                    Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse {bindingFile}: {ex.Message}");
                 }
             }
 
@@ -309,7 +309,7 @@ namespace DynamicOpenVR
                     {
                         if (combinedLocalizations.ContainsKey(kvp.Key))
                         {
-                            Debug.LogWarning($"Duplicate entry {kvp.Key}");
+                            Logger.Warn($"Duplicate entry {kvp.Key}");
                         }
                         else
                         {

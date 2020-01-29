@@ -76,6 +76,9 @@
     <Compile Include="IO\Vector2Input.cs" />
     <Compile Include="IO\Vector3Input.cs" />
     <Compile Include="IO\VectorInput.cs" />
+    <Compile Include="Logging\ILogHandler.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\UnityDebugLogHandler.cs" />
     <Compile Include="Manifest\ActionManifest.cs" />
     <Compile Include="Manifest\ManifestAction.cs" />
     <Compile Include="Manifest\ManifestActionSet.cs" />

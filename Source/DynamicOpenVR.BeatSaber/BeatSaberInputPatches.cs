@@ -95,7 +95,7 @@ namespace DynamicOpenVR.BeatSaber
 	[HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
     internal class TriggerHapticPulsePatch
 	{
-        [HarmonyPriority(Priority.First)]
+        [HarmonyPriority(Priority.Last)]
 		public static bool Prefix(XRNode node, float strength)
 		{
 			try

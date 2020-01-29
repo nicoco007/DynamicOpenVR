@@ -43,6 +43,9 @@
     <Reference Include="IPA.Loader">
       <HintPath>..\..\Libraries\IPA.Loader.dll</HintPath>
     </Reference>
+    <Reference Include="MainAssembly">
+      <HintPath>..\..\Libraries\MainAssembly.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json.12.0.0.0">
       <HintPath>..\..\Libraries\Newtonsoft.Json.12.0.0.0.dll</HintPath>
     </Reference>

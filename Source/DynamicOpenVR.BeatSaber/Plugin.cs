@@ -19,12 +19,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DynamicOpenVR.IO;
 using Harmony;
 using IPA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using Valve.VR;
 using Logger = IPA.Logging.Logger;
 
 namespace DynamicOpenVR.BeatSaber
@@ -41,6 +44,8 @@ namespace DynamicOpenVR.BeatSaber
         public static PoseInput rightHandPose { get; private set; }
 
         private HarmonyInstance _harmonyInstance;
+
+        private readonly HashSet<EVREventType> pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
 
         public void Init(Logger logger)
         {
@@ -240,6 +245,14 @@ namespace DynamicOpenVR.BeatSaber
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
         public void OnSceneUnloaded(Scene scene) { }
-        public void OnUpdate() { }
+
+        public void OnUpdate()
+        {
+            VREvent_t evt = default;
+            if (OpenVR.System.PollNextEvent(ref evt, (uint)Marshal.SizeOf(typeof(VREvent_t))) && pauseEvents.Contains((EVREventType) evt.eventType))
+            {
+                Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
+            }
+        }
     }
 }

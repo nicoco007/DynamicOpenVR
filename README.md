@@ -5,7 +5,8 @@
 
 Unity scripts to allow dynamic creation of OpenVR actions at runtime. Intended to allow 3rd parties to add actions and bindings to an existing game to extend functionality.
 
-More information coming soon.
+## Installing
+Download the latest release from [the releases page](https://github.com/nicoco007/DynamicOpenVR/releases) and extract **the entire contents** of the ZIP file into your Beat Saber folder (for Steam, this is usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber`), **overwriting any existing files**.
 
 ## Troubleshooting
 See [the troubleshooting guide](https://github.com/nicoco007/DynamicOpenVR/blob/master/TROUBLESHOOTING.md).

@@ -102,11 +102,11 @@ namespace DynamicOpenVR.BeatSaber
 			{
 				if (node == XRNode.LeftHand)
 				{
-					Plugin.leftSlice.TriggerHapticVibration(0.05f, strength);
+					Plugin.leftSlice.TriggerHapticVibration(0.05f, strength, 25f);
 				}
 				else if (node == XRNode.RightHand)
 				{
-					Plugin.rightSlice.TriggerHapticVibration(0.05f, strength);
+					Plugin.rightSlice.TriggerHapticVibration(0.05f, strength, 25f);
 				}
 			}
 			catch (Exception) { }

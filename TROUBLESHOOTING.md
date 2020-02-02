@@ -1,19 +1,57 @@
-# Troubleshooting
-**BEFORE DOING ANY OF THIS, PLEASE MAKE SURE THAT ALL YOUR MODS ARE UP TO DATE!**
+# Table of Contents
 
-## Table of Contents
-1. [Buttons and/or tracking aren't working properly](#1-buttons-andor-tracking-arent-working-properly)
-2. [Sabers/hands disappear when brought up to the face](#2-sabershands-disappear-when-brought-up-to-the-face)
-3. [Completely Removing DynamicOpenVR](#3-completely-removing-dynamicopenvr)
+If anything in this guide is unclear, feel free to [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new).
 
-## 1. Buttons and/or tracking aren't working properly
+- [Table of Contents](#table-of-contents)
+- [Checking the installation](#checking-the-installation)
+- [Buttons and/or tracking aren't working properly](#buttons-andor-tracking-arent-working-properly)
+  - [Diagnosing issues with bindings](#diagnosing-issues-with-bindings)
+  - [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers)
+  - [Getting to the binding editor when the Edit this Binding button is not visible](#getting-to-the-binding-editor-when-the-edit-this-binding-button-is-not-visible)
+  - [Deleting the current binding](#deleting-the-current-binding)
+  - [Restore missing buttons in the bindings UI](#restore-missing-buttons-in-the-bindings-ui)
+  - [Exporting bindings so they can be included by default in DynamicOpenVR](#exporting-bindings-so-they-can-be-included-by-default-in-dynamicopenvr)
+- [Sabers/hands disappear when brought up to the face](#sabershands-disappear-when-brought-up-to-the-face)
+- [Completely Removing DynamicOpenVR](#completely-removing-dynamicopenvr)
+
+# Checking the installation
+Before trying anything below, please make sure all the files listed below are present in your Beat Saber installation folder (indentation indicates the contents of a folder). If you do not have file extensions visible in Windows Explorer, you will not see the `.json`/`.dll`/`.vrmanifest` at the end of the files; this is not a problem.
+
+* DynamicOpenVR
+  * Actions
+    * beatsaber.json
+    * customavatars.json
+  * Bindings
+    * beatsaber_holographic_controller.json
+    * beatsaber_knuckles.json
+    * beatsaber_oculus_touch.json
+    * beatsaber_vive_controller.json
+    * customavatars_knuckles.json
+* Libs
+  * DynamicOpenVR.dll
+* Plugins
+  * DynamicOpenVR.BeatSaber.dll
+
+If any of these files is missing, please reinstall both DynamicOpenVR and Custom Avatars. If you have successfully started the game at least once, these files should also be present in your Beat Saber installation folder:
+
+* DynamicOpenVR
+  * action_manifest.json
+  * default_bindings_holographic_controllers.json
+  * default_bindings_knuckles.json
+  * default_bindings_oculus_touch.json
+  * default_bindings_vive_controller.json
+* beatsaber.vrmanifest
+
+If any of these are missing, DynamicOpenVR did not load properly. Please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new).
+
+# Buttons and/or tracking aren't working properly
 *If this happens after uninstalling DynamicOpenVR, please see [Completely Removing DynamicOpenVR](TROUBLESHOOTING.md#completely-removing-dynamicopenvr).*
 
 *If you have previously selected a community-created binding, **it will not work**. Please revert to the default bindings (follow the instructions below if you don't know how).*
 
-Input or tracking not working are usually a symptom of missing or broken input bindings. Follow the instructions below to diagnose this kind of issue.
+Input or tracking not working are usually a symptom of missing or broken input bindings. Follow the instructions below to diagnose this kind of issue. Make sure you have read [Checking the installation](#checking-the-installation) before doing any of this.
 
-### 1.1 Diagnosing issues with bindings
+## Diagnosing issues with bindings
 1. Start Beat Saber.
 2. Open Controller Settings by clicking on the SteamVR menu button and choosing Devices > Controller Settings.
    
@@ -28,57 +66,29 @@ Input or tracking not working are usually a symptom of missing or broken input b
    ![](Documentation/Images/manage-bindings-default.png)
 
 5. You should now see which binding is currently being used by Beat Saber.
-   * If it is called "Default Beat Saber Bindings," your game should technically be working. Try completely closing SteamVR and starting Beat Saber again. If input still doesn't work, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
-   * If it is called "Default bindings for legacy applications for &lt;Your Controllers&gt;," DynamicOpenVR did not register properly. Try completely closing SteamVR and starting Beat Saber again. If the same binding is still there, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
-   * If it is called anything else, you have most likely previously selected a community created binding. These will not work with DynamicOpenVR since it switches the game to the new input system. You will need to revert to the default bindings for input to work properly (follow the instructions below if you don't know how).
-   * If the window is stuck on "Loading current binding..." or something else, then there are most likely no default bindings for the controllers you are currently using.
+   * If it is called "Default Beat Saber Bindings," your game should technically be working. Try completely closing SteamVR and starting Beat Saber again. If input still doesn't work, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new).
+   * If it is called "Default bindings for legacy applications for &lt;Your Controllers&gt;," DynamicOpenVR did not register properly. Try completely closing SteamVR, checking if all the files listed in [Checking the installation](#checking-the-installation) are present, and starting Beat Saber again. If the same binding is still there, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new).
+   * If it is stuck on "Loading current binding&hellip;," SteamVR is most likely failing to load your previous binding. See [Deleting the current binding](#deleting-the-current-binding) to fix that and restart this section from step 1.
 
-   If you can see the "Edit this Binding" button, skip to step 8. If not, proceed to the next step.
+   If you can see the "Edit this Binding" button, continue to [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers) below.
 
    ![](Documentation/Images/binding-possibilities.png)
 
-6. Close the binding management popup and click "Show" under "Advanced Settings" in the bottom left corner. You should now see the "Show Old Binding UI" button; press it.
+## Creating a new binding for your controllers
 
-   ![](Documentation/Images/enable-advanced-settings.png)
-
-7. In the window that opens, select "Beat Saber." Since you have the game already open, it should be at the top of the list.
-
-   ![](Documentation/Images/select-game.png)
-
-8. Make sure the controllers you are currently using are selected.
+1. Make sure the controllers you are currently using are selected.
 
    ![](Documentation/Images/select-right-controller.png)
 
-9. Scroll all the way down until you see the "Create New Binding" button and press it.
+2. Scroll all the way down until you see the "Create New Binding" button and press it.
 
    ![](Documentation/Images/create-binding.png)
 
-10. You should now see the screen below. If you can see all 3 buttons, skip to step 14. If you only see the "Add Chords" button (or if any of the buttons are missing), proceed to the next step.
+3. You should now see the screen below. You should see all 3 buttons highlighted below. If you only see the "Add Chords" button (or if any of the buttons are missing), see [Restore missing buttons in the bindings UI](#restore-missing-buttons-in-the-bindings-UI).
 
     ![](Documentation/Images/verify-buttons.png)
 
-11. Press the back button in the top right corner and select one of the following controllers:
-    * Index Controller
-    * Oculus Touch
-    * Vive Controller
-   
-    You **must** choose one of the above controllers because they come with default bindings. For this guide, we will choose the Index Controller.
-
-    ![](Documentation/Images/select-different-controller.png)
-
-12. Press the "Edit" button under "Current Binding."
-
-    ![](Documentation/Images/edit-existing-binding.png)
-
-13. Immediately go back, choose your own controller again, and scroll down to press the "Create New Binding" button once more.
-
-    ![](Documentation/Images/go-back.png)
-
-    ![](Documentation/Images/select-right-controller.png)
-
-    ![](Documentation/Images/create-binding.png)
-
-14. Start configuring the binding. Start with buttons and triggers.
+4.  Start configuring the binding. Start with buttons and triggers.
     * "Menu Button" &rarr; Menu Click
     * "Left Trigger Pull" &rarr; Left Trigger Pull
     * "Right Trigger Pull" &rarr; Right Trigger Pull
@@ -89,7 +99,7 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
         ![](Documentation/Images/plus.png)
 
-    2. Next, select the mode in which the input will be used. Since we want to use the trigger as, well, a trigger, select "Trigger."
+    2. Next, select the mode in which the input will be used. Since we want to use the trigger as, well, a trigger, select "Trigger." If no actions show up when configuring an input, it is most likely because there is a file missing. Please read [Checking the installation](#checking-the-installation) to make sure no files are missing and try again. If you are still having problems, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new).
 
        ![](Documentation/Images/use-input-as.png)
 
@@ -103,33 +113,76 @@ Input or tracking not working are usually a symptom of missing or broken input b
     
     Repeat these steps for the right trigger and the menu button. Note that for the menu button, you should be choosing "Button" as the mode and "Click" as the value to be used.
 
-15. Once you are done adding the button bindings, your screen should look like this.
+5.  Once you are done adding the button bindings, your screen should look like this.
 
     ![](Documentation/Images/bindings.png)
 
-16. After you've done the buttons, add the following action poses by pressing the "Edit Action Poses" button.
+6.  After you've done the buttons, add the following action poses by pressing the "Edit Action Poses" button.
 
     * "Left Hand Pose" &rarr; Left Hand Raw
     * "Right Hand Pose" &rarr; Right Hand Raw
 
     ![](Documentation/Images/poses.png)
 
-17. Finally, you can add the haptics.
+7.  Finally, you can add the haptics.
     
     * "Left Slice Haptic Feedback" &rarr; "Left Hand Haptics"
     * "Right Slice Haptic Feedback" &rarr; "Right Hand Haptics"
 
     ![](Documentation/Images/haptics.png)
 
-18. Once you are done, you can save your bindings by pressing "Save Personal Binding" at the bottom of the screen, entering a name and a description, and pressing the "Save" button. Note that it may take a few seconds for the binding to save and for the popup to close (don't press cancel!).
+8.  Once you are done, you can save your bindings by pressing "Save Personal Binding" at the bottom of the screen, entering a name and a description, and pressing the "Save" button. Note that it may take a few seconds for the binding to save and for the popup to close (don't press cancel!).
 
     ![](Documentation/Images/save.png)
 
-19. And there you go! Your bindings are now configured and you should be able to use in-game input properly. You can now close the settings windows and enjoy your game! If you would like to submit the bindings you just created to be included by default in DynamicOpenVR, continue on to the section below.
+9.  And there you go! Your bindings are now configured and you should be able to use in-game input properly. You can now close the settings windows and enjoy your game! If you would like to submit the bindings you just created to be included by default in DynamicOpenVR, see [Exporting bindings so they can be included by default in DynamicOpenVR](#exporting-bindings-so-they-can-be-included-by-default-in-dynamicopenvr)
 
     ![](Documentation/Images/done.png)
 
-### 1.2 Exporting bindings so they can be included by default in DynamicOpenVR
+## Getting to the binding editor when the Edit this Binding button is not visible
+
+1. Close the binding management popup and click "Show" under "Advanced Settings" in the bottom left corner. You should now see the "Show Old Binding UI" button; press it.
+
+   ![](Documentation/Images/enable-advanced-settings.png)
+
+2. In the window that opens, select "Beat Saber." Since you have the game already open, it should be at the top of the list.
+
+   ![](Documentation/Images/select-game.png)
+
+3. Continue with [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers).
+
+## Deleting the current binding
+
+1. Close SteamVR.
+2. Go to your Steam installation folder (usually `C:\Program Files (x86)\Steam`).
+3. Go to the `userdata` folder.
+4. There will be one or more folders inside that are just numbers; these are the user IDs of each account that has been used in Steam. You will need to repeat the following for each of them:
+   1. Inside the user folder, go to `250820` > `remote` (if it does not exist, you can ignore that user).
+   2. Delete the `binding_config.json` file.
+5. Start SteamVR again.
+
+## Restore missing buttons in the bindings UI
+
+1.  Press the back button in the top right corner and select one of the following controllers:
+    * Index Controller
+    * Oculus Touch
+    * Vive Controller
+   
+    You **must** choose one of the above controllers because they come with default bindings. For this guide, we will choose the Index Controller.
+
+    ![](Documentation/Images/select-different-controller.png)
+
+2.  Press the "Edit" button under "Current Binding."
+
+    ![](Documentation/Images/edit-existing-binding.png)
+
+3.  Press the back button without editing anything.
+
+    ![](Documentation/Images/go-back.png)
+
+4. Restart [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers) at step 1.
+
+## Exporting bindings so they can be included by default in DynamicOpenVR
 
 1. Open Controller Settings and make sure Advanced Settings are set to show (see above if necessary). Select "Developer" in the left-hand pane, turn "Enable debugging options in the input binding user interface" to ON, and press the "Restart SteamVR" button that appears afterwards.
 
@@ -143,36 +196,28 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
    ![](Documentation/Images/manage-bindings-advanced.png)
 
-4. You should now once again see your binding. Press the "Replace Default Binding" that has appeared at the bottom of the screen.
+4. You should now once again see your binding. Press the "Export Binding File" that has appeared at the bottom of the screen.
 
-    ![](Documentation/Images/replace-default-binding.png)
+    ![](Documentation/Images/export-binding-file.png)
 
-5. A new file whose name starts with `steam_app_620980_binding_` followed by your controller name should have been created in the `DynamicOpenVR` folder in your Beat Saber installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber`). Compress that file into a ZIP, attach it to a [new issue](https://github.com/nicoco007/DynamicOpenVR/issues/new) (GitHub unfortunately does not allow attaching JSON files directly), and you're good to go!
+5. A new file whose name starts with `export_steam.app.620980_` followed by your controller name and the name of the binding should have been created your Documents folder under `steamvr\input\exports` (usually `C:\Users\<Your Name>\Documents\steamvr\input\exports`). Compress that file into a ZIP, attach it to a [new issue](https://github.com/nicoco007/DynamicOpenVR/issues/new) (GitHub unfortunately does not allow attaching JSON files directly), and you're good to go!
 
    ![](Documentation/Images/files.png)
    
    
-## 2. Sabers/hands disappear when brought up to the face
+# Sabers/hands disappear when brought up to the face
 
-After running the game at least once, there should be a file called `CustomAvatars.json` in the `UserData` folder inside Beat Saber's installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber` for Steam). Open that file in any text editor (e.g. Notepad) and change the number beside `cameraNearClipPlane` (which should be 0.3 by default) to anything down to 0.01. A smaller number means stuff will be visible closer to your eyes but may affect performance negatively.
+After running the game at least once, there should be a file called `CustomAvatars.json` in the `UserData` folder inside Beat Saber's installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber` for Steam). Open that file in any text editor (e.g. Notepad) and change the number beside `cameraNearClipPlane` to anything down to 0.01. A smaller number means stuff will be visible closer to your eyes but may affect performance negatively.
 
 
-## 3. Completely Removing DynamicOpenVR
-DynamicOpenVR generates files specific to your computer to improve user experience in SteamVR's interface. These files may cause issues after partially removing DynamicOpenVR. To completely uninstall DynamicOpenVR, make sure these files/folders no longer exist in Beat Saber's installation folder:
+# Completely Removing DynamicOpenVR
+DynamicOpenVR generates files specific to your computer to improve user experience in SteamVR's interface. These files may cause issues after partially removing DynamicOpenVR. To completely uninstall DynamicOpenVR, first close SteamVR, then make sure these files/folders no longer exist in Beat Saber's installation folder:
 
 * Libs\DynamicOpenVR.dll
 * Plugins\DynamicOpenVR.BeatSaber.dll
 * DynamicOpenVR (the entire folder)
 * beatsaber.vrmanifest
 
-After you have deleted the above, restart SteamVR, go back to Manage Controller Settings for Beat Saber, and make sure that the "Default" option is selected (not "Custom"). If controllers are not responsive in-game, go to the old binding UI (see step 6 of *Buttons and/or tracking aren't working properly* above) and make sure that your controllers are selected under "Current Controller" and that under "Current Binding" there is something along the lines of "Default bindings for legacy applications." If that's not the case, press the "View" button on the binding under "Default Bindings" (which should be "Default Bindings for Legacy Applications" or something similar) and press "Select this Binding" at the bottom of the screen that shows up.
+If, after deleting all these files, your controllers are unresponsive, you may have to delete the current binding manually since SteamVR is confused. Follow the instructions in [Deleting the current binding](#deleting-the-current-binding) to get rid of it.
 
-If you get an error saying something about the action manifest missing, double-check that you deleted **all** the files and folders listed above, and try following the steps below:
-
-1. Close SteamVR.
-2. Go to the `config` folder inside your Steam installation folder (usually `C:\Program Files (x86)\Steam`)
-3. Open the `appconfig.json` file in any text editor (e.g. Notepad).
-4. Remove the line `"D:\\SteamLibrary\\steamapps\\common\\Beat Saber\\beatsaber.vrmanifest",` (should be the first line under `manifest_paths: [`) and save the file.
-5. Restart SteamVR once again and make sure that "Default" is selected in Manage Controller Bindings for Beat Saber.
-
-If you're still having issues after following all of these steps, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues). If you don't want to wait, the only sure-fire way of getting the game to work again is to do a clean install. It is highly recommended to make a backup of the installation folder before reinstalling the game if you want to keep your songs/avatars/sabers/settings or any other stuff that might be in there.
+If you're still having issues after following all of these steps, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new). If you don't want to wait, the only sure-fire way of getting the game to work again is to do a clean install. It is highly recommended to make a backup of the installation folder before reinstalling the game if you want to keep your songs/avatars/sabers/settings or any other stuff that might be in there.

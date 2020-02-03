@@ -45,7 +45,9 @@ namespace DynamicOpenVR.BeatSaber
 
         private HarmonyInstance _harmonyInstance;
 
-        private readonly HashSet<EVREventType> pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
+        private readonly HashSet<EVREventType> _pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
+
+        private bool _initialized;
 
         public void Init(Logger logger)
         {
@@ -68,6 +70,8 @@ namespace DynamicOpenVR.BeatSaber
                 AddManifestToSteamConfig();
                 RegisterActionSet();
                 ApplyHarmonyPatches();
+
+                _initialized = true;
             }
             catch (Exception ex)
             {
@@ -79,13 +83,13 @@ namespace DynamicOpenVR.BeatSaber
         public void OnApplicationQuit()
         {
             // not really necessary here, just following good practices
-            leftTriggerValue.Dispose();
-            rightTriggerValue.Dispose();
-            menu.Dispose();
-            leftSlice.Dispose();
-            rightSlice.Dispose();
-            leftHandPose.Dispose();
-            rightHandPose.Dispose();
+            leftTriggerValue?.Dispose();
+            rightTriggerValue?.Dispose();
+            menu?.Dispose();
+            leftSlice?.Dispose();
+            rightSlice?.Dispose();
+            leftHandPose?.Dispose();
+            rightHandPose?.Dispose();
         }
 
         private void AddManifestToSteamConfig()
@@ -248,10 +252,13 @@ namespace DynamicOpenVR.BeatSaber
 
         public void OnUpdate()
         {
-            VREvent_t evt = default;
-            if (OpenVR.System.PollNextEvent(ref evt, (uint)Marshal.SizeOf(typeof(VREvent_t))) && pauseEvents.Contains((EVREventType) evt.eventType))
+            if (_initialized)
             {
-                Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
+                VREvent_t evt = default;
+                if (OpenVR.System.PollNextEvent(ref evt, (uint)Marshal.SizeOf(typeof(VREvent_t))) && _pauseEvents.Contains((EVREventType) evt.eventType))
+                {
+                    Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
+                }
             }
         }
     }

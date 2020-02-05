@@ -117,22 +117,35 @@ namespace DynamicOpenVR.BeatSaber
             List<JToken> existing = manifestPaths.Where(p => p.Value<string>() == manifestPath).ToList();
 
             // only rewrite if path isn't in list already or is not at the top
-            if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0)
+            if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 0)
             {
                 logger.Info($"Adding '{manifestPath}' to '{appConfigPath}'");
 
                 foreach (JToken token in existing)
                 {
-                    appConfig["manifest_paths"].Value<JArray>().Remove(token);
+                    manifestPaths.Remove(token);
                 }
 
-                appConfig["manifest_paths"].Value<JArray>().Insert(0, manifestPath);
+                manifestPaths.Insert(0, manifestPath);
 
                 WriteAppConfig(appConfigPath, appConfig);
             }
             else
             {
                 logger.Info("Manifest is already registered");
+            }
+
+            if (manifestPaths.ToObject<List<string>>().IndexOf(globalManifestPath) == -1)
+            {
+                logger.Info($"Adding '{globalManifestPath}' to '{appConfigPath}'");
+
+                manifestPaths.Add(globalManifestPath);
+
+                WriteAppConfig(appConfigPath, appConfig);
+            }
+            else
+            {
+                logger.Info("Global manifest is already registered");
             }
         }
 
@@ -182,12 +195,16 @@ namespace DynamicOpenVR.BeatSaber
 
         private JObject ReadAppConfig(string configPath)
         {
+            var appConfig = new JObject();
+
             if (!File.Exists(configPath))
             {
-                throw new FileNotFoundException("Could not find file " + configPath);
-            }
+                logger.Warn($"Could not find file '{configPath}'");
 
-            JObject appConfig;
+                appConfig.Add("manifest_paths", new JArray());
+
+                return appConfig;
+            }
             
             logger.Debug("Reading " + configPath);
 
@@ -198,7 +215,14 @@ namespace DynamicOpenVR.BeatSaber
 
             if (appConfig == null)
             {
-                throw new Exception("Could not read app config from " + configPath);
+                logger.Warn("File is empty");
+                appConfig = new JObject();
+            }
+
+            if (!appConfig.ContainsKey("manifest_paths"))
+            {
+                logger.Warn("manifest_paths is missing");
+                appConfig.Add("manifest_paths", new JArray());
             }
 
             return appConfig;

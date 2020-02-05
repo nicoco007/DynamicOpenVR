@@ -6,8 +6,9 @@ If anything in this guide is unclear, feel free to [open an issue](https://githu
 - [Checking the installation](#checking-the-installation)
 - [Buttons and/or tracking aren't working properly](#buttons-andor-tracking-arent-working-properly)
   - [Diagnosing issues with bindings](#diagnosing-issues-with-bindings)
+  - [Selecting a default binding](#selecting-a-default-binding)
   - [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers)
-  - [Getting to the binding editor when the Edit this Binding button is not visible](#getting-to-the-binding-editor-when-the-edit-this-binding-button-is-not-visible)
+  - [Getting to the binding editor when the "Edit this Binding" button is not visible](#getting-to-the-binding-editor-when-the-%22edit-this-binding%22-button-is-not-visible)
   - [Deleting the current binding](#deleting-the-current-binding)
   - [Restore missing buttons in the bindings UI](#restore-missing-buttons-in-the-bindings-ui)
   - [Exporting bindings so they can be included by default in DynamicOpenVR](#exporting-bindings-so-they-can-be-included-by-default-in-dynamicopenvr)
@@ -69,12 +70,41 @@ Input or tracking not working are usually a symptom of missing or broken input b
    * If it is called "Default Beat Saber Bindings," your game should technically be working. Try completely closing SteamVR and starting Beat Saber again. If input still doesn't work, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new).
    * If it is called "Default bindings for legacy applications for &lt;Your Controllers&gt;," DynamicOpenVR did not register properly. Try completely closing SteamVR, checking if all the files listed in [Checking the installation](#checking-the-installation) are present, and starting Beat Saber again. If the same binding is still there, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues/new).
    * If it is stuck on "Loading current binding&hellip;," SteamVR is most likely failing to load your previous binding. See [Deleting the current binding](#deleting-the-current-binding) to fix that and restart this section from step 1.
+   * If the name of the binding is anything else, it is most likely not compatible with DynamicOpenVR. You have two options:
+     * If you own controllers that are supported by default (i.e. Vive Wands, Index Controllers Oculus Touch Controllers, or WMR Holographic Controllers), there should already be compatible bindings included with DynamicOpenVR. See [Selecting a default binding](#selecting-a-default-binding) to select the right binding.
+     * If you have a different setup, see [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers).
 
-   If you can see the "Edit this Binding" button, continue to [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers) below.
+   See the screenshots below for reference.
 
    ![](Documentation/Images/binding-possibilities.png)
 
+## Selecting a default binding
+
+1. In the Manage Controller Bindings popup, press "Choose Another." If you cannot see it, follow the instructions under [Getting to the binding editor when the "Edit this binding" button is not visible](#getting-to-the-binding-editor-when-the-%22edit-this-binding%22-button-is-not-visible) and continue with step 2 of this section.
+
+   ![](Documentation/Images/press-choose-another.png)
+
+2. Make sure the controllers you are currently using are selected.
+
+   ![](Documentation/Images/controller-official-bindings.png)
+
+3. In the window that opens, should should see a section called "Official Bindings" and "Default Beat Saber Bindings" under it. Press the "View" button.
+
+   ![](Documentation/Images/official-bindings.png)
+
+4. Press the "Select this Binding" button.
+
+   ![](Documentation/Images/select-official-binding.png)
+
+5. You should now have the default binding selected. Try starting the game again to check if the issue is still present.
+
+   ![](Documentation/Images/current-binding-official.png)
+
 ## Creating a new binding for your controllers
+
+1. In the Manage Controller Bindings popup, press "Choose Another." If you cannot see it, follow the instructions under [Getting to the binding editor when the "Edit this binding" button is not visible](#getting-to-the-binding-editor-when-the-%22edit-this-binding%22-button-is-not-visible) and continue with step 2 of this section.
+
+   ![](Documentation/Images/press-choose-another.png)
 
 1. Make sure the controllers you are currently using are selected.
 
@@ -139,27 +169,35 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
     ![](Documentation/Images/done.png)
 
-## Getting to the binding editor when the Edit this Binding button is not visible
+## Getting to the binding editor when the "Edit this Binding" button is not visible
 
 1. Close the binding management popup and click "Show" under "Advanced Settings" in the bottom left corner. You should now see the "Show Old Binding UI" button; press it.
 
    ![](Documentation/Images/enable-advanced-settings.png)
 
-2. In the window that opens, select "Beat Saber." Since you have the game already open, it should be at the top of the list.
+2. In the window that opens, select "Beat Saber." Since you have the game open, it should be at the top of the list.
 
    ![](Documentation/Images/select-game.png)
 
-3. Continue with [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers).
+3. You should now see the window below. Make sure the right game is selected by looking at the window's header; it should be "Change Bindings for Beat Saber." If you have not selected the right game, press the "Back" button and choose the right one.
+
+   ![](Documentation/Images/beat-saber-bindings.png)
 
 ## Deleting the current binding
 
 1. Close SteamVR.
 2. Go to your Steam installation folder (usually `C:\Program Files (x86)\Steam`).
-3. Go to the `userdata` folder.
-4. There will be one or more folders inside that are just numbers; these are the user IDs of each account that has been used in Steam. You will need to repeat the following for each of them:
-   1. Inside the user folder, go to `250820` > `remote` (if it does not exist, you can ignore that user).
-   2. Delete the `binding_config.json` file.
-5. Start SteamVR again.
+3. Go to the `config` folder.
+4. There will be a filed called `steamvr.vrsettings`. Open it in a text editor (e.g. Notepad).
+5. Scroll down until you see the line `"steam.app.620980 : {`.
+
+   ![](Documentation/Images/vrsettings-before.png)
+
+6. Remove the section highlighted above, starting from the `"steam.app.620980" : {` line all the way down and including the `},`. The file should now look like this:
+
+   ![](Documentation/Images/vrsettings-after.png)
+
+7. Start SteamVR again.
 
 ## Restore missing buttons in the bindings UI
 

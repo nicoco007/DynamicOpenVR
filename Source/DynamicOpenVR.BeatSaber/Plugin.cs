@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using DynamicOpenVR.IO;
 using Harmony;
 using IPA;
@@ -103,7 +104,7 @@ namespace DynamicOpenVR.BeatSaber
             string appConfigPath = Path.Combine(steamFolder, "config", "appconfig.json");
             string globalManifestPath = Path.Combine(steamFolder, "config", "steamapps.vrmanifest");
 
-            logger.Debug("Found Steam at " + steamFolder);
+            logger.Info("Found Steam at " + steamFolder);
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
@@ -162,7 +163,15 @@ namespace DynamicOpenVR.BeatSaber
                 throw new Exception("Steam process could not be found.");
             }
 
-            string path = steamProcess.MainModule?.FileName;
+            var stringBuilder = new StringBuilder(2048);
+            int capacity = stringBuilder.Capacity + 1;
+
+            if (NativeMethods.QueryFullProcessImageName(steamProcess.Handle, 0, stringBuilder, ref capacity) == 0)
+            {
+                throw new Exception("QueryFullProcessImageName returned 0");
+            }
+
+            string path = stringBuilder.ToString();
 
             if (string.IsNullOrEmpty(path))
             {

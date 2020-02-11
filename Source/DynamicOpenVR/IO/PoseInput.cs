@@ -60,45 +60,7 @@ namespace DynamicOpenVR.IO
         {
             _actionData = OpenVRWrapper.GetPoseActionDataForNextFrame(handle);
             HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
-            _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
-        }
-
-        private Vector3 GetPosition(HmdMatrix34_t rawMatrix)
-        {
-            return new Vector3(
-                rawMatrix.m3,
-                rawMatrix.m7,
-                -rawMatrix.m11
-            );
-        }
-        
-        private Quaternion GetRotation(HmdMatrix34_t rawMatrix)
-        {
-            // based on SteamVR's Unity plugin
-            // https://github.com/ValveSoftware/steamvr_unity_plugin/blob/master/Assets/SteamVR/Scripts/SteamVR_Utils.cs
-            float[,] matrix = {
-                {  rawMatrix.m0,  rawMatrix.m1, -rawMatrix.m2,   rawMatrix.m3 },
-                {  rawMatrix.m4,  rawMatrix.m5, -rawMatrix.m6,   rawMatrix.m7 },
-                { -rawMatrix.m8, -rawMatrix.m9,  rawMatrix.m10, -rawMatrix.m11 }
-            };
-
-            Quaternion rotation = new Quaternion(
-                Mathf.Sqrt(Mathf.Max(0, 1 + matrix[0, 0] - matrix[1, 1] - matrix[2, 2])) / 2,
-                Mathf.Sqrt(Mathf.Max(0, 1 - matrix[0, 0] + matrix[1, 1] - matrix[2, 2])) / 2,
-                Mathf.Sqrt(Mathf.Max(0, 1 - matrix[0, 0] - matrix[1, 1] + matrix[2, 2])) / 2,
-                Mathf.Sqrt(Mathf.Max(0, 1 + matrix[0, 0] + matrix[1, 1] + matrix[2, 2])) / 2
-            );
-            
-            rotation.x = CopySign(rotation.x, matrix[2, 1] - matrix[1, 2]);
-            rotation.y = CopySign(rotation.y, matrix[0, 2] - matrix[2, 0]);
-            rotation.z = CopySign(rotation.z, matrix[1, 0] - matrix[0, 1]);
-
-            return rotation;
-        }
-
-        private float CopySign(float magnitude, float sign)
-        {
-            return Mathf.Abs(magnitude) * Mathf.Sign(sign);
+            _pose = new Pose(rawMatrix.GetPosition(), rawMatrix.GetRotation());
         }
 
         private Vector3 ToVector3(HmdVector3_t vector)

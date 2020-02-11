@@ -40,7 +40,7 @@ namespace DynamicOpenVR.BeatSaber
 					__result = Plugin.rightTriggerValue.value;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				__result = 0;
 			}

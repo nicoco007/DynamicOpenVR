@@ -95,14 +95,21 @@ namespace DynamicOpenVR
                 }
                 catch (OpenVRInputException ex)
                 {
-                    Logger.Error($"An error occurred when fetching data for action '{action.name}'. Action has been disabled.");
+                    Logger.Error($"An unexpected OpenVR error occurred when fetching data for action '{action.name}'. Action has been disabled.");
                     Logger.Error(ex);
 
                     DeregisterAction(action);
                 }
                 catch (NullReferenceException ex)
                 {
-                    Logger.Error($"A null reference exception occured when trying to retrieve data for action '{action.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                    Logger.Error($"A null reference exception occurred when fetching data for action '{action.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                    Logger.Error(ex);
+
+                    DeregisterAction(action);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"An unexpected error occurred when fetching data for action '{action.name}'. Action has been disabled.");
                     Logger.Error(ex);
 
                     DeregisterAction(action);
@@ -121,14 +128,14 @@ namespace DynamicOpenVR
 
             if (_instantiated)
             {
-                TryUpdateHandle(action);
-
                 string actionSetName = action.GetActionSetName();
 
                 if (!_actionSetNames.Contains(actionSetName))
                 {
                     TryAddActionSet(actionSetName);
                 }
+
+                TryUpdateHandle(action);
             }
         }
 
@@ -193,14 +200,21 @@ namespace DynamicOpenVR
             }
             catch (OpenVRInputException ex)
             {
-                Logger.Error($"An error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
+                Logger.Error($"An unexpected OpenVR error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
                 Logger.Error(ex);
 
                 DeregisterAction(action);
             }
             catch (NullReferenceException ex)
             {
-                Logger.Error($"A null reference exception occured when trying to retrieve data for action '{action.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                Logger.Error($"A null reference exception occurred when fetching handle for action '{action.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                Logger.Error(ex);
+
+                DeregisterAction(action);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"An unexpected error occurred when fetching handle for action '{action.name}'. Action has been disabled.");
                 Logger.Error(ex);
 
                 DeregisterAction(action);
@@ -215,12 +229,17 @@ namespace DynamicOpenVR
             }
             catch (OpenVRInputException ex)
             {
-                Logger.Error($"An error occurred when fetching handle for action set '{actionSetName}'.");
+                Logger.Error($"An unexpected OpenVR error occurred when fetching handle for action set '{actionSetName}'.");
                 Logger.Error(ex);
             }
             catch (NullReferenceException ex)
             {
-                Logger.Error($"A null reference exception occured when trying to retrieve data for action set '{actionSetName}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                Logger.Error($"A null reference exception occured when fetching handle for action set '{actionSetName}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                Logger.Error(ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"An unexpected error occurred when fetching handle for action set '{actionSetName}'.");
                 Logger.Error(ex);
             }
         }

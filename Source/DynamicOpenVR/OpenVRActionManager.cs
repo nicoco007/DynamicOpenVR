@@ -100,6 +100,13 @@ namespace DynamicOpenVR
 
                     DeregisterAction(action);
                 }
+                catch (NullReferenceException ex)
+                {
+                    Logger.Error($"A null reference exception occured when trying to retrieve data for action '{action.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                    Logger.Error(ex);
+
+                    DeregisterAction(action);
+                }
             }
         }
 
@@ -191,6 +198,13 @@ namespace DynamicOpenVR
 
                 DeregisterAction(action);
             }
+            catch (NullReferenceException ex)
+            {
+                Logger.Error($"A null reference exception occured when trying to retrieve data for action '{action.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                Logger.Error(ex);
+
+                DeregisterAction(action);
+            }
         }
 
         private void TryAddActionSet(string actionSetName)
@@ -202,6 +216,11 @@ namespace DynamicOpenVR
             catch (OpenVRInputException ex)
             {
                 Logger.Error($"An error occurred when fetching handle for action set '{actionSetName}'.");
+                Logger.Error(ex);
+            }
+            catch (NullReferenceException ex)
+            {
+                Logger.Error($"A null reference exception occured when trying to retrieve data for action set '{actionSetName}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
                 Logger.Error(ex);
             }
         }

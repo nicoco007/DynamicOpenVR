@@ -67,6 +67,10 @@ namespace DynamicOpenVR.BeatSaber
 
             try
             {
+                OpenVRStatus.Init();
+
+                logger.Info("Successfully initialized OpenVR API");
+
                 AddManifestToSteamConfig();
                 RegisterActionSet();
                 ApplyHarmonyPatches();

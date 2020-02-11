@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using UnityEngine.XR;
+using Valve.VR;
 
 namespace DynamicOpenVR
 {
@@ -32,9 +33,25 @@ namespace DynamicOpenVR
             {
                 if (NativeMethods.LoadLibrary("openvr_api") == IntPtr.Zero) return "OpenVR API is not loaded";
                 if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0) return "OpenVR is not the selected VR SDK";
-                if (!OpenVRWrapper.isRuntimeInstalled) return "OpenVR is not running";
+                if (!OpenVRWrapper.isRuntimeInstalled) return "OpenVR runtime is not installed";
 
                 return null;
+            }
+        }
+
+        public static void Init()
+        {
+            EVRInitError error = EVRInitError.None;
+            CVRSystem system = OpenVR.Init(ref error);
+
+            if (error != EVRInitError.None)
+            {
+                throw new OpenVRInitException(error);
+            }
+
+            if (system == null)
+            {
+                throw new OpenVRInitException("OpenVR.Init returned null");
             }
         }
     }

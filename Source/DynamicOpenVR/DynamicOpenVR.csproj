@@ -86,6 +86,7 @@
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OpenVRActionManager.cs" />
     <Compile Include="OpenVRInputException.cs" />
+    <Compile Include="OpenVRInitException.cs" />
     <Compile Include="OpenVRStatus.cs" />
     <Compile Include="OpenVRWrapper.cs" />
     <Compile Include="openvr_api.cs" />

@@ -6,6 +6,7 @@ rev = os.getenv("GIT_REV")
 file_path = "Source/DynamicOpenVR.BeatSaber/manifest.json"
 
 if (rev is not None and len(rev) > 0):
+    print("Skipping commit hash")
     exit()
 
 if (commit_hash is None or len(commit_hash) == 0):
@@ -18,4 +19,4 @@ with open(file_path, "r") as json_file:
 obj["version"] = obj["version"] + "-" + commit_hash
 
 with open(file_path, "w") as json_file:
-    json.dump(obj, json_file, indent=4)
+    json.dump(obj, json_file, indent=2)

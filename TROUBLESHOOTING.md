@@ -81,7 +81,7 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
 ## Selecting a default binding
 
-1. In the Manage Controller Bindings popup, press "Choose Another." If you cannot see it, follow the instructions under [Getting to the binding editor when the "Edit this binding" button is not visible](#getting-to-the-binding-editor-when-the-%22edit-this-binding%22-button-is-not-visible) and continue with step 2 of this section.
+1. In the Manage Controller Bindings popup, press "Choose Another." If you cannot see it, follow the instructions under [Getting to the binding editor when the Edit this binding button is not visible](#getting-to-the-binding-editor-when-the-edit-this-binding-button-is-not-visible) and continue with step 2 of this section.
 
    ![](Documentation/Images/press-choose-another.png)
 
@@ -103,7 +103,7 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
 ## Creating a new binding for your controllers
 
-1. In the Manage Controller Bindings popup, press "Choose Another." If you cannot see it, follow the instructions under [Getting to the binding editor when the "Edit this binding" button is not visible](#getting-to-the-binding-editor-when-the-%22edit-this-binding%22-button-is-not-visible) and continue with step 2 of this section.
+1. In the Manage Controller Bindings popup, press "Choose Another." If you cannot see it, follow the instructions under [Getting to the binding editor when the Edit this binding button is not visible](#getting-to-the-binding-editor-when-the-edit-this-binding-button-is-not-visible) and continue with step 2 of this section.
 
    ![](Documentation/Images/press-choose-another.png)
 

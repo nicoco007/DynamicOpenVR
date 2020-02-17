@@ -302,7 +302,7 @@ namespace DynamicOpenVR
                 var defaultBinding = new DefaultBinding
                 {
                     actionManifestVersion = manifestVersion,
-                    name = "Default Action Bindings for Beat Saber",
+                    name = "Default Beat Saber Bindings",
                     description = "Action bindings for Beat Saber.",
                     controllerType = controllerType,
                     category = "steamvr_input",

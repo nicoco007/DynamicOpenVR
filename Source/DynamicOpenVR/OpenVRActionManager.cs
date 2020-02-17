@@ -53,9 +53,8 @@ namespace DynamicOpenVR
         public bool initialized = false;
 
         private readonly Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
-
-        private List<ulong> _actionSetHandles;
-        private HashSet<string> _actionSetNames;
+        private readonly HashSet<string> _actionSetNames = new HashSet<string>();
+        private readonly List<ulong> _actionSetHandles = new List<ulong>();
 
         public void Initialize()
         {
@@ -69,13 +68,10 @@ namespace DynamicOpenVR
             CombineAndWriteManifest();
                 
             OpenVRWrapper.SetActionManifestPath(OpenVRStatus.kActionManifestPath);
-            
-            Logger.Debug("Registering action sets");
 
-            _actionSetNames = new HashSet<string>(_actions.Values.Select(action => action.GetActionSetName()).Distinct());
-            _actionSetHandles = new List<ulong>(_actionSetNames.Count);
+            IEnumerable<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct();
 
-            foreach (string actionSetName in _actionSetNames)
+            foreach (string actionSetName in actionSetNames)
             {
                 TryAddActionSet(actionSetName);
             }
@@ -90,6 +86,8 @@ namespace DynamicOpenVR
 
         public void Update()
         {
+            if (!initialized) return; // do nothing until initialized
+
             if (_actionSetHandles != null)
             {
                 OpenVRWrapper.UpdateActionState(_actionSetHandles);
@@ -243,8 +241,11 @@ namespace DynamicOpenVR
         {
             Logger.Debug($"Registering action set '{actionSetName}'");
 
+            if (_actionSetNames.Contains(actionSetName)) throw new InvalidOperationException($"Action set '{actionSetName}' has already been registered");
+
             try
             {
+                _actionSetNames.Add(actionSetName);
                 _actionSetHandles.Add(OpenVRWrapper.GetActionSetHandle(actionSetName));
             }
             catch (OpenVRInputException ex)
@@ -301,7 +302,7 @@ namespace DynamicOpenVR
                 var defaultBinding = new DefaultBinding
                 {
                     actionManifestVersion = manifestVersion,
-                    name = "Default Beat Saber Bindings",
+                    name = "Default Action Bindings for Beat Saber",
                     description = "Action bindings for Beat Saber.",
                     controllerType = controllerType,
                     category = "steamvr_input",

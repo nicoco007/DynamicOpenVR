@@ -8,7 +8,7 @@ If anything in this guide is unclear, feel free to [open an issue](https://githu
   - [Diagnosing issues with bindings](#diagnosing-issues-with-bindings)
   - [Selecting a default binding](#selecting-a-default-binding)
   - [Creating a new binding for your controllers](#creating-a-new-binding-for-your-controllers)
-  - [Getting to the binding editor when the "Edit this Binding" button is not visible](#getting-to-the-binding-editor-when-the-%22edit-this-binding%22-button-is-not-visible)
+  - [Getting to the binding editor when the Edit this Binding button is not visible](#getting-to-the-binding-editor-when-the-edit-this-binding-button-is-not-visible)
   - [Deleting the current binding](#deleting-the-current-binding)
   - [Restore missing buttons in the bindings UI](#restore-missing-buttons-in-the-bindings-ui)
   - [Exporting bindings so they can be included by default in DynamicOpenVR](#exporting-bindings-so-they-can-be-included-by-default-in-dynamicopenvr)
@@ -172,7 +172,7 @@ Input or tracking not working are usually a symptom of missing or broken input b
 
     ![](Documentation/Images/done.png)
 
-## Getting to the binding editor when the "Edit this Binding" button is not visible
+## Getting to the binding editor when the Edit this Binding button is not visible
 
 1. Close the binding management popup and click "Show" under "Advanced Settings" in the bottom left corner. You should now see the "Show Old Binding UI" button; press it.
 

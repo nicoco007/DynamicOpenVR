@@ -1,5 +1,5 @@
 // DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
-// Copyright © 2019-2020 Nicolas Gnyra
+// Copyright ?2019-2020 Nicolas Gnyra
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
@@ -125,25 +125,24 @@ namespace DynamicOpenVR
             return actionData;
         }
 
-        internal static InputPoseActionData_t GetPoseActionDataForNextFrame(ulong actionHandle, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
-        {
-            InputPoseActionData_t actionData = default;
+		internal static InputPoseActionData_t GetPoseActionData(ulong actionHandle, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
+		{
+			InputPoseActionData_t actionData = default;
 
-            EVRInputError error = OpenVR.Input.GetPoseActionDataForNextFrame(actionHandle, origin, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+			EVRInputError error = OpenVR.Input.GetPoseActionData(actionHandle, origin, 0, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+			if (error != EVRInputError.None && error != EVRInputError.NoData)
+			{
+				throw new OpenVRInputException($"Could not get pose data for action with handle '{actionHandle}': {error}", error);
+			}
 
-            if (error != EVRInputError.None && error != EVRInputError.NoData)
-            {
-                throw new OpenVRInputException($"Could not get pose data for action with handle '{actionHandle}': {error}", error);
-            }
+			return actionData;
+		}
 
-            return actionData;
-        }
-
-		internal static VRSkeletalSummaryData_t GetSkeletalSummaryData(ulong actionHandle, EVRSummaryType summaryType = EVRSummaryType.FromDevice)
+		internal static VRSkeletalSummaryData_t GetSkeletalSummaryData(ulong actionHandle)
 		{
 			VRSkeletalSummaryData_t summaryData = default;
 
-			EVRInputError error = OpenVR.Input.GetSkeletalSummaryData(actionHandle, summaryType, ref summaryData);
+			EVRInputError error = OpenVR.Input.GetSkeletalSummaryData(actionHandle, ref summaryData);
 
 			if (error != EVRInputError.None && error != EVRInputError.NoData)
 			{

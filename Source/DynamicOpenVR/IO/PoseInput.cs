@@ -1,4 +1,4 @@
-﻿// DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
+// DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
 // Copyright © 2019-2020 Nicolas Gnyra
 
 // This program is free software: you can redistribute it and/or modify
@@ -56,16 +56,50 @@ namespace DynamicOpenVR.IO
 
         public override bool isActive => _actionData.bActive;
 
+        public Vector3 GetPosition(HmdMatrix34_t rawMatrix)
+        {
+            return new Vector3(rawMatrix.m3, rawMatrix.m7, -rawMatrix.m11);
+        }
+
+        public bool IsRotationValid(HmdMatrix34_t rawMatrix)
+        {
+            return ((rawMatrix.m2 != 0 || rawMatrix.m6 != 0 || rawMatrix.m10 != 0) && (rawMatrix.m1 != 0 || rawMatrix.m5 != 0 || rawMatrix.m9 != 0));
+        }
+
+        public Quaternion GetRotation(HmdMatrix34_t rawMatrix)
+        {
+            if (IsRotationValid(rawMatrix))
+            {
+                float w = Mathf.Sqrt(Mathf.Max(0, 1 + rawMatrix.m0 + rawMatrix.m5 + rawMatrix.m10)) / 2;
+                float x = Mathf.Sqrt(Mathf.Max(0, 1 + rawMatrix.m0 - rawMatrix.m5 - rawMatrix.m10)) / 2;
+                float y = Mathf.Sqrt(Mathf.Max(0, 1 - rawMatrix.m0 + rawMatrix.m5 - rawMatrix.m10)) / 2;
+                float z = Mathf.Sqrt(Mathf.Max(0, 1 - rawMatrix.m0 - rawMatrix.m5 + rawMatrix.m10)) / 2;
+
+                _copysign(ref x, -rawMatrix.m9 - -rawMatrix.m6);
+                _copysign(ref y, -rawMatrix.m2 - -rawMatrix.m8);
+                _copysign(ref z, rawMatrix.m4 - rawMatrix.m1);
+
+                return new Quaternion(x, y, z, w);
+            }
+            return Quaternion.identity;
+        }
+
+        private static void _copysign(ref float sizeval, float signval)
+        {
+            if (signval > 0 != sizeval > 0)
+                sizeval = -sizeval;
+        }
         internal override void UpdateData()
         {
-            _actionData = OpenVRWrapper.GetPoseActionDataForNextFrame(handle);
+            _actionData = OpenVRWrapper.GetPoseActionData(handle);
             HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
-            _pose = new Pose(rawMatrix.GetPosition(), rawMatrix.GetRotation());
+            _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
         }
 
         private Vector3 ToVector3(HmdVector3_t vector)
         {
             return new Vector3(vector.v0, vector.v1, vector.v2);
         }
+
     }
 }

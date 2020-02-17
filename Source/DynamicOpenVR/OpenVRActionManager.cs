@@ -29,7 +29,7 @@ using Logger = DynamicOpenVR.Logging.Logger;
 
 namespace DynamicOpenVR
 {
-    internal class OpenVRActionManager : MonoBehaviour
+    public class OpenVRActionManager : MonoBehaviour
     {
         private static OpenVRActionManager _instance;
 
@@ -37,13 +37,10 @@ namespace DynamicOpenVR
 		{
 			get
 			{
-                if (!OpenVRStatus.isRunning)
-                {
-                    throw new InvalidOperationException("OpenVR is not running");
-                }
-
-				if (!_instance)
+                if (!_instance)
 				{
+                    Logger.Info($"Creating instance of {nameof(OpenVRActionManager)}");
+
 					GameObject go = new GameObject(nameof(OpenVRActionManager));
 					DontDestroyOnLoad(go);
 					_instance = go.AddComponent<OpenVRActionManager>();
@@ -53,18 +50,27 @@ namespace DynamicOpenVR
 			}
         }
 
-        private Dictionary<int, OVRAction> _actions = new Dictionary<int, OVRAction>();
+        public bool initialized = false;
+
+        private readonly Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
+
         private List<ulong> _actionSetHandles;
-        private bool _instantiated = false;
         private HashSet<string> _actionSetNames;
 
-        private void Start()
+        public void Initialize()
         {
-            _instantiated = true;
-            
+            if (initialized)
+            {
+                throw new InvalidOperationException("Already initialized");
+            }
+
+            Logger.Info($"Initializing {nameof(OpenVRActionManager)}");
+
             CombineAndWriteManifest();
                 
             OpenVRWrapper.SetActionManifestPath(OpenVRStatus.kActionManifestPath);
+            
+            Logger.Debug("Registering action sets");
 
             _actionSetNames = new HashSet<string>(_actions.Values.Select(action => action.GetActionSetName()).Distinct());
             _actionSetHandles = new List<ulong>(_actionSetNames.Count);
@@ -78,6 +84,8 @@ namespace DynamicOpenVR
             {
                 TryUpdateHandle(action);
             }
+
+            initialized = true;
         }
 
         public void Update()
@@ -119,17 +127,19 @@ namespace DynamicOpenVR
 
         public void RegisterAction(OVRAction action)
         {
-            if (_actions.ContainsKey(action.GetHashCode()))
+            if (_actions.ContainsKey(action.id))
             {
                 throw new InvalidOperationException("Action was already registered.");
             }
+            
+            Logger.Debug($"Registering action '{action.name}' ({action.id})");
 
-            _actions.Add(action.GetHashCode(), action);
+            _actions.Add(action.id, action);
 
-            if (_instantiated)
+            if (initialized)
             {
                 string actionSetName = action.GetActionSetName();
-
+                
                 if (!_actionSetNames.Contains(actionSetName))
                 {
                     TryAddActionSet(actionSetName);
@@ -141,18 +151,22 @@ namespace DynamicOpenVR
 
         public void DeregisterAction(OVRAction action)
         {
-            _actions.Remove(action.GetHashCode());
+            Logger.Debug($"Deregistering action '{action.name}' ({action.id})");
+
+            _actions.Remove(action.id);
         }
 
         private void CombineAndWriteManifest()
         {
-            string actionsFolder = Path.Combine("DynamicOpenVR", "Actions");
+            string actionsFolder = Path.Combine(Directory.GetCurrentDirectory(), "DynamicOpenVR", "Actions");
 
             if (!Directory.Exists(actionsFolder))
             {
                 Logger.Warn("Actions folder does not exist!");
                 return;
             }
+
+            Logger.Debug($"Reading actions from '{actionsFolder}'");
 
             string[] actionFiles = Directory.GetFiles(actionsFolder);
             var actionManifests = new List<ActionManifest>();
@@ -171,29 +185,33 @@ namespace DynamicOpenVR
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse {actionFile}: {ex.Message}");
+                    Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse '{actionFile}': {ex.Message}");
                 }
             }
-
+            
             List<ManifestDefaultBinding> defaultBindings = CombineAndWriteBindings(version);
+
+            var manifest = new ActionManifest()
+            {
+                version = version,
+                actions = actionManifests.SelectMany(m => m.actions).ToList(),
+                actionSets = actionManifests.SelectMany(m => m.actionSets).ToList(),
+                defaultBindings = defaultBindings,
+                localization = CombineLocalizations(actionManifests)
+            };
+
+            Logger.Debug($"Writing action manifest to '{OpenVRStatus.kActionManifestPath}'");
 
             using (var writer = new StreamWriter(OpenVRStatus.kActionManifestPath))
             {
-                var manifest = new ActionManifest()
-                {
-                    version = version,
-                    actions = actionManifests.SelectMany(m => m.actions).ToList(),
-                    actionSets = actionManifests.SelectMany(m => m.actionSets).ToList(),
-                    defaultBindings = defaultBindings,
-                    localization = CombineLocalizations(actionManifests)
-                };
-
                 writer.WriteLine(JsonConvert.SerializeObject(manifest, Formatting.Indented));
             }
 		}
 
         private void TryUpdateHandle(OVRAction action)
         {
+            Logger.Debug($"Updating handle for action '{action.name}' ({action.id})");
+
             try
             {
                 action.UpdateHandle();
@@ -223,6 +241,8 @@ namespace DynamicOpenVR
 
         private void TryAddActionSet(string actionSetName)
         {
+            Logger.Debug($"Registering action set '{actionSetName}'");
+
             try
             {
                 _actionSetHandles.Add(OpenVRWrapper.GetActionSetHandle(actionSetName));
@@ -246,13 +266,15 @@ namespace DynamicOpenVR
 
         private List<ManifestDefaultBinding> CombineAndWriteBindings(int manifestVersion)
         {
-            string bindingsFolder = Path.Combine("DynamicOpenVR", "Bindings");
+            string bindingsFolder = Path.Combine(Directory.GetCurrentDirectory(), "DynamicOpenVR", "Bindings");
 
             if (!Directory.Exists(bindingsFolder))
             {
                 Logger.Warn("Bindings folder does not exist!");
                 return new List<ManifestDefaultBinding>();
             }
+
+            Logger.Debug($"Reading default bindings from '{bindingsFolder}'");
 
             string[] bindingFiles = Directory.GetFiles(bindingsFolder);
             var defaultBindings = new List<DefaultBinding>();
@@ -268,7 +290,7 @@ namespace DynamicOpenVR
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse {bindingFile}: {ex.Message}");
+                    Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse '{bindingFile}': {ex.Message}");
                 }
             }
 
@@ -347,7 +369,7 @@ namespace DynamicOpenVR
                     {
                         if (combinedLocalizations.ContainsKey(kvp.Key))
                         {
-                            Logger.Warn($"Duplicate entry {kvp.Key}");
+                            Logger.Warn($"Duplicate entry '{kvp.Key}'");
                         }
                         else
                         {

@@ -25,6 +25,7 @@ namespace DynamicOpenVR.IO
     {
         private static readonly Regex kNameRegex = new Regex(@"^\/actions\/[a-z0-9_-]+\/(?:in|out)\/[a-z0-9_-]+$", RegexOptions.IgnoreCase);
 
+        public string id => ((uint)GetHashCode()).ToString(); // this might change at some point
         public string name { get; }
         internal ulong handle { get; private set; }
 

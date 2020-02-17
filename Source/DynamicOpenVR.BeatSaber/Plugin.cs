@@ -76,6 +76,8 @@ namespace DynamicOpenVR.BeatSaber
                 RegisterActionSet();
                 ApplyHarmonyPatches();
 
+                OpenVRActionManager.instance.Initialize();
+
                 _initialized = true;
             }
             catch (Exception ex)
@@ -243,7 +245,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteBeatSaberManifest(string manifestPath, JObject beatSaberManifest)
         {
-            logger.Info("Writing manifest to " + manifestPath);
+            logger.Info($"Writing manifest to '{manifestPath}'");
 
             using (StreamWriter writer = new StreamWriter(manifestPath))
             {
@@ -253,7 +255,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteAppConfig(string configPath, JObject appConfig)
         {
-            logger.Info("Writing app config to " + configPath);
+            logger.Info($"Writing app config to '{configPath}'");
 
             using (StreamWriter writer = new StreamWriter(configPath))
             {

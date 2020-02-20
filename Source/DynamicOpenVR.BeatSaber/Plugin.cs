@@ -124,6 +124,7 @@ namespace DynamicOpenVR.BeatSaber
             JObject appConfig = ReadAppConfig(appConfigPath);
             JArray manifestPaths = appConfig["manifest_paths"].Value<JArray>();
             List<JToken> existing = manifestPaths.Where(p => p.Value<string>() == manifestPath).ToList();
+            bool updated = false;
 
             // only rewrite if path isn't in list already or is not at the top
             if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 0)
@@ -137,7 +138,7 @@ namespace DynamicOpenVR.BeatSaber
 
                 manifestPaths.Insert(0, manifestPath);
 
-                WriteAppConfig(appConfigPath, appConfig);
+                updated = true;
             }
             else
             {
@@ -150,11 +151,16 @@ namespace DynamicOpenVR.BeatSaber
 
                 manifestPaths.Add(globalManifestPath);
 
-                WriteAppConfig(appConfigPath, appConfig);
+                updated = true;
             }
             else
             {
                 logger.Info("Global manifest is already registered");
+            }
+
+            if (updated)
+            {
+                WriteAppConfig(appConfigPath, appConfig);
             }
         }
 

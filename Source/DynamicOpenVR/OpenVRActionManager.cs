@@ -174,6 +174,8 @@ namespace DynamicOpenVR
             {
                 try
                 {
+                    Logger.Debug($"Reading '{actionFile}'");
+
                     using (var reader = new StreamReader(actionFile))
                     {
                         string data = reader.ReadToEnd();
@@ -299,6 +301,8 @@ namespace DynamicOpenVR
             {
                 try
                 {
+                    Logger.Debug($"Reading '{bindingFile}'");
+
                     using (var reader = new StreamReader(bindingFile))
                     {
                         defaultBindings.Add(JsonConvert.DeserializeObject<DefaultBinding>(reader.ReadToEnd()));

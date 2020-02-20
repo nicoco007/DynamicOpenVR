@@ -32,7 +32,7 @@ namespace DynamicOpenVR
             get
             {
                 if (NativeMethods.LoadLibrary("openvr_api") == IntPtr.Zero) return "OpenVR API is not loaded";
-                if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0) return "OpenVR is not the selected VR SDK";
+                if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0) return $"OpenVR is not the selected VR SDK ({XRSettings.loadedDeviceName})";
                 if (!OpenVRWrapper.isRuntimeInstalled) return "OpenVR runtime is not installed";
 
                 return null;

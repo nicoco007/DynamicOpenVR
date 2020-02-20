@@ -24,6 +24,7 @@ using System.Text;
 using DynamicOpenVR.IO;
 using Harmony;
 using IPA;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -66,25 +67,27 @@ namespace DynamicOpenVR.BeatSaber
                 return;
             }
 
+            OpenVRStatus.Init();
+
+            logger.Info("Successfully initialized OpenVR API");
+
+            // adding the manifest to config is more of a quality of life thing
             try
             {
-                OpenVRStatus.Init();
-
-                logger.Info("Successfully initialized OpenVR API");
-
                 AddManifestToSteamConfig();
-                RegisterActionSet();
-                ApplyHarmonyPatches();
-
-                OpenVRActionManager.instance.Initialize();
-
-                _initialized = true;
             }
             catch (Exception ex)
             {
-                logger.Error($"Failed to initialize {typeof(Plugin).Namespace}.");
+                logger.Error($"Failed to update SteamVR manifest.");
                 logger.Error(ex);
             }
+
+            RegisterActionSet();
+            ApplyHarmonyPatches();
+
+            OpenVRActionManager.instance.Initialize();
+
+            _initialized = true;
         }
 
         public void OnApplicationQuit()
@@ -105,8 +108,6 @@ namespace DynamicOpenVR.BeatSaber
             string manifestPath = Path.Combine(Environment.CurrentDirectory, "beatsaber.vrmanifest");
             string appConfigPath = Path.Combine(steamFolder, "config", "appconfig.json");
             string globalManifestPath = Path.Combine(steamFolder, "config", "steamapps.vrmanifest");
-
-            logger.Info("Found Steam at " + steamFolder);
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
@@ -158,6 +159,16 @@ namespace DynamicOpenVR.BeatSaber
 
         private string GetSteamHomeDirectory()
         {
+            string steamPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", string.Empty).ToString();
+
+            if (!string.IsNullOrEmpty(steamPath) && Directory.Exists(steamPath))
+            {
+                logger.Info($"Got Steam path from registry: '{steamPath}'");
+                return steamPath;
+            }
+
+            logger.Info($"Could not get Steam path from registry; attempting retrival via process");
+
             Process steamProcess = Process.GetProcessesByName("Steam").FirstOrDefault();
 
             if (steamProcess == null)
@@ -173,14 +184,18 @@ namespace DynamicOpenVR.BeatSaber
                 throw new Exception("QueryFullProcessImageName returned 0");
             }
 
-            string path = stringBuilder.ToString();
+            string exePath = stringBuilder.ToString();
 
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(exePath))
             {
                 throw new Exception("Steam path could not be found.");
             }
 
-            return Path.GetDirectoryName(path);
+            steamPath = Path.GetDirectoryName(exePath);
+
+            logger.Info($"Got Steam path from process: '{steamPath}'");
+
+            return steamPath;
         }
 
         private JObject ReadBeatSaberManifest(string globalManifestPath)
@@ -192,7 +207,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest;
             
-            logger.Debug("Reading " + globalManifestPath);
+            logger.Debug($"Reading '{globalManifestPath}'");
 
             using (StreamReader reader = new StreamReader(globalManifestPath))
             {
@@ -221,7 +236,7 @@ namespace DynamicOpenVR.BeatSaber
                 return appConfig;
             }
             
-            logger.Debug("Reading " + configPath);
+            logger.Debug($"Reading '{configPath}'");
 
             using (StreamReader reader = new StreamReader(configPath))
             {

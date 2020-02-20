@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
+using DynamicOpenVR.Logging;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Valve.VR;
@@ -26,6 +27,8 @@ namespace DynamicOpenVR
 
 		internal static void SetActionManifestPath(string manifestPath)
 		{
+			Logger.Info($"Setting action manifest path to '{manifestPath}'");
+
 			EVRInputError error = OpenVR.Input.SetActionManifestPath(manifestPath);
 
 			if (error != EVRInputError.None)
@@ -91,7 +94,7 @@ namespace DynamicOpenVR
 
 			if (error != EVRInputError.None && error != EVRInputError.NoData)
 			{
-				throw new OpenVRInputException($"Could not get analog data for action with handle '{actionHandle}': {error}", error);
+				throw new OpenVRInputException($"Could not get analog data for action with handle {actionHandle}: {error}", error);
 			}
 
 			return actionData;
@@ -105,7 +108,7 @@ namespace DynamicOpenVR
 
             if (error != EVRInputError.None && error != EVRInputError.NoData)
             {
-                throw new OpenVRInputException($"Could not get digital data for action with handle '{actionHandle}': {error}", error);
+                throw new OpenVRInputException($"Could not get digital data for action with handle {actionHandle}: {error}", error);
             }
 
             return actionData;
@@ -119,7 +122,7 @@ namespace DynamicOpenVR
 
             if (error != EVRInputError.None && error != EVRInputError.NoData)
             {
-                throw new OpenVRInputException($"Could not get skeletal data for action with handle '{actionHandle}': {error}", error);
+                throw new OpenVRInputException($"Could not get skeletal data for action with handle {actionHandle}: {error}", error);
             }
 
             return actionData;
@@ -133,7 +136,7 @@ namespace DynamicOpenVR
 
             if (error != EVRInputError.None && error != EVRInputError.NoData)
             {
-                throw new OpenVRInputException($"Could not get pose data for action with handle '{actionHandle}': {error}", error);
+                throw new OpenVRInputException($"Could not get pose data for action with handle {actionHandle}: {error}", error);
             }
 
             return actionData;
@@ -147,7 +150,7 @@ namespace DynamicOpenVR
 
 			if (error != EVRInputError.None && error != EVRInputError.NoData)
 			{
-				throw new OpenVRInputException($"Could not get skeletal summary data for action with handle '{actionHandle}': {error}", error);
+				throw new OpenVRInputException($"Could not get skeletal summary data for action with handle {actionHandle}: {error}", error);
 			}
 
 			return summaryData;
@@ -159,8 +162,13 @@ namespace DynamicOpenVR
 
             if (error != EVRInputError.None && error != EVRInputError.NoData)
             {
-                throw new OpenVRInputException($"Failed to trigger haptic feedback vibration for action with handle '{actionHandle}': {error}", error);
+                throw new OpenVRInputException($"Failed to trigger haptic feedback vibration for action with handle {actionHandle}: {error}", error);
             }
         }
+
+		internal static string GetRuntimeVersion()
+		{
+			return OpenVR.System.GetRuntimeVersion();
+		}
 	}
 }

@@ -70,7 +70,8 @@ namespace DynamicOpenVR.BeatSaber
             OpenVRStatus.Init();
 
             logger.Info("Successfully initialized OpenVR API");
-
+            logger.Info("Running SteamVR version " + OpenVRStatus.version);
+                
             // adding the manifest to config is more of a quality of life thing
             try
             {
@@ -217,7 +218,7 @@ namespace DynamicOpenVR.BeatSaber
 
             if (beatSaberManifest == null)
             {
-                throw new Exception("Failed to read Beat Saber manifest from " + globalManifestPath);
+                throw new Exception($"Beat Saber manifest not found in '{globalManifestPath}'");
             }
 
             return beatSaberManifest;

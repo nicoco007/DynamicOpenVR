@@ -39,6 +39,14 @@ namespace DynamicOpenVR
             }
         }
 
+        public static string version
+        {
+            get
+            {
+                return OpenVRWrapper.GetRuntimeVersion();
+            }
+        }
+
         public static void Init()
         {
             EVRInitError error = EVRInitError.None;

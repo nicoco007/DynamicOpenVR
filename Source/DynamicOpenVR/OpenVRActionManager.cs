@@ -186,7 +186,7 @@ namespace DynamicOpenVR
                     Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse '{actionFile}': {ex.Message}");
                 }
             }
-            
+
             List<ManifestDefaultBinding> defaultBindings = CombineAndWriteBindings(version);
 
             var manifest = new ActionManifest()
@@ -197,6 +197,21 @@ namespace DynamicOpenVR
                 defaultBindings = defaultBindings,
                 localization = CombineLocalizations(actionManifests)
             };
+
+            foreach (string actionSetName in manifest.actionSets.Select(a => a.Name))
+            {
+                Logger.Debug($"Found defined action set '{actionSetName}'");
+            }
+
+            foreach (string actionName in manifest.actions.Select(a => a.Name))
+            {
+                Logger.Debug($"Found defined action '{actionName}'");
+            }
+
+            foreach (string controllerType in manifest.defaultBindings.Select(a => a.ControllerType))
+            {
+                Logger.Debug($"Found default binding for controller '{controllerType}'");
+            }
 
             Logger.Debug($"Writing action manifest to '{OpenVRStatus.kActionManifestPath}'");
 

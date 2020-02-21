@@ -38,7 +38,6 @@ namespace DynamicOpenVR
                 return null;
             }
         }
-
         public static void Init()
         {
             EVRInitError error = EVRInitError.None;

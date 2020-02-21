@@ -70,7 +70,7 @@ namespace DynamicOpenVR.BeatSaber
             OpenVRStatus.Init();
 
             logger.Info("Successfully initialized OpenVR API");
-
+                
             // adding the manifest to config is more of a quality of life thing
             try
             {
@@ -123,6 +123,7 @@ namespace DynamicOpenVR.BeatSaber
             JObject appConfig = ReadAppConfig(appConfigPath);
             JArray manifestPaths = appConfig["manifest_paths"].Value<JArray>();
             List<JToken> existing = manifestPaths.Where(p => p.Value<string>() == manifestPath).ToList();
+            bool updated = false;
 
             // only rewrite if path isn't in list already or is not at the top
             if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 0)
@@ -136,7 +137,7 @@ namespace DynamicOpenVR.BeatSaber
 
                 manifestPaths.Insert(0, manifestPath);
 
-                WriteAppConfig(appConfigPath, appConfig);
+                updated = true;
             }
             else
             {
@@ -149,11 +150,16 @@ namespace DynamicOpenVR.BeatSaber
 
                 manifestPaths.Add(globalManifestPath);
 
-                WriteAppConfig(appConfigPath, appConfig);
+                updated = true;
             }
             else
             {
                 logger.Info("Global manifest is already registered");
+            }
+
+            if (updated)
+            {
+                WriteAppConfig(appConfigPath, appConfig);
             }
         }
 
@@ -217,7 +223,7 @@ namespace DynamicOpenVR.BeatSaber
 
             if (beatSaberManifest == null)
             {
-                throw new Exception("Failed to read Beat Saber manifest from " + globalManifestPath);
+                throw new Exception($"Beat Saber manifest not found in '{globalManifestPath}'");
             }
 
             return beatSaberManifest;

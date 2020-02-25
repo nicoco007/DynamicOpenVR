@@ -9,6 +9,7 @@
   "version": "0.1.2",
   "features": [],
   "dependsOn": {
-    "BSIPA": "^3.13.0"
+    "BSIPA": "^3.13.0",
+    "DynamicOpenVR": "^0.1.0"
   }
 }

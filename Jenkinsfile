@@ -21,35 +21,39 @@ pipeline {
     stage('Prepare Debug') {
       steps {
         bat 'robocopy Packaging Packaging-Debug /E & if %ERRORLEVEL% LEQ 3 (exit /b 0)'
-        bat 'mkdir Packaging-Debug\\Plugins'
-        bat 'mkdir Packaging-Debug\\Libs'
+        bat 'mkdir Packaging-Debug\\DynamicOpenVR\\Libs'
+        bat 'mkdir Packaging-Debug\\DynamicOpenVR.BeatSaber\\Plugins'
         bat 'python bsipa_version_hash.py'
       }
     }
     stage('Build Debug') {
       steps {
         bat 'msbuild Source\\DynamicOpenVR.sln /p:Configuration=Debug /p:Platform="Any CPU" /p:AutomatedBuild=true'
-        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.dll Packaging-Debug\\Libs'
-        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.pdb Packaging-Debug\\Libs'
-        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\Plugins'
-        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.pdb Packaging-Debug\\Plugins'
-        bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-DEBUG.zip -r \"./Packaging-Debug/*\""
+        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.dll Packaging-Debug\\DynamicOpenVR\\Libs'
+        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\DynamicOpenVR.pdb Packaging-Debug\\DynamicOpenVR\\Libs'
+        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\DynamicOpenVR.BeatSaber\\Plugins'
+        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\DynamicOpenVR.BeatSaber.pdb Packaging-Debug\\DynamicOpenVR.BeatSaber\\Plugins'
+        bat "7z a DynamicOpenVR-${env.GIT_VERSION}-DEBUG.zip -r \"./Packaging-Debug/DynamicOpenVR/*\""
+        bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-DEBUG.zip -r \"./Packaging-Debug/DynamicOpenVR.BeatSaber/*\""
+        archiveArtifacts "DynamicOpenVR-${env.GIT_VERSION}-DEBUG.zip"
         archiveArtifacts "DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-DEBUG.zip"
       }
     }
     stage('Prepare Release') {
       steps {
         bat 'robocopy Packaging Packaging-Release /E & if %ERRORLEVEL% LEQ 3 (exit /b 0)'
-        bat 'mkdir Packaging-Release\\Plugins'
-        bat 'mkdir Packaging-Release\\Libs'
+        bat 'mkdir Packaging-Release\\DynamicOpenVR\\Libs'
+        bat 'mkdir Packaging-Release\\DynamicOpenVR.BeatSaber\\Plugins'
       }
     }
     stage('Build Release') {
       steps {
         bat 'msbuild Source\\DynamicOpenVR.sln /p:Configuration=Release /p:Platform="Any CPU" /p:AutomatedBuild=true'
-        bat 'copy Source\\DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging-Release\\Libs'
-        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\Plugins'
-        bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-RELEASE.zip -r \"./Packaging-Release/*\""
+        bat 'copy Source\\DynamicOpenVR\\bin\\Release\\DynamicOpenVR.dll Packaging-Release\\DynamicOpenVR\\Libs'
+        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Release\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\DynamicOpenVR.BeatSaber\\Plugins'
+        bat "7z a DynamicOpenVR-${env.GIT_VERSION}-RELEASE.zip -r \"./Packaging-Release/DynamicOpenVR/*\""
+        bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-RELEASE.zip -r \"./Packaging-Release/DynamicOpenVR.BeatSaber/*\""
+        archiveArtifacts "DynamicOpenVR-${env.GIT_VERSION}-RELEASE.zip"
         archiveArtifacts "DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-RELEASE.zip"
       }
     }

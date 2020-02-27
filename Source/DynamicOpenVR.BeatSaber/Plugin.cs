@@ -70,7 +70,6 @@ namespace DynamicOpenVR.BeatSaber
             OpenVRStatus.Init();
 
             logger.Info("Successfully initialized OpenVR API");
-            logger.Info("Running SteamVR version " + OpenVRStatus.version);
                 
             // adding the manifest to config is more of a quality of life thing
             try

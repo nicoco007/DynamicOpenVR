@@ -1,5 +1,5 @@
 // DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
-// Copyright ?2019-2020 Nicolas Gnyra
+// Copyright © 2019-2020 Nicolas Gnyra
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,6 @@
 using Harmony;
 using System;
 using UnityEngine.XR;
-using Valve.VR;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
@@ -103,15 +102,15 @@ namespace DynamicOpenVR.BeatSaber
 			{
 				if (node == XRNode.LeftHand)
 				{
-					Plugin.leftSlice.TriggerHapticVibration(.01f, strength, 25f);
+					Plugin.leftSlice.TriggerHapticVibration(0.01f, strength, 25f);
 				}
 				else if (node == XRNode.RightHand)
 				{
-					Plugin.rightSlice.TriggerHapticVibration(.01f, strength, 25f);
+					Plugin.rightSlice.TriggerHapticVibration(0.01f, strength, 25f);
 				}
 			}
 			catch (Exception) { }
-			Plugin.logger.Debug($"Pulse strength: {strength}");
+
 			return false;
 		}
 	}

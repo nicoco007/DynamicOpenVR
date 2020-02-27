@@ -56,17 +56,19 @@ namespace DynamicOpenVR.IO
 
         public override bool isActive => _actionData.bActive;
 
-        public Vector3 GetPosition(HmdMatrix34_t rawMatrix)
+        internal override void UpdateData()
+        {
+            _actionData = OpenVRWrapper.GetPoseActionData(handle);
+            HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
+            _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
+        }
+
+        private Vector3 GetPosition(HmdMatrix34_t rawMatrix)
         {
             return new Vector3(rawMatrix.m3, rawMatrix.m7, -rawMatrix.m11);
         }
 
-        public bool IsRotationValid(HmdMatrix34_t rawMatrix)
-        {
-            return ((rawMatrix.m2 != 0 || rawMatrix.m6 != 0 || rawMatrix.m10 != 0) && (rawMatrix.m1 != 0 || rawMatrix.m5 != 0 || rawMatrix.m9 != 0));
-        }
-
-        public Quaternion GetRotation(HmdMatrix34_t rawMatrix)
+        private Quaternion GetRotation(HmdMatrix34_t rawMatrix)
         {
             if (IsRotationValid(rawMatrix))
             {
@@ -75,25 +77,20 @@ namespace DynamicOpenVR.IO
                 float y = Mathf.Sqrt(Mathf.Max(0, 1 - rawMatrix.m0 + rawMatrix.m5 - rawMatrix.m10)) / 2;
                 float z = Mathf.Sqrt(Mathf.Max(0, 1 - rawMatrix.m0 - rawMatrix.m5 + rawMatrix.m10)) / 2;
 
-                _copysign(ref x, -rawMatrix.m9 - -rawMatrix.m6);
-                _copysign(ref y, -rawMatrix.m2 - -rawMatrix.m8);
-                _copysign(ref z, rawMatrix.m4 - rawMatrix.m1);
+                CopySign(ref x, rawMatrix.m6 - rawMatrix.m9);
+                CopySign(ref y, rawMatrix.m8 - rawMatrix.m2);
+                CopySign(ref z, rawMatrix.m4 - rawMatrix.m1);
 
                 return new Quaternion(x, y, z, w);
             }
+
             return Quaternion.identity;
         }
 
-        private static void _copysign(ref float sizeval, float signval)
+        private static void CopySign(ref float sizeVal, float signVal)
         {
-            if (signval > 0 != sizeval > 0)
-                sizeval = -sizeval;
-        }
-        internal override void UpdateData()
-        {
-            _actionData = OpenVRWrapper.GetPoseActionData(handle);
-            HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
-            _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
+            if (signVal > 0 != sizeVal > 0)
+                sizeVal = -sizeVal;
         }
 
         private Vector3 ToVector3(HmdVector3_t vector)
@@ -101,5 +98,9 @@ namespace DynamicOpenVR.IO
             return new Vector3(vector.v0, vector.v1, vector.v2);
         }
 
+        private bool IsRotationValid(HmdMatrix34_t rawMatrix)
+        {
+            return (rawMatrix.m2 != 0 || rawMatrix.m6 != 0 || rawMatrix.m10 != 0) && (rawMatrix.m1 != 0 || rawMatrix.m5 != 0 || rawMatrix.m9 != 0);
+        }
     }
 }

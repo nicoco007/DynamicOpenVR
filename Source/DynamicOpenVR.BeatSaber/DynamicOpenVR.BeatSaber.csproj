@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPALogHandler.cs" />
+    <Compile Include="MessageBox.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

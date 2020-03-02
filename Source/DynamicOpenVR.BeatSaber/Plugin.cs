@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -144,7 +145,7 @@ namespace DynamicOpenVR.BeatSaber
                 logger.Info("Manifest is already registered");
             }
 
-            if (manifestPaths.ToObject<List<string>>().IndexOf(globalManifestPath) == -1)
+            if (!manifestPaths.Any(s => s.Value<string>().Equals(globalManifestPath, StringComparison.InvariantCultureIgnoreCase)))
             {
                 logger.Info($"Adding '{globalManifestPath}' to '{appConfigPath}'");
 
@@ -159,13 +160,26 @@ namespace DynamicOpenVR.BeatSaber
 
             if (updated)
             {
-                WriteAppConfig(appConfigPath, appConfig);
+                if (MessageBox.Show(
+                        "DynamicOpenVR.BeatSaber has created a .vrmanifest file in your game's root folder and would like to register it within SteamVR. " +
+                        $"The file has been created at \"{manifestPath}\" and will be added to the global SteamVR app configuration at \"{appConfigPath}\". " +
+                        "Doing this allows SteamVR to properly recognize that the game is now using the new input system when the game is not running. " +
+                        "However, it may cause issues on certain systems. You can choose to do this now or later once you've run the game once with " +
+                        "DynamicOpenVR enabled and checked everything works.\n\nCan DynamicOpenVR.BeatSaber proceed with the changes?",
+                        "DynamicOpenVR needs your permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    WriteAppConfig(appConfigPath, appConfig);
+                }
+                else
+                {
+                    logger.Warn("Manifest creation canceled by user");
+                }
             }
         }
 
         private string GetSteamHomeDirectory()
         {
-            string steamPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", string.Empty).ToString();
+            string steamPath = NormalizePath(Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", string.Empty).ToString());
 
             if (!string.IsNullOrEmpty(steamPath) && Directory.Exists(steamPath))
             {
@@ -173,7 +187,7 @@ namespace DynamicOpenVR.BeatSaber
                 return steamPath;
             }
 
-            logger.Info($"Could not get Steam path from registry; attempting retrival via process");
+            logger.Info("Could not get Steam path from registry; attempting retrieval via process");
 
             Process steamProcess = Process.GetProcessesByName("Steam").FirstOrDefault();
 
@@ -320,6 +334,59 @@ namespace DynamicOpenVR.BeatSaber
                     Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
                 }
             }
+        }
+
+        private string NormalizePath(string path)
+        {
+            if (TryGetExactPath(path, out string exactPath))
+            {
+                return exactPath;
+            }
+
+            return new Uri(path).LocalPath;
+        }
+
+        private bool TryGetExactPath(string path, out string exactPath)
+        {
+            bool result = false;
+            exactPath = null;
+
+            // DirectoryInfo accepts either a file path or a directory path, and most of its properties work for either.
+            // However, its Exists property only works for a directory path.
+            DirectoryInfo directory = new DirectoryInfo(path);
+            if (File.Exists(path) || directory.Exists)
+            {
+                List<string> parts = new List<string>();
+
+                DirectoryInfo parentDirectory = directory.Parent;
+                while (parentDirectory != null)
+                {
+                    FileSystemInfo entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
+                    parts.Add(entry.Name);
+
+                    directory = parentDirectory;
+                    parentDirectory = directory.Parent;
+                }
+
+                // Handle the root part (i.e., drive letter or UNC \\server\share).
+                string root = directory.FullName;
+                if (root.Contains(':'))
+                {
+                    root = root.ToUpper();
+                }
+                else
+                {
+                    string[] rootParts = root.Split('\\');
+                    root = string.Join("\\", rootParts.Select(part => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(part)));
+                }
+
+                parts.Add(root);
+                parts.Reverse();
+                exactPath = Path.Combine(parts.ToArray());
+                result = true;
+            }
+
+            return result;
         }
     }
 }

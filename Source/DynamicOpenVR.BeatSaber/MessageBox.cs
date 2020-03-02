@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace DynamicOpenVR.BeatSaber
 {
-    internal static class NativeMethods
-    {
-        [DllImport("kernel32.dll", SetLastError=true)]
-        internal static extern int QueryFullProcessImageName([In] IntPtr hProcess, [In] int dwFlags, [Out] StringBuilder lpExeName, ref int lpdwSize);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet= CharSet.Auto)]
-        internal static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
-    }
-
-    internal enum MessageBoxType : uint
+    internal enum MessageBoxButtons : uint
     {
         /// <summary>
         /// The message box contains three push buttons: Abort, Retry, and Ignore. 
@@ -53,79 +42,64 @@ namespace DynamicOpenVR.BeatSaber
         /// <summary>
         /// The message box contains three push buttons: Yes, No, and Cancel. 
         /// </summary>
-        YesNoCancel = 0x00000003u,
-        
+        YesNoCancel = 0x00000003u
+    }
+
+    internal enum MessageBoxIcon : uint
+    {
         /// <summary>
-        /// An exclamation-point icon appears in the message box.
+        /// No icon is displayed.
         /// </summary>
-        IconExclamation = 0x00000030u,
+        None = 0x00000000u,
 
         /// <summary>
         /// An exclamation-point icon appears in the message box.
         /// </summary>
-        IconWarning = 0x00000030u,
+        Exclamation = 0x00000030u,
+
+        /// <summary>
+        /// An exclamation-point icon appears in the message box.
+        /// </summary>
+        Warning = 0x00000030u,
 
         /// <summary>
         /// An icon consisting of a lowercase letter i in a circle appears in the message box.
         /// </summary>
-        IconInformation = 0x00000040u,
+        Information = 0x00000040u,
 
         /// <summary>
         /// An icon consisting of a lowercase letter i in a circle appears in the message box.
         /// </summary>
-        IconAsterisk = 0x00000040u,
+        Asterisk = 0x00000040u,
 
         /// <summary>
         /// A question-mark icon appears in the message box. The question-mark message icon is no longer recommended because it does not clearly represent a specific type of message and because the phrasing of a message as a question could apply to any message type. In addition, users can confuse the message symbol question mark with Help information. Therefore, do not use this question mark message symbol in your message boxes. The system continues to support its inclusion only for backward compatibility.
         /// </summary>
-        IconQuestion = 0x00000020u,
+        Question = 0x00000020u,
 
         /// <summary>
         /// A stop-sign icon appears in the message box.
         /// </summary>
-        IconStop = 0x00000010u,
+        Stop = 0x00000010u,
 
         /// <summary>
         /// A stop-sign icon appears in the message box.
         /// </summary>
-        IconError = 0x00000010u,
+        Error = 0x00000010u,
 
         /// <summary>
         /// A stop-sign icon appears in the message box.
         /// </summary>
-        IconHand = 0x00000010u,
-
-        /// <summary>
-        /// The first button is the default button. DefaultButton1 is the default unless DefaultButton2, DefaultButton3, or DefaultButton4 is specified.
-        /// </summary>
-        DefaultButton1 = 0x00000000u,
-
-        /// <summary>
-        /// The second button is the default button.
-        /// </summary>
-        DefaultButton2 = 0x00000100u,
-
-        /// <summary>
-        /// The third button is the default button.
-        /// </summary>
-        DefaultButton3 = 0x00000200u,
-
-        /// <summary>
-        /// The fourth button is the default button.
-        /// </summary>
-        DefaultButton4 = 0x00000300u
+        Hand = 0x00000010u
     }
 
-    internal enum DialogResult
+    internal class MessageBox
     {
-        Abort = 3,
-        Cancel = 2,
-        Continue = 11,
-        Ignore = 5,
-        No = 7,
-        Ok = 1,
-        Retry = 4,
-        TryAgain = 10,
-        Yes = 6
+        internal static DialogResult Show(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.Ok, MessageBoxIcon icon = MessageBoxIcon.None)
+        {
+            uint type = (uint)buttons | (uint)icon;
+
+            return (DialogResult) NativeMethods.MessageBox(IntPtr.Zero, message, title, type);
+        }
     }
 }

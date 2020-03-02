@@ -79,7 +79,7 @@ namespace DynamicOpenVR.BeatSaber
             }
             catch (Exception ex)
             {
-                logger.Error($"Failed to update SteamVR manifest.");
+                logger.Error("Failed to update SteamVR manifest.");
                 logger.Error(ex);
             }
 
@@ -129,7 +129,7 @@ namespace DynamicOpenVR.BeatSaber
             // only rewrite if path isn't in list already or is not at the top
             if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 0)
             {
-                logger.Info($"Adding '{manifestPath}' to '{appConfigPath}'");
+                logger.Info($"Adding '{manifestPath}' to app config");
 
                 foreach (JToken token in existing)
                 {
@@ -142,12 +142,12 @@ namespace DynamicOpenVR.BeatSaber
             }
             else
             {
-                logger.Info("Manifest is already registered");
+                logger.Info("Manifest is already in app config");
             }
 
             if (!manifestPaths.Any(s => s.Value<string>().Equals(globalManifestPath, StringComparison.InvariantCultureIgnoreCase)))
             {
-                logger.Info($"Adding '{globalManifestPath}' to '{appConfigPath}'");
+                logger.Info($"Adding '{globalManifestPath}' to app config");
 
                 manifestPaths.Add(globalManifestPath);
 
@@ -155,7 +155,7 @@ namespace DynamicOpenVR.BeatSaber
             }
             else
             {
-                logger.Info("Global manifest is already registered");
+                logger.Info("Global manifest is already in app config");
             }
 
             if (updated)
@@ -164,15 +164,16 @@ namespace DynamicOpenVR.BeatSaber
                         "DynamicOpenVR.BeatSaber has created a .vrmanifest file in your game's root folder and would like to register it within SteamVR. " +
                         $"The file has been created at \"{manifestPath}\" and will be added to the global SteamVR app configuration at \"{appConfigPath}\". " +
                         "Doing this allows SteamVR to properly recognize that the game is now using the new input system when the game is not running. " +
-                        "However, it may cause issues on certain systems. You can choose to do this now or later once you've run the game once with " +
+                        "However, it may cause issues on certain systems. You can choose to do this now or wait until you've run the game with " +
                         "DynamicOpenVR enabled and checked everything works.\n\nCan DynamicOpenVR.BeatSaber proceed with the changes?",
                         "DynamicOpenVR needs your permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
+                    logger.Info($"Writing app config changes to '{appConfigPath}'");
                     WriteAppConfig(appConfigPath, appConfig);
                 }
                 else
                 {
-                    logger.Warn("Manifest creation canceled by user");
+                    logger.Warn("Manifest registration canceled by user");
                 }
             }
         }
@@ -346,6 +347,17 @@ namespace DynamicOpenVR.BeatSaber
             return new Uri(path).LocalPath;
         }
 
+        /// <summary>
+        /// Gets the exact case used on the file system for an existing file or directory.
+        /// From https://stackoverflow.com/a/29578292/3133529
+        /// </summary>
+        /// <param name="path">A relative or absolute path.</param>
+        /// <param name="exactPath">The full path using the correct case if the path exists.  Otherwise, null.</param>
+        /// <returns>True if the exact path was found.  False otherwise.</returns>
+        /// <remarks>
+        /// This supports drive-lettered paths and UNC paths, but a UNC root
+        /// will be returned in title case (e.g., \\Server\Share).
+        /// </remarks>
         private bool TryGetExactPath(string path, out string exactPath)
         {
             bool result = false;

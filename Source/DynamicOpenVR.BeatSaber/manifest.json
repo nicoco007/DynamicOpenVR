@@ -6,7 +6,7 @@
   "id": "DynamicOpenVR.BeatSaber",
   "name": "DynamicOpenVR.BeatSaber",
   "icon": "DynamicOpenVR.BeatSaber.Resources.icon.png",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "features": [],
   "dependsOn": {
     "BSIPA": "^3.13.0",

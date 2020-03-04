@@ -46,10 +46,10 @@ namespace DynamicOpenVR.BeatSaber
         public static PoseInput leftHandPose { get; private set; }
         public static PoseInput rightHandPose { get; private set; }
 
-        private HarmonyInstance _harmonyInstance;
-
+        private readonly string _actionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
         private readonly HashSet<EVREventType> _pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
-
+        
+        private HarmonyInstance _harmonyInstance;
         private bool _initialized;
 
         public void Init(Logger logger)
@@ -62,13 +62,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             logger.Info("Starting " + typeof(Plugin).Namespace);
 
-            if (!OpenVRStatus.isRunning)
-            {
-                logger.Warn(OpenVRStatus.errorMessage + "; Exiting.");
-                return;
-            }
-
-            OpenVRStatus.Init();
+            OpenVRUtilities.Init();
 
             logger.Info("Successfully initialized OpenVR API");
                 
@@ -86,7 +80,7 @@ namespace DynamicOpenVR.BeatSaber
             RegisterActionSet();
             ApplyHarmonyPatches();
 
-            OpenVRActionManager.instance.Initialize();
+            OpenVRActionManager.instance.Initialize(_actionManifestPath);
 
             _initialized = true;
         }
@@ -105,14 +99,14 @@ namespace DynamicOpenVR.BeatSaber
 
         private void AddManifestToSteamConfig()
         {
-            string steamFolder = GetSteamHomeDirectory();
+            string steamFolder = SteamUtilities.GetSteamHomeDirectory();
             string manifestPath = Path.Combine(Environment.CurrentDirectory, "beatsaber.vrmanifest");
             string appConfigPath = Path.Combine(steamFolder, "config", "appconfig.json");
             string globalManifestPath = Path.Combine(steamFolder, "config", "steamapps.vrmanifest");
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
-            beatSaberManifest["action_manifest_path"] = OpenVRStatus.kActionManifestPath;
+            beatSaberManifest["action_manifest_path"] = _actionManifestPath;
 
             JObject vrManifest = new JObject
             {
@@ -176,47 +170,6 @@ namespace DynamicOpenVR.BeatSaber
                     logger.Warn("Manifest registration canceled by user");
                 }
             }
-        }
-
-        private string GetSteamHomeDirectory()
-        {
-            string steamPath = NormalizePath(Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", string.Empty).ToString());
-
-            if (!string.IsNullOrEmpty(steamPath) && Directory.Exists(steamPath))
-            {
-                logger.Info($"Got Steam path from registry: '{steamPath}'");
-                return steamPath;
-            }
-
-            logger.Info("Could not get Steam path from registry; attempting retrieval via process");
-
-            Process steamProcess = Process.GetProcessesByName("Steam").FirstOrDefault();
-
-            if (steamProcess == null)
-            {
-                throw new Exception("Steam process could not be found.");
-            }
-
-            var stringBuilder = new StringBuilder(2048);
-            int capacity = stringBuilder.Capacity + 1;
-
-            if (NativeMethods.QueryFullProcessImageName(steamProcess.Handle, 0, stringBuilder, ref capacity) == 0)
-            {
-                throw new Exception("QueryFullProcessImageName returned 0");
-            }
-
-            string exePath = stringBuilder.ToString();
-
-            if (string.IsNullOrEmpty(exePath))
-            {
-                throw new Exception("Steam path could not be found.");
-            }
-
-            steamPath = Path.GetDirectoryName(exePath);
-
-            logger.Info($"Got Steam path from process: '{steamPath}'");
-
-            return steamPath;
         }
 
         private JObject ReadBeatSaberManifest(string globalManifestPath)
@@ -335,70 +288,6 @@ namespace DynamicOpenVR.BeatSaber
                     Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
                 }
             }
-        }
-
-        private string NormalizePath(string path)
-        {
-            if (TryGetExactPath(path, out string exactPath))
-            {
-                return exactPath;
-            }
-
-            return new Uri(path).LocalPath;
-        }
-
-        /// <summary>
-        /// Gets the exact case used on the file system for an existing file or directory.
-        /// From https://stackoverflow.com/a/29578292/3133529
-        /// </summary>
-        /// <param name="path">A relative or absolute path.</param>
-        /// <param name="exactPath">The full path using the correct case if the path exists.  Otherwise, null.</param>
-        /// <returns>True if the exact path was found.  False otherwise.</returns>
-        /// <remarks>
-        /// This supports drive-lettered paths and UNC paths, but a UNC root
-        /// will be returned in title case (e.g., \\Server\Share).
-        /// </remarks>
-        private bool TryGetExactPath(string path, out string exactPath)
-        {
-            bool result = false;
-            exactPath = null;
-
-            // DirectoryInfo accepts either a file path or a directory path, and most of its properties work for either.
-            // However, its Exists property only works for a directory path.
-            DirectoryInfo directory = new DirectoryInfo(path);
-            if (File.Exists(path) || directory.Exists)
-            {
-                List<string> parts = new List<string>();
-
-                DirectoryInfo parentDirectory = directory.Parent;
-                while (parentDirectory != null)
-                {
-                    FileSystemInfo entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
-                    parts.Add(entry.Name);
-
-                    directory = parentDirectory;
-                    parentDirectory = directory.Parent;
-                }
-
-                // Handle the root part (i.e., drive letter or UNC \\server\share).
-                string root = directory.FullName;
-                if (root.Contains(':'))
-                {
-                    root = root.ToUpper();
-                }
-                else
-                {
-                    string[] rootParts = root.Split('\\');
-                    root = string.Join("\\", rootParts.Select(part => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(part)));
-                }
-
-                parts.Add(root);
-                parts.Reverse();
-                exactPath = Path.Combine(parts.ToArray());
-                result = true;
-            }
-
-            return result;
         }
     }
 }

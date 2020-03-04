@@ -85,12 +85,13 @@
     <Compile Include="Manifest\ManifestDefaultBinding.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OpenVRActionManager.cs" />
-    <Compile Include="OpenVRInputException.cs" />
-    <Compile Include="OpenVRInitException.cs" />
-    <Compile Include="OpenVRStatus.cs" />
+    <Compile Include="Exceptions\OpenVRInputException.cs" />
+    <Compile Include="Exceptions\OpenVRInitException.cs" />
+    <Compile Include="OpenVRUtilities.cs" />
     <Compile Include="OpenVRWrapper.cs" />
     <Compile Include="openvr_api.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SteamUtilities.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

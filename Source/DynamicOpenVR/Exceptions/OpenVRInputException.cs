@@ -17,15 +17,13 @@
 using System;
 using Valve.VR;
 
-namespace DynamicOpenVR
+namespace DynamicOpenVR.Exceptions
 {
-    public class OpenVRInitException : Exception
+    public class OpenVRInputException : Exception
     {
-        public EVRInitError Error { get; } = EVRInitError.None;
+        public EVRInputError Error { get; }
 
-        internal OpenVRInitException(string message) : base(message) { }
-
-        internal OpenVRInitException(EVRInitError error) : base("Failed to initialize OpenVR: " + error)
+        internal OpenVRInputException(string message, EVRInputError error) : base(message)
         {
             Error = error;
         }

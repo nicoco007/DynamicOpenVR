@@ -17,6 +17,7 @@
 using DynamicOpenVR.Logging;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using DynamicOpenVR.Exceptions;
 using Valve.VR;
 
 namespace DynamicOpenVR
@@ -135,7 +136,7 @@ namespace DynamicOpenVR
             EVRInputError error = OpenVR.Input.GetPoseActionData(actionHandle, origin, 0, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
             if (error != EVRInputError.None && error != EVRInputError.NoData)
             {
-            throw new OpenVRInputException($"Could not get pose data for action with handle {actionHandle}: {error}", error);
+                throw new OpenVRInputException($"Could not get pose data for action with handle {actionHandle}: {error}", error);
             }
 
             return actionData;

@@ -24,6 +24,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using DynamicOpenVR.DefaultBindings;
+using DynamicOpenVR.Exceptions;
 using UnityEngine;
 using Logger = DynamicOpenVR.Logging.Logger;
 
@@ -50,13 +51,25 @@ namespace DynamicOpenVR
 			}
         }
 
-        public bool initialized = false;
+        public string actionManifestPath
+        {
+            get
+            {
+                if (!initialized) throw new Exception(nameof(OpenVRActionManager) + " is not initialized");
+
+                return _actionManifestPath;
+            }
+        }
+
+        public bool initialized { get; private set; }
+
+        private string _actionManifestPath;
 
         private readonly Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
         private readonly HashSet<string> _actionSetNames = new HashSet<string>();
         private readonly List<ulong> _actionSetHandles = new List<ulong>();
 
-        public void Initialize()
+        public void Initialize(string actionManifestPath)
         {
             if (initialized)
             {
@@ -66,8 +79,9 @@ namespace DynamicOpenVR
             Logger.Info($"Initializing {nameof(OpenVRActionManager)}");
 
             CombineAndWriteManifest();
-                
-            OpenVRWrapper.SetActionManifestPath(OpenVRStatus.kActionManifestPath);
+
+            _actionManifestPath = actionManifestPath;
+            OpenVRWrapper.SetActionManifestPath(actionManifestPath);
 
             IEnumerable<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct();
 
@@ -215,9 +229,9 @@ namespace DynamicOpenVR
                 Logger.Debug($"Found default binding for controller '{controllerType}'");
             }
 
-            Logger.Debug($"Writing action manifest to '{OpenVRStatus.kActionManifestPath}'");
+            Logger.Debug($"Writing action manifest to '{actionManifestPath}'");
 
-            using (var writer = new StreamWriter(OpenVRStatus.kActionManifestPath))
+            using (var writer = new StreamWriter(actionManifestPath))
             {
                 writer.WriteLine(JsonConvert.SerializeObject(manifest, Formatting.Indented));
             }

@@ -7,6 +7,8 @@ namespace DynamicOpenVR
 {
     public static class OpenVRUtilities
     {
+        public static bool isInitialized { get; private set; }
+
         public static void Init()
         {
             if (NativeMethods.LoadLibrary("openvr_api") == IntPtr.Zero) throw new OpenVRInitException("OpenVR API is not loaded");
@@ -25,6 +27,8 @@ namespace DynamicOpenVR
             {
                 throw new OpenVRInitException("OpenVR.Init returned null");
             }
+
+            isInitialized = true;
         }
     }
 }

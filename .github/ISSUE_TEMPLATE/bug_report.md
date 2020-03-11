@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**Before doing anything else, please attach your latest log to this issue. It should be located at `Logs\_latest.log` in your Beat Saber installation's folder.**
+**Before doing anything else, please attach your latest *full* log to this issue. It should be located at `Logs\_latest.log` (not the one inside `Logs\DynamicOpenVR`, the one directly under `Logs`) in your Beat Saber installation's folder.**
 
 **Desktop (please complete the following information):**
 - Operating system: [e.g. Windows 10, Ubuntu 18.04]

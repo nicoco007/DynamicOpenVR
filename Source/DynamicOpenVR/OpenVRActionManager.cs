@@ -78,9 +78,10 @@ namespace DynamicOpenVR
 
             Logger.Info($"Initializing {nameof(OpenVRActionManager)}");
 
+            _actionManifestPath = actionManifestPath;
+
             CombineAndWriteManifest();
 
-            _actionManifestPath = actionManifestPath;
             OpenVRWrapper.SetActionManifestPath(actionManifestPath);
 
             IEnumerable<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct();
@@ -229,9 +230,9 @@ namespace DynamicOpenVR
                 Logger.Debug($"Found default binding for controller '{controllerType}'");
             }
 
-            Logger.Debug($"Writing action manifest to '{actionManifestPath}'");
+            Logger.Debug($"Writing action manifest to '{_actionManifestPath}'");
 
-            using (var writer = new StreamWriter(actionManifestPath))
+            using (var writer = new StreamWriter(_actionManifestPath))
             {
                 writer.WriteLine(JsonConvert.SerializeObject(manifest, Formatting.Indented));
             }

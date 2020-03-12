@@ -16,16 +16,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using DynamicOpenVR.IO;
 using Harmony;
 using IPA;
-using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -121,7 +117,7 @@ namespace DynamicOpenVR.BeatSaber
             bool updated = false;
 
             // only rewrite if path isn't in list already or is not at the top
-            if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 0)
+            if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 1)
             {
                 logger.Info($"Adding '{manifestPath}' to app config");
 

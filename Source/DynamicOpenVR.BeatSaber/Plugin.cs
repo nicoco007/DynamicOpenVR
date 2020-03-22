@@ -58,7 +58,16 @@ namespace DynamicOpenVR.BeatSaber
         {
             logger.Info("Starting " + typeof(Plugin).Namespace);
 
-            OpenVRUtilities.Init();
+            try
+            {
+                OpenVRUtilities.Init();
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Failed to initialize OpenVR API; DynamicOpenVR will not run");
+                logger.Error(ex);
+                return;
+            }
 
             logger.Info("Successfully initialized OpenVR API");
                 
@@ -83,15 +92,35 @@ namespace DynamicOpenVR.BeatSaber
 
         public void OnApplicationQuit()
         {
-            // not really necessary here, just following good practices
-            leftTriggerValue?.Dispose();
-            rightTriggerValue?.Dispose();
-            menu?.Dispose();
-            leftSlice?.Dispose();
-            rightSlice?.Dispose();
-            leftHandPose?.Dispose();
-            rightHandPose?.Dispose();
+            // not really necessary since the game is closing, just following good practices
+            if (_initialized)
+            {
+                leftTriggerValue?.Dispose();
+                rightTriggerValue?.Dispose();
+                menu?.Dispose();
+                leftSlice?.Dispose();
+                rightSlice?.Dispose();
+                leftHandPose?.Dispose();
+                rightHandPose?.Dispose();
+            }
         }
+
+        public void OnUpdate()
+        {
+            if (_initialized)
+            {
+                VREvent_t evt = default;
+                if (OpenVR.System.PollNextEvent(ref evt, (uint)Marshal.SizeOf(typeof(VREvent_t))) && _pauseEvents.Contains((EVREventType) evt.eventType))
+                {
+                    Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
+                }
+            }
+        }
+
+        public void OnFixedUpdate() { }
+        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
+        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
+        public void OnSceneUnloaded(Scene scene) { }
 
         private void AddManifestToSteamConfig()
         {
@@ -267,23 +296,6 @@ namespace DynamicOpenVR.BeatSaber
 
             _harmonyInstance = HarmonyInstance.Create(GetType().Namespace);
             _harmonyInstance.PatchAll();
-        }
-
-        public void OnFixedUpdate() { }
-        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
-        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
-        public void OnSceneUnloaded(Scene scene) { }
-
-        public void OnUpdate()
-        {
-            if (_initialized)
-            {
-                VREvent_t evt = default;
-                if (OpenVR.System.PollNextEvent(ref evt, (uint)Marshal.SizeOf(typeof(VREvent_t))) && _pauseEvents.Contains((EVREventType) evt.eventType))
-                {
-                    Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
-                }
-            }
         }
     }
 }

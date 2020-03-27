@@ -3,20 +3,24 @@
 [![Latest Version](https://img.shields.io/github/v/release/nicoco007/DynamicOpenVR?include_prereleases&style=flat-square)](https://github.com/nicoco007/DynamicOpenVR/releases)
 [![License](https://img.shields.io/github/license/nicoco007/DynamicOpenVR?style=flat-square)](https://github.com/nicoco007/DynamicOpenVR/blob/master/LICENSE)
 
-Unity scripts to allow dynamic creation of OpenVR actions at runtime. Intended to allow 3rd parties to add actions and bindings to an existing game to extend functionality.
+## What is DynamicOpenVR?
+
+DynamicOpenVR is a set of Unity scripts that enables legacy games to use the new SteamVR action-based input system and allows multiple 3rd party developers to add new action-based inputs and outputs to a game without interfering with each other. It is built to seamlessly integrate with existing games that use either the legacy input system or the new action-based one.
+
+### Why should I care?
+
+DynamicOpenVR makes it easier for developers to add inputs to a game while allowing the user to customize how to trigger those inputs via SteamVR's powerful binding system. This removes the need for an additional layer of configuration and helps avoid hardcoding inputs to specific buttons.
 
 ## Installing
 Download the latest release from [the releases page](https://github.com/nicoco007/DynamicOpenVR/releases) and extract **the entire contents** of the ZIP file into your Beat Saber folder (for Steam, this is usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber`), **overwriting any existing files**.
 
 ## Troubleshooting
-See [the troubleshooting guide](https://github.com/nicoco007/DynamicOpenVR/blob/master/TROUBLESHOOTING.md).
+See [the troubleshooting guide](TROUBLESHOOTING.md).
 
-## DynamicOpenVR.BeatSaber
-An implementation of DynamicOpenVR as a [Beat Saber](https://beatsaber.com/) plugin. Get the latest (unstable!) [debug](https://ci.gnyra.com/job/DynamicOpenVR/job/master/lastSuccessfulBuild/artifact/DynamicOpenVR.BeatSaber.DEBUG.zip) or [release](https://ci.gnyra.com/job/DynamicOpenVR/job/master/lastSuccessfulBuild/artifact/DynamicOpenVR.BeatSaber.RELEASE.zip) build.
+## Using DynamicOpenVR in your game/mod
+While there are currently no official instructions, you can take a look at the DynamicOpenVR.BeatSaber project in this repository for an implementation of DynamicOpenVR for Beat Saber (which uses the legacy input system, so lots of Unity XR input methods are being patched) and the [Beat Saber Custom Avatars](https://github.com/nicoco007/BeatSaberCustomAvatars) mod which uses finger tracking inputs.
 
 ## Contributing
-Guidelines coming soon.
-
 To automatically copy the compiled DLLs into Beat Saber's installation directory, create a file called DynamicOpenVR.BeatSaber.csproj.user next to DynamicOpenVR.BeatSaber\DynamicOpenVR.BeatSaber.csproj and paste in the following:
 
 ```xml

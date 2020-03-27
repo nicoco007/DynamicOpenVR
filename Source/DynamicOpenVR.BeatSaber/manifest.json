@@ -9,7 +9,15 @@
   "version": "0.2.0",
   "features": [],
   "dependsOn": {
-    "BSIPA": "^3.13.0",
+    "BSIPA": "^4.0.0",
     "DynamicOpenVR": "^0.2.0"
-  }
+  },
+  "files": [
+    "DynamicOpenVR\\Actions\\beatsaber.json",
+    "DynamicOpenVR\\Bindings\\beatsaber_holographic_controller.json",
+    "DynamicOpenVR\\Bindings\\beatsaber_hypereal_controller.json",
+    "DynamicOpenVR\\Bindings\\beatsaber_knuckles.json",
+    "DynamicOpenVR\\Bindings\\beatsaber_oculus_touch.json",
+    "DynamicOpenVR\\Bindings\\beatsaber_vive_controller.json"
+  ]
 }

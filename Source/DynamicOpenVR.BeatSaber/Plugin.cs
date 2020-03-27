@@ -18,20 +18,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using DynamicOpenVR.IO;
-using Harmony;
+using HarmonyLib;
 using IPA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Valve.VR;
 using Logger = IPA.Logging.Logger;
+using Object = UnityEngine.Object;
 
 namespace DynamicOpenVR.BeatSaber
 {
-    public class Plugin : IBeatSaberPlugin
+    [Plugin(RuntimeOptions.SingleStartInit)]
+    internal class Plugin
     {
         public static Logger logger { get; private set; }
         public static VectorInput leftTriggerValue { get; private set; }
@@ -43,18 +42,18 @@ namespace DynamicOpenVR.BeatSaber
         public static PoseInput rightHandPose { get; private set; }
 
         private readonly string _actionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
-        private readonly HashSet<EVREventType> _pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
         
-        private HarmonyInstance _harmonyInstance;
-        private bool _initialized;
+        private Harmony _harmonyInstance;
 
-        public void Init(Logger logger)
+        [Init]
+        public Plugin(Logger logger)
         {
             Plugin.logger = logger;
             Logging.Logger.handler = new IPALogHandler();
         }
 
-        public void OnApplicationStart()
+        [OnStart]
+        public void OnStart()
         {
             logger.Info("Starting " + typeof(Plugin).Namespace);
 
@@ -87,40 +86,28 @@ namespace DynamicOpenVR.BeatSaber
 
             OpenVRActionManager.instance.Initialize(_actionManifestPath);
 
-            _initialized = true;
+            OpenVREventHandler eventHandler = new GameObject(nameof(OpenVREventHandler)).AddComponent<OpenVREventHandler>();
+            Object.DontDestroyOnLoad(eventHandler.gameObject);
+            eventHandler.onGamePaused += OnGamePaused;
         }
 
-        public void OnApplicationQuit()
+        [OnExit]
+        public void OnExit()
         {
             // not really necessary since the game is closing, just following good practices
-            if (_initialized)
-            {
-                leftTriggerValue?.Dispose();
-                rightTriggerValue?.Dispose();
-                menu?.Dispose();
-                leftSlice?.Dispose();
-                rightSlice?.Dispose();
-                leftHandPose?.Dispose();
-                rightHandPose?.Dispose();
-            }
+            leftTriggerValue?.Dispose();
+            rightTriggerValue?.Dispose();
+            menu?.Dispose();
+            leftSlice?.Dispose();
+            rightSlice?.Dispose();
+            leftHandPose?.Dispose();
+            rightHandPose?.Dispose();
         }
 
-        public void OnUpdate()
+        private void OnGamePaused()
         {
-            if (_initialized)
-            {
-                VREvent_t evt = default;
-                if (OpenVR.System.PollNextEvent(ref evt, (uint)Marshal.SizeOf(typeof(VREvent_t))) && _pauseEvents.Contains((EVREventType) evt.eventType))
-                {
-                    Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
-                }
-            }
+            Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
         }
-
-        public void OnFixedUpdate() { }
-        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode) { }
-        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
-        public void OnSceneUnloaded(Scene scene) { }
 
         private void AddManifestToSteamConfig()
         {
@@ -294,7 +281,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             logger.Info("Applying input patches");
 
-            _harmonyInstance = HarmonyInstance.Create(GetType().Namespace);
+            _harmonyInstance = new Harmony("com.nicoco007.dynamic-open-vr-beat-saber");
             _harmonyInstance.PatchAll();
         }
     }

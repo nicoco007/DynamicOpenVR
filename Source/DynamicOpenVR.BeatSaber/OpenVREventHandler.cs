@@ -12,10 +12,18 @@ namespace DynamicOpenVR.BeatSaber
 
         public event Action gamePaused;
 
+        private VREvent_t _evt;
+        private uint _size;
+
+        private void Start()
+        {
+            _evt = default;
+            _size = (uint)Marshal.SizeOf<VREvent_t>();
+        }
+
         private void Update()
         {
-            VREvent_t evt = default;
-            if (OpenVR.System.PollNextEvent(ref evt, (uint)Marshal.SizeOf(typeof(VREvent_t))) && _pauseEvents.Contains((EVREventType) evt.eventType))
+            if (OpenVR.System.PollNextEvent(ref _evt, _size) && _pauseEvents.Contains((EVREventType) _evt.eventType))
             {
                 gamePaused?.Invoke();
             }

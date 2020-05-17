@@ -88,7 +88,7 @@ namespace DynamicOpenVR.BeatSaber
 
             OpenVREventHandler eventHandler = new GameObject(nameof(OpenVREventHandler)).AddComponent<OpenVREventHandler>();
             Object.DontDestroyOnLoad(eventHandler.gameObject);
-            eventHandler.onGamePaused += OnGamePaused;
+            eventHandler.gamePaused += OnGamePaused;
         }
 
         [OnExit]

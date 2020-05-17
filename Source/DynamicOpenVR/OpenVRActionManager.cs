@@ -145,7 +145,7 @@ namespace DynamicOpenVR
                 throw new InvalidOperationException("Action was already registered.");
             }
             
-            Logger.Debug($"Registering action '{action.name}' ({action.id})");
+            Logger.Trace($"Registering action '{action.name}' ({action.id})");
 
             _actions.Add(action.id, action);
 
@@ -164,7 +164,7 @@ namespace DynamicOpenVR
 
         public void DeregisterAction(OVRAction action)
         {
-            Logger.Debug($"Deregistering action '{action.name}' ({action.id})");
+            Logger.Trace($"Deregistering action '{action.name}' ({action.id})");
 
             _actions.Remove(action.id);
         }
@@ -179,7 +179,7 @@ namespace DynamicOpenVR
                 return;
             }
 
-            Logger.Debug($"Reading actions from '{actionsFolder}'");
+            Logger.Trace($"Reading actions from '{actionsFolder}'");
 
             string[] actionFiles = Directory.GetFiles(actionsFolder);
             var actionManifests = new List<ActionManifest>();
@@ -189,7 +189,7 @@ namespace DynamicOpenVR
             {
                 try
                 {
-                    Logger.Debug($"Reading '{actionFile}'");
+                    Logger.Trace($"Reading '{actionFile}'");
 
                     using (var reader = new StreamReader(actionFile))
                     {
@@ -217,20 +217,20 @@ namespace DynamicOpenVR
 
             foreach (string actionSetName in manifest.actionSets.Select(a => a.Name))
             {
-                Logger.Debug($"Found defined action set '{actionSetName}'");
+                Logger.Trace($"Found defined action set '{actionSetName}'");
             }
 
             foreach (string actionName in manifest.actions.Select(a => a.Name))
             {
-                Logger.Debug($"Found defined action '{actionName}'");
+                Logger.Trace($"Found defined action '{actionName}'");
             }
 
             foreach (string controllerType in manifest.defaultBindings.Select(a => a.ControllerType))
             {
-                Logger.Debug($"Found default binding for controller '{controllerType}'");
+                Logger.Trace($"Found default binding for controller '{controllerType}'");
             }
 
-            Logger.Debug($"Writing action manifest to '{_actionManifestPath}'");
+            Logger.Trace($"Writing action manifest to '{_actionManifestPath}'");
 
             using (var writer = new StreamWriter(_actionManifestPath))
             {
@@ -240,7 +240,7 @@ namespace DynamicOpenVR
 
         private void TryUpdateHandle(OVRAction action)
         {
-            Logger.Debug($"Updating handle for action '{action.name}' ({action.id})");
+            Logger.Trace($"Updating handle for action '{action.name}' ({action.id})");
 
             try
             {
@@ -271,7 +271,7 @@ namespace DynamicOpenVR
 
         private void TryAddActionSet(string actionSetName)
         {
-            Logger.Debug($"Registering action set '{actionSetName}'");
+            Logger.Trace($"Registering action set '{actionSetName}'");
 
             if (_actionSetNames.Contains(actionSetName)) throw new InvalidOperationException($"Action set '{actionSetName}' has already been registered");
 
@@ -307,7 +307,7 @@ namespace DynamicOpenVR
                 return new List<ManifestDefaultBinding>();
             }
 
-            Logger.Debug($"Reading default bindings from '{bindingsFolder}'");
+            Logger.Trace($"Reading default bindings from '{bindingsFolder}'");
 
             string[] bindingFiles = Directory.GetFiles(bindingsFolder);
             var defaultBindings = new List<DefaultBinding>();
@@ -316,7 +316,7 @@ namespace DynamicOpenVR
             {
                 try
                 {
-                    Logger.Debug($"Reading '{bindingFile}'");
+                    Logger.Trace($"Reading '{bindingFile}'");
 
                     using (var reader = new StreamReader(bindingFile))
                     {

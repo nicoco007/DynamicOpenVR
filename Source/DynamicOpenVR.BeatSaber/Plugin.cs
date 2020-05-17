@@ -193,7 +193,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest;
             
-            logger.Debug($"Reading '{globalManifestPath}'");
+            logger.Trace($"Reading '{globalManifestPath}'");
 
             using (StreamReader reader = new StreamReader(globalManifestPath))
             {
@@ -222,7 +222,7 @@ namespace DynamicOpenVR.BeatSaber
                 return appConfig;
             }
             
-            logger.Debug($"Reading '{configPath}'");
+            logger.Trace($"Reading '{configPath}'");
 
             using (StreamReader reader = new StreamReader(configPath))
             {

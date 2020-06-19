@@ -281,7 +281,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             logger.Info("Applying input patches");
 
-            _harmonyInstance = new Harmony("com.nicoco007.dynamic-open-vr-beat-saber");
+            _harmonyInstance = new Harmony("com.nicoco007.dynamicopenvr.beatsaber");
             _harmonyInstance.PatchAll();
         }
     }

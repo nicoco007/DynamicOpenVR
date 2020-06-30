@@ -22,11 +22,11 @@ using UnityEngine.XR;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
-namespace DynamicOpenVR.BeatSaber
+namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
     [HarmonyPatch(typeof(InputTracking))]
     [HarmonyPatch("GetLocalPosition", MethodType.Normal)]
-    class InputTrackingGetLocalPositionPatch
+    class InputTracking_GetLocalPosition
     {
         [HarmonyPriority(Priority.First)]
         public static bool Prefix(XRNode node, ref Vector3 __result)
@@ -49,7 +49,7 @@ namespace DynamicOpenVR.BeatSaber
 
     [HarmonyPatch(typeof(InputTracking))]
     [HarmonyPatch("GetLocalRotation", MethodType.Normal)]
-    class InputTrackingGetLocalRotationPatch
+    class InputTracking_GetLocalRotation
     {
         [HarmonyPriority(Priority.First)]
         public static bool Prefix(XRNode node, ref Quaternion __result)
@@ -72,7 +72,7 @@ namespace DynamicOpenVR.BeatSaber
 
     [HarmonyPatch(typeof(InputTracking))]
     [HarmonyPatch("GetNodeStates", MethodType.Normal)]
-    class InputTrackingGetNodeStatesPatch
+    class InputTracking_GetNodeStates
     {
         [HarmonyPriority(Priority.First)]
         public static void Postfix(List<XRNodeState> nodeStates)

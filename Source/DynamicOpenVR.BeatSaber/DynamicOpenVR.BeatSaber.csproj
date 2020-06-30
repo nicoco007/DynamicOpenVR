@@ -79,8 +79,8 @@
     <Compile Include="OpenVREventHandler.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BeatSaberInputPatches.cs" />
-    <Compile Include="XRInputPatches.cs" />
+    <Compile Include="HarmonyPatches\BeatSaberInputPatches.cs" />
+    <Compile Include="HarmonyPatches\XRInputPatches.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />

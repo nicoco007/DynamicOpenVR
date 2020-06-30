@@ -19,11 +19,11 @@ using UnityEngine.XR;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
-namespace DynamicOpenVR.BeatSaber
+namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
 	[HarmonyPatch(typeof(VRControllersInputManager))]
 	[HarmonyPatch("TriggerValue", MethodType.Normal)]
-    internal class TriggerValuePatch
+    internal class VRControllersInputManager_TriggerValue
 	{
         [HarmonyPriority(Priority.First)]
 		public static bool Prefix(XRNode node, ref float __result)
@@ -46,7 +46,7 @@ namespace DynamicOpenVR.BeatSaber
 
 	[HarmonyPatch(typeof(VRControllersInputManager))]
 	[HarmonyPatch("MenuButtonDown", MethodType.Normal)]
-    internal class MenuButtonDownPatch
+    internal class VRControllersInputManager_MenuButtonDown
 	{
         // ReSharper disable once RedundantAssignment
         [HarmonyPriority(Priority.First)]
@@ -74,7 +74,7 @@ namespace DynamicOpenVR.BeatSaber
 
 	[HarmonyPatch(typeof(VRPlatformHelper))]
 	[HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
-    internal class TriggerHapticPulsePatch
+    internal class VRPlatformHelper_TriggerHapticPulse
 	{
         [HarmonyPriority(Priority.Last)]
 		public static bool Prefix(XRNode node, float strength)

@@ -15,7 +15,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using HarmonyLib;
-using System;
 using UnityEngine.XR;
 
 // ReSharper disable UnusedMember.Global
@@ -29,23 +28,19 @@ namespace DynamicOpenVR.BeatSaber
         [HarmonyPriority(Priority.First)]
 		public static bool Prefix(XRNode node, ref float __result)
 		{
-			try
+			if (node == XRNode.LeftHand)
 			{
-				if (node == XRNode.LeftHand)
-				{
-					__result = Plugin.leftTriggerValue.value;
-				}
-				else if (node == XRNode.RightHand)
-				{
-					__result = Plugin.rightTriggerValue.value;
-				}
-			}
-			catch (Exception)
-			{
-				__result = 0;
+				__result = Plugin.leftTriggerValue.value;
+				return false;
 			}
 
-			return false;
+			if (node == XRNode.RightHand)
+			{
+				__result = Plugin.rightTriggerValue.value;
+				return false;
+			}
+
+			return true;
 		}
 	}
 
@@ -57,14 +52,7 @@ namespace DynamicOpenVR.BeatSaber
         [HarmonyPriority(Priority.First)]
         public static bool Prefix(ref bool __result)
 		{
-			try
-			{
-				__result = Plugin.menu.activeChange;
-			}
-			catch (Exception)
-			{
-				__result = false;
-			}
+			__result = Plugin.menu.activeChange;
 
 			return false;
 		}
@@ -78,14 +66,7 @@ namespace DynamicOpenVR.BeatSaber
         [HarmonyPriority(Priority.First)]
 		public static bool Prefix(ref bool __result)
 		{
-			try
-			{
-				__result = Plugin.menu.state;
-			}
-			catch (Exception)
-			{
-				__result = false;
-			}
+			__result = Plugin.menu.state;
 
 			return false;
 		}
@@ -98,20 +79,19 @@ namespace DynamicOpenVR.BeatSaber
         [HarmonyPriority(Priority.Last)]
 		public static bool Prefix(XRNode node, float strength)
 		{
-			try
+			if (node == XRNode.LeftHand)
 			{
-				if (node == XRNode.LeftHand)
-				{
-					Plugin.leftSlice.TriggerHapticVibration(0.01f, strength, 25f);
-				}
-				else if (node == XRNode.RightHand)
-				{
-					Plugin.rightSlice.TriggerHapticVibration(0.01f, strength, 25f);
-				}
+				Plugin.leftSlice.TriggerHapticVibration(0.01f, strength, 25f);
+				return false;
 			}
-			catch (Exception) { }
 
-			return false;
+			if (node == XRNode.RightHand)
+			{
+				Plugin.rightSlice.TriggerHapticVibration(0.01f, strength, 25f);
+				return false;
+			}
+			
+			return true;
 		}
 	}
 }

@@ -74,8 +74,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPALogHandler.cs" />
-    <Compile Include="MessageBox.cs" />
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Native\DialogResult.cs" />
+    <Compile Include="Native\MessageBoxButtons.cs" />
+    <Compile Include="Native\MessageBox.cs" />
+    <Compile Include="Native\MessageBoxIcon.cs" />
+    <Compile Include="Native\MessageBoxType.cs" />
+    <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="OpenVREventHandler.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

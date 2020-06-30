@@ -26,7 +26,6 @@ namespace DynamicOpenVR.BeatSaber
     {
         private readonly HashSet<EVREventType> _pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
 
-        public event Action<VREvent_t> evt;
         public event Action gamePaused;
 
         private VREvent_t _evt;

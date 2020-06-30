@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DynamicOpenVR.BeatSaber.Native;
 using DynamicOpenVR.IO;
 using HarmonyLib;
 using IPA;

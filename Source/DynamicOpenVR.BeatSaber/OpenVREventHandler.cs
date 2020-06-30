@@ -26,6 +26,7 @@ namespace DynamicOpenVR.BeatSaber
     {
         private readonly HashSet<EVREventType> _pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
 
+        public event Action<VREvent_t> evt;
         public event Action gamePaused;
 
         private VREvent_t _evt;
@@ -39,9 +40,12 @@ namespace DynamicOpenVR.BeatSaber
 
         private void Update()
         {
-            if (OpenVR.System.PollNextEvent(ref _evt, _size) && _pauseEvents.Contains((EVREventType) _evt.eventType))
+            while (OpenVR.System.PollNextEvent(ref _evt, _size))
             {
-                gamePaused?.Invoke();
+                if (_pauseEvents.Contains((EVREventType) _evt.eventType))
+                {
+                    gamePaused?.Invoke();
+                }
             }
         }
     }

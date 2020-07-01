@@ -58,7 +58,7 @@ namespace DynamicOpenVR.IO
 
         internal override void UpdateData()
         {
-            _actionData = OpenVRWrapper.GetPoseActionData(handle);
+            _actionData = OpenVRFacade.GetPoseActionData(handle);
             HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
             _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
         }

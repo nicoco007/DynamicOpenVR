@@ -82,7 +82,7 @@ namespace DynamicOpenVR
 
             CombineAndWriteManifest();
 
-            OpenVRWrapper.SetActionManifestPath(actionManifestPath);
+            OpenVRFacade.SetActionManifestPath(actionManifestPath);
 
             IEnumerable<string> actionSetNames = _actions.Values.Select(action => action.GetActionSetName()).Distinct();
 
@@ -105,7 +105,7 @@ namespace DynamicOpenVR
 
             if (_actionSetHandles != null)
             {
-                OpenVRWrapper.UpdateActionState(_actionSetHandles);
+                OpenVRFacade.UpdateActionState(_actionSetHandles);
             }
 
             foreach (var action in _actions.Values.OfType<OVRInput>().ToList())
@@ -278,7 +278,7 @@ namespace DynamicOpenVR
             try
             {
                 _actionSetNames.Add(actionSetName);
-                _actionSetHandles.Add(OpenVRWrapper.GetActionSetHandle(actionSetName));
+                _actionSetHandles.Add(OpenVRFacade.GetActionSetHandle(actionSetName));
             }
             catch (OpenVRInputException ex)
             {

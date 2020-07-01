@@ -31,7 +31,7 @@ namespace DynamicOpenVR.IO
 
         internal override void UpdateData()
         {
-            _actionData = OpenVRWrapper.GetAnalogActionData(handle);
+            _actionData = OpenVRFacade.GetAnalogActionData(handle);
         }
     }
 }

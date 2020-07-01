@@ -47,7 +47,7 @@ namespace DynamicOpenVR.IO
 
         internal void UpdateHandle()
         {
-            handle = OpenVRWrapper.GetActionHandle(name);
+            handle = OpenVRFacade.GetActionHandle(name);
 
             if (handle <= 0)
             {

@@ -89,7 +89,7 @@
     <Compile Include="Exceptions\OpenVRInputException.cs" />
     <Compile Include="Exceptions\OpenVRInitException.cs" />
     <Compile Include="OpenVRUtilities.cs" />
-    <Compile Include="OpenVRWrapper.cs" />
+    <Compile Include="OpenVRFacade.cs" />
     <Compile Include="openvr_api.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SteamUtilities.cs" />

@@ -37,8 +37,8 @@ namespace DynamicOpenVR.IO
 
         internal override void UpdateData()
         {
-            _actionData = OpenVRWrapper.GetSkeletalActionData(handle);
-            _summaryData = OpenVRWrapper.GetSkeletalSummaryData(handle);
+            _actionData = OpenVRFacade.GetSkeletalActionData(handle);
+            _summaryData = OpenVRFacade.GetSkeletalSummaryData(handle);
         }
     }
 }

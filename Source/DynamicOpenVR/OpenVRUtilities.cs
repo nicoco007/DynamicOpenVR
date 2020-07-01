@@ -27,8 +27,8 @@ namespace DynamicOpenVR
 
         public static void Init()
         {
-            if (string.Compare(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase) != 0) throw new OpenVRInitException($"OpenVR is not the selected VR SDK ({XRSettings.loadedDeviceName})");
-            if (!OpenVRWrapper.isRuntimeInstalled) throw new OpenVRInitException("OpenVR runtime is not installed");
+            if (!string.Equals(XRSettings.loadedDeviceName, "OpenVR", StringComparison.InvariantCultureIgnoreCase)) throw new OpenVRInitException($"OpenVR is not the selected VR SDK ({XRSettings.loadedDeviceName})");
+            if (!OpenVRFacade.IsRuntimeInstalled()) throw new OpenVRInitException("OpenVR runtime is not installed");
 
             EVRInitError error = EVRInitError.None;
             CVRSystem system = OpenVR.Init(ref error);

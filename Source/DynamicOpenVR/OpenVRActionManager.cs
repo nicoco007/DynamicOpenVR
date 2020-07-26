@@ -36,7 +36,8 @@ namespace DynamicOpenVR
 		{
 			get
 			{
-                if (!_instance)
+                // check for null since we don't want to create another object if the current one is marked for destruction
+                if (_instance == null)
 				{
                     Logger.Info($"Creating instance of {nameof(OpenVRActionManager)}");
 

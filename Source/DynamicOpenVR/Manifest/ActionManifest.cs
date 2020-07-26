@@ -22,7 +22,7 @@ namespace DynamicOpenVR.Manifest
     internal class ActionManifest
     {
         [JsonProperty(PropertyName = "version")]
-        internal ulong version { get; set; } = 1;
+        internal int version { get; set; } = 1;
 
         [JsonProperty(PropertyName = "actions")]
         internal List<ManifestAction> actions { get; set; } = new List<ManifestAction>();

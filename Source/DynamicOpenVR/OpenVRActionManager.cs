@@ -21,8 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using DynamicOpenVR.DefaultBindings;
 using DynamicOpenVR.Exceptions;
 using UnityEngine;
@@ -183,7 +181,6 @@ namespace DynamicOpenVR
 
             string[] actionFiles = Directory.GetFiles(actionsFolder);
             var actionManifests = new List<ActionManifest>();
-            ushort version = 0;
 
             foreach (string actionFile in actionFiles)
             {
@@ -195,12 +192,21 @@ namespace DynamicOpenVR
                     {
                         string data = reader.ReadToEnd();
                         actionManifests.Add(JsonConvert.DeserializeObject<ActionManifest>(data));
-                        version += BitConverter.ToUInt16(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(data)), 0);
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.Error($"An error of type {ex.GetType().FullName} occured when trying to parse '{actionFile}': {ex.Message}");
+                }
+            }
+
+            int version = 23;
+
+            unchecked
+            {
+                foreach (string action in actionManifests.SelectMany(am => am.actions).Select(a => a.Name).OrderBy(n => n, StringComparer.InvariantCulture))
+                {
+                    version = version * 17 + action.GetHashCode();
                 }
             }
 

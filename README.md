@@ -1,4 +1,5 @@
-# DynamicOpenVR
+![DynamicOpenVR Logo](Documentation/Images/dynamicopenvr-logo-wide.png)
+
 [![Build Status](https://img.shields.io/jenkins/build/https/ci.gnyra.com/job/DynamicOpenVR/job/master?style=flat-square)](https://ci.gnyra.com/blue/organizations/jenkins/DynamicOpenVR/)
 [![Latest Version](https://img.shields.io/github/v/release/nicoco007/DynamicOpenVR?include_prereleases&style=flat-square)](https://github.com/nicoco007/DynamicOpenVR/releases)
 [![License](https://img.shields.io/github/license/nicoco007/DynamicOpenVR?style=flat-square)](https://github.com/nicoco007/DynamicOpenVR/blob/master/LICENSE)

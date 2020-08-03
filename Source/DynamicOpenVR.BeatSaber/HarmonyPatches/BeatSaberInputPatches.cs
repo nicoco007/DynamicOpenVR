@@ -94,4 +94,15 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 			return true;
 		}
 	}
+
+	[HarmonyPatch(typeof(OpenVRHelper))]
+	[HarmonyPatch("Update", MethodType.Normal)]
+	internal class OpenVRHelper_Update
+    {
+		public static bool Prefix()
+        {
+			// prevent OpenVRHelper from consuming events
+			return false;
+        }
+    }
 }

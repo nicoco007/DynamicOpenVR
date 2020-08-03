@@ -15,36 +15,51 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using Valve.VR;
+using Logger = DynamicOpenVR.Logging.Logger;
 
-namespace DynamicOpenVR.BeatSaber
+namespace DynamicOpenVR
 {
-    internal class OpenVREventHandler : MonoBehaviour
+    public class OpenVREventHandler : MonoBehaviour
     {
-        private readonly HashSet<EVREventType> _pauseEvents = new HashSet<EVREventType>(new [] { EVREventType.VREvent_InputFocusCaptured, EVREventType.VREvent_DashboardActivated, EVREventType.VREvent_OverlayShown });
+        private static OpenVREventHandler _instance;
 
-        public event Action gamePaused;
+        public static OpenVREventHandler instance
+        {
+            get
+            {
+                // check for null since we don't want to create another object if the current one is marked for destruction
+                if (_instance == null)
+                {
+                    Logger.Info($"Creating instance of {nameof(OpenVREventHandler)}");
 
-        private VREvent_t _evt;
+                    GameObject go = new GameObject(nameof(OpenVREventHandler));
+                    DontDestroyOnLoad(go);
+                    _instance = go.AddComponent<OpenVREventHandler>();
+                }
+
+                return _instance;
+            }
+        }
+
+        public event Action<VREvent_t> eventTriggered;
+
         private uint _size;
 
         private void Start()
         {
-            _evt = default;
             _size = (uint)Marshal.SizeOf<VREvent_t>();
         }
 
         private void Update()
         {
-            while (OpenVR.System.PollNextEvent(ref _evt, _size))
+            VREvent_t evt = default;
+
+            while (OpenVR.System.PollNextEvent(ref evt, _size))
             {
-                if (_pauseEvents.Contains((EVREventType) _evt.eventType))
-                {
-                    gamePaused?.Invoke();
-                }
+                eventTriggered?.Invoke(evt);
             }
         }
     }

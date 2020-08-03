@@ -88,6 +88,7 @@
     <Compile Include="OpenVRActionManager.cs" />
     <Compile Include="Exceptions\OpenVRInputException.cs" />
     <Compile Include="Exceptions\OpenVRInitException.cs" />
+    <Compile Include="OpenVREventHandler.cs" />
     <Compile Include="OpenVRUtilities.cs" />
     <Compile Include="OpenVRFacade.cs" />
     <Compile Include="openvr_api.cs" />

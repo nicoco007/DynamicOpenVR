@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DynamicOpenVR.BeatSaber.Native;
 using DynamicOpenVR.IO;
 using HarmonyLib;
@@ -25,8 +26,9 @@ using IPA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Valve.VR;
 using Logger = IPA.Logging.Logger;
-using Object = UnityEngine.Object;
 
 namespace DynamicOpenVR.BeatSaber
 {
@@ -45,6 +47,9 @@ namespace DynamicOpenVR.BeatSaber
         private readonly string _actionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
         
         private Harmony _harmonyInstance;
+
+        private VRPlatformHelper _vrPlatformHelper;
+        private OpenVRHelper _openVRHelper;
 
         [Init]
         public Plugin(Logger logger)
@@ -87,9 +92,8 @@ namespace DynamicOpenVR.BeatSaber
 
             OpenVRActionManager.instance.Initialize(_actionManifestPath);
 
-            OpenVREventHandler eventHandler = new GameObject(nameof(OpenVREventHandler)).AddComponent<OpenVREventHandler>();
-            Object.DontDestroyOnLoad(eventHandler.gameObject);
-            eventHandler.gamePaused += OnGamePaused;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            OpenVREventHandler.instance.eventTriggered += OnOpenVREventTriggered;
         }
 
         [OnExit]
@@ -105,9 +109,49 @@ namespace DynamicOpenVR.BeatSaber
             rightHandPose?.Dispose();
         }
 
-        private void OnGamePaused()
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            Resources.FindObjectsOfTypeAll<PauseController>().FirstOrDefault()?.Pause();
+            if (scene.name == "PCInit")
+            {
+                _vrPlatformHelper = Resources.FindObjectsOfTypeAll<VRPlatformHelper>().First();
+                _openVRHelper = (OpenVRHelper) typeof(VRPlatformHelper).GetField("_openVRHeper", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_vrPlatformHelper);
+            }
+        }
+
+        private void OnOpenVREventTriggered(VREvent_t evt)
+        {
+            if (!_vrPlatformHelper || _openVRHelper == null) return;
+
+            EVREventType eventType = (EVREventType)evt.eventType;
+
+            if (eventType == EVREventType.VREvent_InputFocusReleased && evt.data.process.pid == 0)
+            {
+                _vrPlatformHelper.HandleInputFocusWasReleased();
+                _openVRHelper.EnableEventSystem();
+            }
+
+            if (eventType == EVREventType.VREvent_InputFocusCaptured && evt.data.process.oldPid == 0)
+            {
+                _vrPlatformHelper.HandleInputFocusWasCaptured();
+                _openVRHelper.DisableEventSystem();
+            }
+
+            if (eventType == EVREventType.VREvent_DashboardActivated)
+            {
+                _vrPlatformHelper.HandleDashboardWasActivated();
+                _openVRHelper.DisableEventSystem();
+            }
+
+            if (eventType == EVREventType.VREvent_DashboardDeactivated)
+            {
+                _vrPlatformHelper.HandleDashboardWasDectivated();
+                _openVRHelper.EnableEventSystem();
+            }
+
+            if (eventType == EVREventType.VREvent_Quit)
+            {
+                Application.Quit();
+            }
         }
 
         private void AddManifestToSteamConfig()

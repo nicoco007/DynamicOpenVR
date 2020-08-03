@@ -1,48 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{12B5BA1F-421F-4860-B27D-95A11A54E59D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DynamicOpenVR</RootNamespace>
     <AssemblyName>DynamicOpenVR</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DefineConstants>UNITY_5_3_OR_NEWER</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNITY_5_3_OR_NEWER</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\Libraries\UnityEngine.dll</HintPath>
     </Reference>
@@ -57,48 +29,4 @@
       <HintPath>..\..\Libraries\UnityEngine.XRModule.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DefaultBindings\BindingCollection.cs" />
-    <Compile Include="DefaultBindings\ChordBinding.cs" />
-    <Compile Include="DefaultBindings\SkeletonBinding.cs" />
-    <Compile Include="DefaultBindings\DefaultBinding.cs" />
-    <Compile Include="DefaultBindings\HapticBinding.cs" />
-    <Compile Include="DefaultBindings\PoseBinding.cs" />
-    <Compile Include="DefaultBindings\SourceBinding.cs" />
-    <Compile Include="DefaultBindings\SourceInput.cs" />
-    <Compile Include="IO\AnalogInput.cs" />
-    <Compile Include="IO\BooleanInput.cs" />
-    <Compile Include="IO\HapticVibrationOutput.cs" />
-    <Compile Include="IO\OVRInput.cs" />
-    <Compile Include="IO\OVRAction.cs" />
-    <Compile Include="IO\PoseInput.cs" />
-    <Compile Include="IO\SkeletalInput.cs" />
-    <Compile Include="IO\SkeletalSummaryData.cs" />
-    <Compile Include="IO\Vector2Input.cs" />
-    <Compile Include="IO\Vector3Input.cs" />
-    <Compile Include="IO\VectorInput.cs" />
-    <Compile Include="Logging\ILogHandler.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Logging\UnityDebugLogHandler.cs" />
-    <Compile Include="Manifest\ActionManifest.cs" />
-    <Compile Include="Manifest\ManifestAction.cs" />
-    <Compile Include="Manifest\ManifestActionSet.cs" />
-    <Compile Include="Manifest\ManifestDefaultBinding.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="OpenVRActionManager.cs" />
-    <Compile Include="Exceptions\OpenVRInputException.cs" />
-    <Compile Include="Exceptions\OpenVRInitException.cs" />
-    <Compile Include="OpenVREventHandler.cs" />
-    <Compile Include="OpenVRUtilities.cs" />
-    <Compile Include="OpenVRFacade.cs" />
-    <Compile Include="openvr_api.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SteamUtilities.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

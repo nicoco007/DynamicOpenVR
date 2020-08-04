@@ -50,6 +50,9 @@
   </ItemGroup>
   <Target Name="CopyBeatSaberFiles" AfterTargets="AfterBuild" Condition="$(AutomatedBuild) == 'false' and $(BeatSaberDir) != ''">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BeatSaberDir)\Plugins" />
+    <Copy SourceFiles="$(SolutionDir)..\Packaging\DynamicOpenVR\Plugins\DynamicOpenVR.manifest" DestinationFolder="$(BeatSaberDir)\Plugins" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BeatSaberDir)\Plugins" />
     <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(BeatSaberDir)\Plugins" Condition="$(Configuration) == 'Debug'" />
+    <Copy SourceFiles="$(TargetDir)DynamicOpenVR.pdb" DestinationFolder="$(BeatSaberDir)\Libs" Condition="$(Configuration) == 'Debug'" />
   </Target>
 </Project>

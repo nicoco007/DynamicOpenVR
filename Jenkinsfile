@@ -34,10 +34,10 @@ pipeline {
     stage('Build Debug') {
       steps {
         bat 'dotnet build Source\\DynamicOpenVR.sln -c Debug -p:AutomatedBuild=true'
-        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\netstandard2.0\\DynamicOpenVR.dll Packaging-Debug\\DynamicOpenVR\\Libs'
-        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\netstandard2.0\\DynamicOpenVR.pdb Packaging-Debug\\DynamicOpenVR\\Libs'
-        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\netstandard2.0\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\DynamicOpenVR.BeatSaber\\Plugins'
-        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\netstandard2.0\\DynamicOpenVR.BeatSaber.pdb Packaging-Debug\\DynamicOpenVR.BeatSaber\\Plugins'
+        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\net4.7.2\\DynamicOpenVR.dll Packaging-Debug\\DynamicOpenVR\\Libs'
+        bat 'copy Source\\DynamicOpenVR\\bin\\Debug\\net4.7.2\\DynamicOpenVR.pdb Packaging-Debug\\DynamicOpenVR\\Libs'
+        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\net4.7.2\\DynamicOpenVR.BeatSaber.dll Packaging-Debug\\DynamicOpenVR.BeatSaber\\Plugins'
+        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Debug\\net4.7.2\\DynamicOpenVR.BeatSaber.pdb Packaging-Debug\\DynamicOpenVR.BeatSaber\\Plugins'
         bat "7z a DynamicOpenVR-${env.GIT_VERSION}-DEBUG.zip -r \"./Packaging-Debug/DynamicOpenVR/*\""
         bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-DEBUG.zip -r \"./Packaging-Debug/DynamicOpenVR.BeatSaber/*\""
         archiveArtifacts "DynamicOpenVR-${env.GIT_VERSION}-DEBUG.zip"
@@ -54,8 +54,8 @@ pipeline {
     stage('Build Release') {
       steps {
         bat 'dotnet build Source\\DynamicOpenVR.sln -c Release -p:AutomatedBuild=true'
-        bat 'copy Source\\DynamicOpenVR\\bin\\Release\\netstandard2.0\\DynamicOpenVR.dll Packaging-Release\\DynamicOpenVR\\Libs'
-        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Release\\netstandard2.0\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\DynamicOpenVR.BeatSaber\\Plugins'
+        bat 'copy Source\\DynamicOpenVR\\bin\\Release\\net4.7.2\\DynamicOpenVR.dll Packaging-Release\\DynamicOpenVR\\Libs'
+        bat 'copy Source\\DynamicOpenVR.BeatSaber\\bin\\Release\\net4.7.2\\DynamicOpenVR.BeatSaber.dll Packaging-Release\\DynamicOpenVR.BeatSaber\\Plugins'
         bat "7z a DynamicOpenVR-${env.GIT_VERSION}-RELEASE.zip -r \"./Packaging-Release/DynamicOpenVR/*\""
         bat "7z a DynamicOpenVR.BeatSaber-${env.GIT_VERSION}-RELEASE.zip -r \"./Packaging-Release/DynamicOpenVR.BeatSaber/*\""
         archiveArtifacts "DynamicOpenVR-${env.GIT_VERSION}-RELEASE.zip"

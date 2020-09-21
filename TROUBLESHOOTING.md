@@ -13,7 +13,6 @@ If anything in this guide is unclear, feel free to [open an issue](https://githu
   - [Restore missing buttons in the bindings UI](#restore-missing-buttons-in-the-bindings-ui)
   - [Exporting bindings so they can be included by default in DynamicOpenVR](#exporting-bindings-so-they-can-be-included-by-default-in-dynamicopenvr)
   - [Running without DynamicOpenVR](#running-without-dynamicopenvr)
-- [Sabers/hands disappear when brought up to the face](#sabershands-disappear-when-brought-up-to-the-face)
 - [Completely Removing DynamicOpenVR](#completely-removing-dynamicopenvr)
 
 # Checking the installation
@@ -247,12 +246,7 @@ Input or tracking not working are usually a symptom of missing or broken input b
    
    
 ## Running without DynamicOpenVR
-If you were not able to solve your input issues with the instructions above, you can try running Beat Saber without DynamicOpenVR. To do so, simply stop the game, delete the `Plugins\DynamicOpenVR.BeatSaber.dll` file, and start the game once again. Everything else should load as expected. If not, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues).
-
-
-# Sabers/hands disappear when brought up to the face
-
-After running the game at least once, there should be a file called `CustomAvatars.json` in the `UserData` folder inside Beat Saber's installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\Beat Saber` for Steam). Open that file in any text editor (e.g. Notepad) and change the number beside `cameraNearClipPlane` to anything down to 0.01. A smaller number means stuff will be visible closer to your eyes but may affect performance negatively.
+If you were not able to solve your input issues with the instructions above, you can try running Beat Saber without DynamicOpenVR. To do so, simply stop the game, delete the `Plugins\DynamicOpenVR.BeatSaber.dll` file, and start the game once again.
 
 
 # Completely Removing DynamicOpenVR
@@ -265,4 +259,4 @@ DynamicOpenVR generates files specific to your computer to improve user experien
 
 If, after deleting all these files, your controllers are unresponsive, you may have to delete the current binding manually since SteamVR is confused. Follow the instructions in [Deleting the current binding](#deleting-the-current-binding) to get rid of it.
 
-If you're still having issues after following all of these steps, please [open an issue](https://github.com/nicoco007/DynamicOpenVR/issues). If you don't want to wait, the only sure-fire way of getting the game to work again is to do a clean install. It is highly recommended to make a backup of the installation folder before reinstalling the game if you want to keep your songs/avatars/sabers/settings or any other stuff that might be in there.
+If you're still having issues after following all the steps above, the only sure-fire way of getting the game to work again is to do a clean install. It is highly recommended to make a backup of the installation folder before reinstalling the game if you want to keep your songs/avatars/sabers/settings or any other stuff that might be in there.

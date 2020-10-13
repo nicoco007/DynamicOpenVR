@@ -5,11 +5,13 @@
     <AssemblyName>DynamicOpenVR</AssemblyName>
     <TargetFramework>net4.7.2</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DefineConstants>UNITY_5_3_OR_NEWER</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration) == Release">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
@@ -21,9 +23,30 @@
     <Reference Include="UnityEngine.VRModule">
       <HintPath>..\..\Libraries\UnityEngine.VRModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.XRModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.XRModule">
       <HintPath>..\..\Libraries\UnityEngine.XRModule.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR\**\*.*" />
+    <CopyToBeatSaberFolder Include="$(PublishDir)**\*.*" />
+  </ItemGroup>
+  <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <!-- prevent any referenced DLLs from being copied to the output folder -->
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="Organize" AfterTargets="Publish">
+    <!-- create Libs folder and move DLL/PDB inside -->
+    <MakeDir Directories="$(PublishDir)Libs" />
+    <Move SourceFiles="$(PublishDir)$(TargetName).dll" DestinationFolder="$(PublishDir)Libs" />
+    <Move SourceFiles="$(PublishDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Libs" Condition="$(DebugType) == 'portable'" />
+
+    <!-- copy static files -->
+    <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="CopyToBeatSaberFolder" AfterTargets="Publish" Condition="$(AutomatedBuild) == 'false' and $(BeatSaberDir) != ''">
+    <Copy SourceFiles="@(CopyToBeatSaberFolder)" DestinationFiles="@(CopyToBeatSaberFolder->'$(BeatSaberDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
 </Project>

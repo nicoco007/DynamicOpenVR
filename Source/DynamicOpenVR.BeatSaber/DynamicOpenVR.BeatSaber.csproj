@@ -7,6 +7,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AutomatedBuild>false</AutomatedBuild>
   </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration) == Release">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\Libraries\0Harmony.dll</HintPath>
@@ -23,8 +27,7 @@
     <Reference Include="Main">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
@@ -33,8 +36,7 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.VRModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.VRModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.VRModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
@@ -48,11 +50,26 @@
   <ItemGroup>
     <ProjectReference Include="..\DynamicOpenVR\DynamicOpenVR.csproj" />
   </ItemGroup>
-  <Target Name="CopyBeatSaberFiles" AfterTargets="AfterBuild" Condition="$(AutomatedBuild) == 'false' and $(BeatSaberDir) != ''">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BeatSaberDir)\Plugins" />
-    <Copy SourceFiles="$(SolutionDir)..\Packaging\DynamicOpenVR\Plugins\DynamicOpenVR.manifest" DestinationFolder="$(BeatSaberDir)\Plugins" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BeatSaberDir)\Plugins" />
-    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(BeatSaberDir)\Plugins" Condition="$(Configuration) == 'Debug'" />
-    <Copy SourceFiles="$(TargetDir)DynamicOpenVR.pdb" DestinationFolder="$(BeatSaberDir)\Libs" Condition="$(Configuration) == 'Debug'" />
+  <ItemGroup>
+    <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR.BeatSaber\**\*.*" />
+    <CopyToBeatSaberFolder Include="$(TargetDir)**\*.*" />
+  </ItemGroup>
+  <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <!-- prevent any referenced DLLs from being copied to the output folder -->
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="Organize" AfterTargets="Publish">
+    <!-- create Plugins folder and move plugin DLL/PDB inside -->
+    <MakeDir Directories="$(PublishDir)Plugins" />
+    <Move SourceFiles="$(PublishDir)$(TargetName).dll" DestinationFolder="$(PublishDir)Plugins" />
+    <Move SourceFiles="$(PublishDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Plugins" Condition="$(DebugType) == 'portable'" />
+
+    <!-- copy static files -->
+    <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="CopyToBeatSaberFolder" AfterTargets="AfterBuild" Condition="$(AutomatedBuild) == 'false' and $(BeatSaberDir) != ''">
+    <Copy SourceFiles="@(CopyToBeatSaberFolder)" DestinationFiles="@(CopyToBeatSaberFolder->'$(BeatSaberDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>

@@ -1,6 +1,6 @@
 name: Build DynamicOpenVR.BeatSaber
 
-on: [ push, create ]
+on: [ push ]
 
 jobs:
   build:

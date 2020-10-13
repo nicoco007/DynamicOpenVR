@@ -72,9 +72,9 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 		}
 	}
 
-	[HarmonyPatch(typeof(VRPlatformHelper))]
+	[HarmonyPatch(typeof(OpenVRHelper))]
 	[HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
-    internal class VRPlatformHelper_TriggerHapticPulse
+    internal class OpenVRHelper_TriggerHapticPulse
 	{
         [HarmonyPriority(Priority.Last)]
 		public static bool Prefix(XRNode node, float strength)

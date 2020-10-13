@@ -23,6 +23,7 @@ using DynamicOpenVR.BeatSaber.Native;
 using DynamicOpenVR.IO;
 using HarmonyLib;
 using IPA;
+using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -48,7 +49,6 @@ namespace DynamicOpenVR.BeatSaber
         
         private Harmony _harmonyInstance;
 
-        private VRPlatformHelper _vrPlatformHelper;
         private OpenVRHelper _openVRHelper;
 
         [Init]
@@ -113,44 +113,55 @@ namespace DynamicOpenVR.BeatSaber
         {
             if (scene.name == "PCInit")
             {
-                _vrPlatformHelper = Resources.FindObjectsOfTypeAll<VRPlatformHelper>().First();
-                _openVRHelper = (OpenVRHelper) typeof(VRPlatformHelper).GetField("_openVRHeper", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_vrPlatformHelper);
+                _openVRHelper = Resources.FindObjectsOfTypeAll<OpenVRHelper>().First();
             }
         }
 
         private void OnOpenVREventTriggered(VREvent_t evt)
         {
-            if (!_vrPlatformHelper || _openVRHelper == null) return;
+            if (_openVRHelper == null) return;
 
             EVREventType eventType = (EVREventType)evt.eventType;
 
             if (eventType == EVREventType.VREvent_InputFocusReleased && evt.data.process.pid == 0)
             {
-                _vrPlatformHelper.HandleInputFocusWasReleased();
+                InvokeEvent(_openVRHelper, nameof(_openVRHelper.inputFocusWasReleasedEvent));
                 _openVRHelper.EnableEventSystem();
             }
 
             if (eventType == EVREventType.VREvent_InputFocusCaptured && evt.data.process.oldPid == 0)
             {
-                _vrPlatformHelper.HandleInputFocusWasCaptured();
+                InvokeEvent(_openVRHelper, nameof(_openVRHelper.inputFocusWasCapturedEvent));
                 _openVRHelper.DisableEventSystem();
             }
 
             if (eventType == EVREventType.VREvent_DashboardActivated)
             {
-                _vrPlatformHelper.HandleDashboardWasActivated();
+                InvokeEvent(_openVRHelper, nameof(_openVRHelper.inputFocusWasCapturedEvent));
                 _openVRHelper.DisableEventSystem();
             }
 
             if (eventType == EVREventType.VREvent_DashboardDeactivated)
             {
-                _vrPlatformHelper.HandleDashboardWasDectivated();
+                InvokeEvent(_openVRHelper, nameof(_openVRHelper.inputFocusWasReleasedEvent));
                 _openVRHelper.EnableEventSystem();
             }
 
             if (eventType == EVREventType.VREvent_Quit)
             {
                 Application.Quit();
+            }
+        }
+
+        private void InvokeEvent<T>(T obj, string name, params object[] args)
+        {
+            var multicastDelegate = (MulticastDelegate)obj.GetType().GetField(name, BindingFlags.Public | BindingFlags.Instance).GetValue(obj);
+
+            if (multicastDelegate == null) return;
+
+            foreach (Delegate handler in multicastDelegate.GetInvocationList())
+            {
+                handler.Method.Invoke(handler.Target, args);
             }
         }
 

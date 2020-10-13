@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR.BeatSaber\**\*.*" />
-    <CopyToBeatSaberFolder Include="$(TargetDir)**\*.*" />
+    <CopyToBeatSaberFolder Include="$(PublishDir)**\*.*" />
   </ItemGroup>
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
@@ -60,16 +60,16 @@
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
     </ItemGroup>
   </Target>
-  <Target Name="Organize" AfterTargets="Publish">
+  <Target Name="Organize" AfterTargets="AfterBuild">
     <!-- create Plugins folder and move plugin DLL/PDB inside -->
     <MakeDir Directories="$(PublishDir)Plugins" />
-    <Move SourceFiles="$(PublishDir)$(TargetName).dll" DestinationFolder="$(PublishDir)Plugins" />
-    <Move SourceFiles="$(PublishDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Plugins" Condition="$(DebugType) == 'portable'" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)Plugins" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Plugins" Condition="$(DebugType) == 'portable'" />
 
     <!-- copy static files -->
     <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-  <Target Name="CopyToBeatSaberFolder" AfterTargets="AfterBuild" Condition="$(AutomatedBuild) == 'false' and $(BeatSaberDir) != ''">
+  <Target Name="CopyToBeatSaberFolder" AfterTargets="AfterBuild" Condition="$(BeatSaberDir) != ''">
     <Copy SourceFiles="@(CopyToBeatSaberFolder)" DestinationFiles="@(CopyToBeatSaberFolder->'$(BeatSaberDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>

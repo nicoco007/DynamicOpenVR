@@ -37,16 +37,16 @@
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
     </ItemGroup>
   </Target>
-  <Target Name="Organize" AfterTargets="Publish">
+  <Target Name="Organize" AfterTargets="AfterBuild">
     <!-- create Libs folder and move DLL/PDB inside -->
     <MakeDir Directories="$(PublishDir)Libs" />
-    <Move SourceFiles="$(PublishDir)$(TargetName).dll" DestinationFolder="$(PublishDir)Libs" />
-    <Move SourceFiles="$(PublishDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Libs" Condition="$(DebugType) == 'portable'" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)Libs" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Libs" Condition="$(DebugType) == 'portable'" />
 
     <!-- copy static files -->
     <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-  <Target Name="CopyToBeatSaberFolder" AfterTargets="Publish" Condition="$(AutomatedBuild) == 'false' and $(BeatSaberDir) != ''">
+  <Target Name="CopyToBeatSaberFolder" AfterTargets="AfterBuild" Condition="$(BeatSaberDir) != ''">
     <Copy SourceFiles="@(CopyToBeatSaberFolder)" DestinationFiles="@(CopyToBeatSaberFolder->'$(BeatSaberDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>

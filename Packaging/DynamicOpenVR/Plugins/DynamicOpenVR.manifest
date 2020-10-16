@@ -5,7 +5,7 @@
   "gameVersion": "1.12.1",
   "id": "DynamicOpenVR",
   "name": "DynamicOpenVR",
-  "version": "0.3.1+dev",
+  "version": "0.3.2+dev",
   "features": [],
   "dependsOn": {},
   "files": [

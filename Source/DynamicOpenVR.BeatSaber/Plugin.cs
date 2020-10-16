@@ -155,7 +155,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void InvokeEvent<T>(T obj, string name, params object[] args)
         {
-            var multicastDelegate = (MulticastDelegate)obj.GetType().GetField(name, BindingFlags.Public | BindingFlags.Instance).GetValue(obj);
+            var multicastDelegate = (MulticastDelegate)obj.GetType().GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
 
             if (multicastDelegate == null) return;
 

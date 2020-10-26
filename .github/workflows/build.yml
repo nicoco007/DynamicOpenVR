@@ -9,28 +9,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Set up environment variables
-      shell: powershell
-      run: |
-        $git_hash = (git log -n 1 --pretty=%h).Trim()
-        $git_tag = git tag -l --points-at HEAD
-        $git_version = If (![string]::IsNullOrWhitespace($git_tag)) { $git_tag } Else { $git_hash }
-
-        Add-Content "$env:GITHUB_ENV" "GIT_HASH=$git_hash"
-        Add-Content "$env:GITHUB_ENV" "GIT_TAG=$git_tag"
-        Add-Content "$env:GITHUB_ENV" "GIT_VERSION=$git_version"
-        Add-Content "$env:GITHUB_ENV" "PYTHONIOENCODING=utf-8"
-
-        echo "Got version '$git_version'"
-
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1.7.2
       with:
         dotnet-version: 3.1.x
 
-    # this should eventually be turned into a task or action
     - name: Set manifest version
-      run: python bsipa_version_hash.py "Packaging\DynamicOpenVR\Plugins\DynamicOpenVR.manifest" "Source\DynamicOpenVR\Properties\AssemblyInfo.cs"
+      run: ./bsipa_version_hash.ps1 "Packaging\DynamicOpenVR\Plugins\DynamicOpenVR.manifest" "Source\DynamicOpenVR\Properties\AssemblyInfo.cs"
 
     - name: Build Debug
       run: dotnet build Source\DynamicOpenVR\DynamicOpenVR.csproj -c Debug
@@ -38,7 +23,7 @@ jobs:
     - name: Upload Debug
       uses: actions/upload-artifact@v2.2.0
       with:
-        name: DynamicOpenVR-${{ env.GIT_VERSION }}-DEBUG
+        name: DynamicOpenVR-${{ env.ZIP_VERSION }}-DEBUG
         path: Source\DynamicOpenVR\bin\Debug\net4.7.2\publish
 
     - name: Build Release
@@ -47,5 +32,5 @@ jobs:
     - name: Upload Release
       uses: actions/upload-artifact@v2.2.0
       with:
-        name: DynamicOpenVR-${{ env.GIT_VERSION }}-RELEASE
+        name: DynamicOpenVR-${{ env.ZIP_VERSION }}-RELEASE
         path: Source\DynamicOpenVR\bin\Release\net4.7.2\publish

@@ -2,10 +2,10 @@
   "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
   "author": "Nicolas Gnyra",
   "description": "Unity scripts to allow dynamic creation of OpenVR actions at runtime.",
-  "gameVersion": "1.12.2",
+  "gameVersion": "1.13.0",
   "id": "DynamicOpenVR",
   "name": "DynamicOpenVR",
-  "version": "0.3.3+dev",
+  "version": "0.3.4+dev",
   "features": [],
   "dependsOn": {},
   "files": [

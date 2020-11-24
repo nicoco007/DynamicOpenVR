@@ -27,9 +27,6 @@
       <HintPath>..\..\Libraries\UnityEngine.XRModule.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR\**\*.*" />
-  </ItemGroup>
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
       <!-- prevent any referenced DLLs from being copied to the output folder -->
@@ -37,6 +34,10 @@
     </ItemGroup>
   </Target>
   <Target Name="Organize" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR\**\*.*" />
+    </ItemGroup>
+    
     <!-- create Libs folder and move DLL/PDB inside -->
     <MakeDir Directories="$(PublishDir)Libs" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)Libs" />

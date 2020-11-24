@@ -50,9 +50,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DynamicOpenVR\DynamicOpenVR.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR.BeatSaber\**\*.*" />
-  </ItemGroup>
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
       <!-- prevent any referenced DLLs from being copied to the output folder -->
@@ -60,6 +57,10 @@
     </ItemGroup>
   </Target>
   <Target Name="Organize" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR.BeatSaber\**\*.*" />
+    </ItemGroup>
+    
     <!-- create Plugins folder and move plugin DLL/PDB inside -->
     <MakeDir Directories="$(PublishDir)Plugins" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)Plugins" />

@@ -34,6 +34,11 @@
         "name": "/actions/main/in/righthandpose",
         "requirement": "mandatory",
         "type": "pose"
+      },
+      {
+        "name": "/actions/main/in/thumbstick",
+        "requirement": "mandatory",
+        "type": "vector2"
       }
     ],
     "action_sets": [
@@ -58,7 +63,8 @@
         "/actions/main/out/leftslice": "Left Slice Haptic Feedback",
         "/actions/main/out/rightslice": "Left Slice Haptic Feedback",
         "/actions/main/in/lefthandpose": "Left Hand Pose",
-        "/actions/main/in/righthandpose": "Right Hand Pose"
+        "/actions/main/in/righthandpose": "Right Hand Pose",
+        "/actions/main/in/thumbstick": "Joystick Position"
       },
       {
         "language_tag": "fr_fr",

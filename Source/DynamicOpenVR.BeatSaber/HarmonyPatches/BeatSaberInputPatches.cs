@@ -15,6 +15,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using HarmonyLib;
+using System;
+using System.Reflection;
+using UnityEngine;
 using UnityEngine.XR;
 
 // ReSharper disable UnusedMember.Global
@@ -99,10 +102,48 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 	[HarmonyPatch("Update", MethodType.Normal)]
 	internal class OpenVRHelper_Update
     {
-		public static bool Prefix()
+		private static bool _scrollingLastFrame;
+		private static FieldInfo _joystickWasCenteredThisFrameEvent;
+		private static FieldInfo _joystickWasNotCenteredThisFrameEvent;
+
+		static OpenVRHelper_Update()
         {
+			_joystickWasCenteredThisFrameEvent = typeof(OpenVRHelper).GetField("joystickWasCenteredThisFrameEvent", BindingFlags.NonPublic | BindingFlags.Instance);
+			_joystickWasNotCenteredThisFrameEvent = typeof(OpenVRHelper).GetField("joystickWasNotCenteredThisFrameEvent", BindingFlags.NonPublic | BindingFlags.Instance);
+		}
+
+		public static bool Prefix(OpenVRHelper __instance)
+        {
+			Vector2 vector = Plugin.thumbstick.vector;
+
+			if (vector.sqrMagnitude <= 0.01f)
+			{
+				if (_scrollingLastFrame)
+				{
+					_scrollingLastFrame = false;
+					InvokeEvent(__instance, _joystickWasCenteredThisFrameEvent);
+				}
+			}
+			else
+            {
+				_scrollingLastFrame = true;
+				InvokeEvent(__instance, _joystickWasNotCenteredThisFrameEvent, vector);
+			}
+
 			// prevent OpenVRHelper from consuming events
 			return false;
         }
+
+		private static void InvokeEvent<T>(T obj, FieldInfo field, params object[] args)
+        {
+			var multicastDelegate = (MulticastDelegate)field.GetValue(obj);
+
+			if (multicastDelegate == null) return;
+
+			foreach (Delegate handler in multicastDelegate.GetInvocationList())
+			{
+				handler.Method.Invoke(handler.Target, args);
+			}
+		}
     }
 }

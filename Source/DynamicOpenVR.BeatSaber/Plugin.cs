@@ -23,7 +23,6 @@ using DynamicOpenVR.BeatSaber.Native;
 using DynamicOpenVR.IO;
 using HarmonyLib;
 using IPA;
-using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -44,6 +43,7 @@ namespace DynamicOpenVR.BeatSaber
         public static HapticVibrationOutput rightSlice { get; private set; }
         public static PoseInput leftHandPose { get; private set; }
         public static PoseInput rightHandPose { get; private set; }
+        public static Vector2Input thumbstick { get; set; }
 
         private readonly string _actionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
         
@@ -107,6 +107,7 @@ namespace DynamicOpenVR.BeatSaber
             rightSlice?.Dispose();
             leftHandPose?.Dispose();
             rightHandPose?.Dispose();
+            thumbstick?.Dispose();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -331,6 +332,7 @@ namespace DynamicOpenVR.BeatSaber
             rightSlice        = new HapticVibrationOutput("/actions/main/out/rightslice");
             leftHandPose      = new PoseInput("/actions/main/in/lefthandpose");
             rightHandPose     = new PoseInput("/actions/main/in/righthandpose");
+            thumbstick        = new Vector2Input("/actions/main/in/thumbstick");
         }
 
         private void ApplyHarmonyPatches()

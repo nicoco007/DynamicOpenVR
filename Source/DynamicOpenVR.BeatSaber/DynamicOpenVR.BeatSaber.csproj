@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR.BeatSaber\**\*.*" />
-    <CopyToBeatSaberFolder Include="$(PublishDir)**\*.*" />
   </ItemGroup>
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
@@ -70,6 +69,10 @@
     <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="CopyToBeatSaberFolder" AfterTargets="AfterBuild" Condition="$(BeatSaberDir) != ''">
+    <ItemGroup>
+      <CopyToBeatSaberFolder Include="$(PublishDir)**\*.*" />
+    </ItemGroup>
+    
     <Copy SourceFiles="@(CopyToBeatSaberFolder)" DestinationFiles="@(CopyToBeatSaberFolder->'$(BeatSaberDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>

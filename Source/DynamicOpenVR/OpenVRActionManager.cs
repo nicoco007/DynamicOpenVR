@@ -201,15 +201,17 @@ namespace DynamicOpenVR
                 }
             }
 
-            int version = 23;
+            uint version = 23;
 
             unchecked
             {
                 foreach (string action in actionManifests.SelectMany(am => am.actions).Select(a => a.Name).OrderBy(n => n, StringComparer.InvariantCulture))
                 {
-                    version = version * 17 + action.GetHashCode();
+                    version = version * 17 + (uint)action.GetHashCode();
                 }
             }
+
+            version = uint.MaxValue;
 
             List<ManifestDefaultBinding> defaultBindings = CombineAndWriteBindings(version);
 
@@ -304,7 +306,7 @@ namespace DynamicOpenVR
             }
         }
 
-        private List<ManifestDefaultBinding> CombineAndWriteBindings(int manifestVersion)
+        private List<ManifestDefaultBinding> CombineAndWriteBindings(uint manifestVersion)
         {
             string bindingsFolder = Path.Combine(Directory.GetCurrentDirectory(), "DynamicOpenVR", "Bindings");
 

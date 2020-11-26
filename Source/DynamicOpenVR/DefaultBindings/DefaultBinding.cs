@@ -22,7 +22,7 @@ namespace DynamicOpenVR.DefaultBindings
     internal class DefaultBinding
     {
         [JsonProperty(PropertyName = "action_manifest_version")]
-        public int actionManifestVersion;
+        public uint actionManifestVersion { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string name { get; set; }

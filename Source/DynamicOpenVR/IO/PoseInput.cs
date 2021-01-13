@@ -60,47 +60,12 @@ namespace DynamicOpenVR.IO
         {
             _actionData = OpenVRFacade.GetPoseActionData(handle);
             HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
-            _pose = new Pose(GetPosition(rawMatrix), GetRotation(rawMatrix));
-        }
-
-        private Vector3 GetPosition(HmdMatrix34_t rawMatrix)
-        {
-            return new Vector3(rawMatrix.m3, rawMatrix.m7, -rawMatrix.m11);
-        }
-
-        private Quaternion GetRotation(HmdMatrix34_t rawMatrix)
-        {
-            if (IsRotationValid(rawMatrix))
-            {
-                float w = Mathf.Sqrt(Mathf.Max(0, 1 + rawMatrix.m0 + rawMatrix.m5 + rawMatrix.m10)) / 2;
-                float x = Mathf.Sqrt(Mathf.Max(0, 1 + rawMatrix.m0 - rawMatrix.m5 - rawMatrix.m10)) / 2;
-                float y = Mathf.Sqrt(Mathf.Max(0, 1 - rawMatrix.m0 + rawMatrix.m5 - rawMatrix.m10)) / 2;
-                float z = Mathf.Sqrt(Mathf.Max(0, 1 - rawMatrix.m0 - rawMatrix.m5 + rawMatrix.m10)) / 2;
-
-                CopySign(ref x, rawMatrix.m6 - rawMatrix.m9);
-                CopySign(ref y, rawMatrix.m8 - rawMatrix.m2);
-                CopySign(ref z, rawMatrix.m4 - rawMatrix.m1);
-
-                return new Quaternion(x, y, z, w);
-            }
-
-            return Quaternion.identity;
-        }
-
-        private static void CopySign(ref float sizeVal, float signVal)
-        {
-            if (signVal > 0 != sizeVal > 0)
-                sizeVal = -sizeVal;
+            _pose = new Pose(rawMatrix.GetPosition(), rawMatrix.GetRotation());
         }
 
         private Vector3 ToVector3(HmdVector3_t vector)
         {
             return new Vector3(vector.v0, vector.v1, vector.v2);
-        }
-
-        private bool IsRotationValid(HmdMatrix34_t rawMatrix)
-        {
-            return (rawMatrix.m2 != 0 || rawMatrix.m6 != 0 || rawMatrix.m10 != 0) && (rawMatrix.m1 != 0 || rawMatrix.m5 != 0 || rawMatrix.m9 != 0);
         }
     }
 }

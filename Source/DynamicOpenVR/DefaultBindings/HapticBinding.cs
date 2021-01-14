@@ -1,5 +1,5 @@
 ﻿// DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
-// Copyright © 2019-2020 Nicolas Gnyra
+// Copyright © 2019-2021 Nicolas Gnyra
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published

@@ -2,15 +2,15 @@
   "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
   "author": "nicoco007",
   "description": "Adds support for action-based OpenVR bindings",
-  "gameVersion": "1.13.0",
+  "gameVersion": "1.13.2",
   "id": "DynamicOpenVR.BeatSaber",
   "name": "DynamicOpenVR.BeatSaber",
   "icon": "DynamicOpenVR.BeatSaber.Resources.icon.png",
-  "version": "0.3.4+dev",
+  "version": "0.3.5+dev",
   "features": [],
   "dependsOn": {
     "BSIPA": "^4.0.0",
-    "DynamicOpenVR": "^0.3.4"
+    "DynamicOpenVR": "^0.3.5"
   },
   "files": [
     "DynamicOpenVR\\Actions\\beatsaber.json",

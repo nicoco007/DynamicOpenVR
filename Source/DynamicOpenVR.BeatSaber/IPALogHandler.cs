@@ -15,44 +15,52 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using DynamicOpenVR.Logging;
+using Logger = IPA.Logging.Logger;
 
 namespace DynamicOpenVR.BeatSaber
 {
     internal class IPALogHandler : ILogHandler
     {
+        private Logger _logger;
+
+        public IPALogHandler(Logger logger)
+        {
+            _logger = logger;
+        }
+
         public void Trace(object message)
         {
-            Plugin.logger.Trace(message?.ToString());
+            _logger.Trace(message?.ToString());
         }
 
         public void Debug(object message)
         {
-            Plugin.logger.Debug(message?.ToString());
+            _logger.Debug(message?.ToString());
         }
 
         public void Info(object message)
         {
-            Plugin.logger.Info(message?.ToString());
+            _logger.Info(message?.ToString());
         }
 
         public void Notice(object message)
         {
-            Plugin.logger.Notice(message?.ToString());
+            _logger.Notice(message?.ToString());
         }
 
         public void Warn(object message)
         {
-            Plugin.logger.Warn(message?.ToString());
+            _logger.Warn(message?.ToString());
         }
 
         public void Error(object message)
         {
-            Plugin.logger.Error(message?.ToString());
+            _logger.Error(message?.ToString());
         }
 
         public void Critical(object message)
         {
-            Plugin.logger.Critical(message?.ToString());
+            _logger.Critical(message?.ToString());
         }
     }
 }

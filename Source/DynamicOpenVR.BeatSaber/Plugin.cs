@@ -35,7 +35,8 @@ namespace DynamicOpenVR.BeatSaber
     [Plugin(RuntimeOptions.SingleStartInit)]
     internal class Plugin
     {
-        public static Logger logger { get; private set; }
+        private static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
+
         public static VectorInput leftTriggerValue { get; private set; }
         public static VectorInput rightTriggerValue { get; private set; }
         public static BooleanInput menu { get; private set; }
@@ -45,23 +46,24 @@ namespace DynamicOpenVR.BeatSaber
         public static PoseInput rightHandPose { get; private set; }
         public static Vector2Input thumbstick { get; set; }
 
-        private readonly string _actionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
-        
-        private Harmony _harmonyInstance;
+        private readonly Logger _logger;
+        private readonly Harmony _harmonyInstance;
 
         private OpenVRHelper _openVRHelper;
 
         [Init]
         public Plugin(Logger logger)
         {
-            Plugin.logger = logger;
-            Logging.Logger.handler = new IPALogHandler();
+            _logger = logger;
+            _harmonyInstance = new Harmony("com.nicoco007.dynamicopenvr.beatsaber");
+
+            Logging.Logger.handler = new IPALogHandler(logger);
         }
 
         [OnStart]
         public void OnStart()
         {
-            logger.Info("Starting " + typeof(Plugin).Namespace);
+            _logger.Info("Starting " + typeof(Plugin).Namespace);
 
             try
             {
@@ -69,12 +71,12 @@ namespace DynamicOpenVR.BeatSaber
             }
             catch (Exception ex)
             {
-                logger.Error("Failed to initialize OpenVR API; DynamicOpenVR will not run");
-                logger.Error(ex);
+                _logger.Error("Failed to initialize OpenVR API; DynamicOpenVR will not run");
+                _logger.Error(ex);
                 return;
             }
 
-            logger.Info("Successfully initialized OpenVR API");
+            _logger.Info("Successfully initialized OpenVR API");
                 
             // adding the manifest to config is more of a quality of life thing
             try
@@ -83,14 +85,14 @@ namespace DynamicOpenVR.BeatSaber
             }
             catch (Exception ex)
             {
-                logger.Error("Failed to update SteamVR manifest.");
-                logger.Error(ex);
+                _logger.Error("Failed to update SteamVR manifest.");
+                _logger.Error(ex);
             }
 
             RegisterActionSet();
             ApplyHarmonyPatches();
 
-            OpenVRActionManager.instance.Initialize(_actionManifestPath);
+            OpenVRActionManager.instance.Initialize(kActionManifestPath);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
             OpenVREventHandler.instance.eventTriggered += OnOpenVREventTriggered;
@@ -175,7 +177,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest = ReadBeatSaberManifest(globalManifestPath);
 
-            beatSaberManifest["action_manifest_path"] = _actionManifestPath;
+            beatSaberManifest["action_manifest_path"] = kActionManifestPath;
 
             JObject vrManifest = new JObject
             {
@@ -192,7 +194,7 @@ namespace DynamicOpenVR.BeatSaber
             // only rewrite if path isn't in list already or is not at the top
             if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 1)
             {
-                logger.Info($"Adding '{manifestPath}' to app config");
+                _logger.Info($"Adding '{manifestPath}' to app config");
 
                 foreach (JToken token in existing)
                 {
@@ -205,12 +207,12 @@ namespace DynamicOpenVR.BeatSaber
             }
             else
             {
-                logger.Info("Manifest is already in app config");
+                _logger.Info("Manifest is already in app config");
             }
 
             if (!manifestPaths.Any(s => s.Value<string>().Equals(globalManifestPath, StringComparison.InvariantCultureIgnoreCase)))
             {
-                logger.Info($"Adding '{globalManifestPath}' to app config");
+                _logger.Info($"Adding '{globalManifestPath}' to app config");
 
                 manifestPaths.Add(globalManifestPath);
 
@@ -218,7 +220,7 @@ namespace DynamicOpenVR.BeatSaber
             }
             else
             {
-                logger.Info("Global manifest is already in app config");
+                _logger.Info("Global manifest is already in app config");
             }
 
             if (updated)
@@ -231,12 +233,12 @@ namespace DynamicOpenVR.BeatSaber
                         "DynamicOpenVR enabled and checked everything works.\n\nCan DynamicOpenVR.BeatSaber proceed with the changes?",
                         "DynamicOpenVR needs your permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    logger.Info($"Writing app config changes to '{appConfigPath}'");
+                    _logger.Info($"Writing app config changes to '{appConfigPath}'");
                     WriteAppConfig(appConfigPath, appConfig);
                 }
                 else
                 {
-                    logger.Warn("Manifest registration canceled by user");
+                    _logger.Warn("Manifest registration canceled by user");
                 }
             }
         }
@@ -250,7 +252,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject beatSaberManifest;
             
-            logger.Trace($"Reading '{globalManifestPath}'");
+            _logger.Trace($"Reading '{globalManifestPath}'");
 
             using (StreamReader reader = new StreamReader(globalManifestPath))
             {
@@ -272,14 +274,14 @@ namespace DynamicOpenVR.BeatSaber
 
             if (!File.Exists(configPath))
             {
-                logger.Warn($"Could not find file '{configPath}'");
+                _logger.Warn($"Could not find file '{configPath}'");
 
                 appConfig.Add("manifest_paths", new JArray());
 
                 return appConfig;
             }
             
-            logger.Trace($"Reading '{configPath}'");
+            _logger.Trace($"Reading '{configPath}'");
 
             using (StreamReader reader = new StreamReader(configPath))
             {
@@ -288,13 +290,13 @@ namespace DynamicOpenVR.BeatSaber
 
             if (appConfig == null)
             {
-                logger.Warn("File is empty");
+                _logger.Warn("File is empty");
                 appConfig = new JObject();
             }
 
             if (!appConfig.ContainsKey("manifest_paths"))
             {
-                logger.Warn("manifest_paths is missing");
+                _logger.Warn("manifest_paths is missing");
                 appConfig.Add("manifest_paths", new JArray());
             }
 
@@ -303,7 +305,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteBeatSaberManifest(string manifestPath, JObject beatSaberManifest)
         {
-            logger.Info($"Writing manifest to '{manifestPath}'");
+            _logger.Info($"Writing manifest to '{manifestPath}'");
 
             using (StreamWriter writer = new StreamWriter(manifestPath))
             {
@@ -313,7 +315,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteAppConfig(string configPath, JObject appConfig)
         {
-            logger.Info($"Writing app config to '{configPath}'");
+            _logger.Info($"Writing app config to '{configPath}'");
 
             using (StreamWriter writer = new StreamWriter(configPath))
             {
@@ -323,7 +325,7 @@ namespace DynamicOpenVR.BeatSaber
 
         private void RegisterActionSet()
         {
-            logger.Info("Registering actions");
+            _logger.Info("Registering actions");
 
             leftTriggerValue  = new VectorInput("/actions/main/in/lefttriggervalue");
             rightTriggerValue = new VectorInput("/actions/main/in/righttriggervalue");
@@ -337,9 +339,8 @@ namespace DynamicOpenVR.BeatSaber
 
         private void ApplyHarmonyPatches()
         {
-            logger.Info("Applying input patches");
+            _logger.Info("Applying input patches");
 
-            _harmonyInstance = new Harmony("com.nicoco007.dynamicopenvr.beatsaber");
             _harmonyInstance.PatchAll();
         }
     }

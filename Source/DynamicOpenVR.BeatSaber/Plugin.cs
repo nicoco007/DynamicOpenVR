@@ -226,11 +226,12 @@ namespace DynamicOpenVR.BeatSaber
             if (updated)
             {
                 if (MessageBox.Show(
-                        "DynamicOpenVR.BeatSaber has created a .vrmanifest file in your game's root folder and would like to register it within SteamVR. " +
-                        $"The file has been created at \"{manifestPath}\" and will be added to the global SteamVR app configuration at \"{appConfigPath}\". " +
+                        "DynamicOpenVR.BeatSaber has created a .vrmanifest file in your game's root folder and would like to permanently register it within SteamVR. " +
+                        $"The file has been created at \"{manifestPath}\" and will be added to the global SteamVR app configuration at \"{appConfigPath}\".\n\n" +
                         "Doing this allows SteamVR to properly recognize that the game is now using the new input system when the game is not running. " +
-                        "However, it may cause issues on certain systems. You can choose to do this now or wait until you've run the game with " +
-                        "DynamicOpenVR enabled and checked everything works.\n\nCan DynamicOpenVR.BeatSaber proceed with the changes?",
+                        "However, it may cause issues on certain systems. You can opt to skip this temporarily and run the game as-is to confirm that " +
+                        "everything works as expected, and you will be prompted with this message again the next time you start the game.\n\n" +
+                        "Can DynamicOpenVR.BeatSaber proceed with the changes?",
                         "DynamicOpenVR needs your permission", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     _logger.Info($"Writing app config changes to '{appConfigPath}'");
@@ -247,7 +248,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             if (!File.Exists(globalManifestPath))
             {
-                throw new FileNotFoundException("Could not find file " + globalManifestPath);
+                throw new FileNotFoundException($"Could not find file '{globalManifestPath}'");
             }
 
             JObject beatSaberManifest;

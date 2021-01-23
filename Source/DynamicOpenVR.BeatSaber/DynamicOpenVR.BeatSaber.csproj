@@ -6,6 +6,8 @@
     <TargetFramework>net4.7.2</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AutomatedBuild>false</AutomatedBuild>
+    <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+    <SteamExecutable>C:\Program Files (x86)\Steam\steam.exe</SteamExecutable>
   </PropertyGroup>
   <PropertyGroup Condition="$(Configuration) == Release">
     <DebugType>none</DebugType>
@@ -60,6 +62,9 @@
     <ItemGroup>
       <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR.BeatSaber\**\*.*" />
     </ItemGroup>
+
+    <!-- clean up -->
+    <RemoveDir Directories="$(PublishDir)" />
     
     <!-- create Plugins folder and move plugin DLL/PDB inside -->
     <MakeDir Directories="$(PublishDir)Plugins" />

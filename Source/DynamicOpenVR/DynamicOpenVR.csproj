@@ -5,6 +5,7 @@
     <AssemblyName>DynamicOpenVR</AssemblyName>
     <TargetFramework>net4.7.2</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
   </PropertyGroup>
   <PropertyGroup Condition="$(Configuration) == Release">
     <DebugType>none</DebugType>
@@ -37,6 +38,9 @@
     <ItemGroup>
       <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR\**\*.*" />
     </ItemGroup>
+
+    <!-- clean up -->
+    <RemoveDir Directories="$(PublishDir)" />
     
     <!-- create Libs folder and move DLL/PDB inside -->
     <MakeDir Directories="$(PublishDir)Libs" />

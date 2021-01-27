@@ -6,8 +6,6 @@
   "id": "DynamicOpenVR",
   "name": "DynamicOpenVR",
   "version": "0.4.0+dev",
-  "features": [],
-  "dependsOn": {},
   "files": [
     "Libs\\DynamicOpenVR.dll"
   ]

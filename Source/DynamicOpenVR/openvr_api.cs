@@ -4,10 +4,15 @@
 // This file is auto-generated, do not edit it.
 //
 //=============================================================================
+#if !OPENVR_XR_API
 
 using System;
 using System.Runtime.InteropServices;
+using Valve.VR;
+
+#if UNITY_5_3_OR_NEWER
 using UnityEngine;
+#endif
 
 namespace Valve.VR
 {
@@ -726,7 +731,7 @@ namespace Valve.VR
 		internal _GetCurrentFadeColor GetCurrentFadeColor;
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		internal delegate void _FadeGrid(float fSeconds, bool bFadeIn);
+		internal delegate void _FadeGrid(float fSeconds, bool bFadeGridIn);
 		[MarshalAs(UnmanagedType.FunctionPtr)]
 		internal _FadeGrid FadeGrid;
 
@@ -1114,6 +1119,11 @@ namespace Valve.VR
 		internal delegate EVROverlayError _GetOverlayTransformCursor(ulong ulOverlayHandle, ref HmdVector2_t pvHotspot);
 		[MarshalAs(UnmanagedType.FunctionPtr)]
 		internal _GetOverlayTransformCursor GetOverlayTransformCursor;
+
+		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		internal delegate EVROverlayError _SetOverlayTransformProjection(ulong ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, ref HmdMatrix34_t pmatTrackingOriginToOverlayTransform, ref VROverlayProjection_t pProjection, EVREye eEye);
+		[MarshalAs(UnmanagedType.FunctionPtr)]
+		internal _SetOverlayTransformProjection SetOverlayTransformProjection;
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		internal delegate EVROverlayError _ShowOverlay(ulong ulOverlayHandle);
@@ -2178,6 +2188,7 @@ namespace Valve.VR
 		}
 		public bool PollNextEvent(ref VREvent_t pEvent, uint uncbVREvent)
 		{
+#if !UNITY_METRO
 			if ((System.Environment.OSVersion.Platform == System.PlatformID.MacOSX) ||
 					(System.Environment.OSVersion.Platform == System.PlatformID.Unix))
 			{
@@ -2190,7 +2201,7 @@ namespace Valve.VR
 				event_packed.Unpack(ref pEvent);
 				return packed_result;
 			}
-
+#endif
 			bool result = FnTable.PollNextEvent(ref pEvent, uncbVREvent);
 			return result;
 		}
@@ -2223,6 +2234,7 @@ namespace Valve.VR
 		}
 		public bool GetControllerState(uint unControllerDeviceIndex, ref VRControllerState_t pControllerState, uint unControllerStateSize)
 		{
+#if !UNITY_METRO
 			if ((System.Environment.OSVersion.Platform == System.PlatformID.MacOSX) ||
 					(System.Environment.OSVersion.Platform == System.PlatformID.Unix))
 			{
@@ -2235,7 +2247,7 @@ namespace Valve.VR
 				state_packed.Unpack(ref pControllerState);
 				return packed_result;
 			}
-
+#endif
 			bool result = FnTable.GetControllerState(unControllerDeviceIndex, ref pControllerState, unControllerStateSize);
 			return result;
 		}
@@ -2253,6 +2265,7 @@ namespace Valve.VR
 		}
 		public bool GetControllerStateWithPose(ETrackingUniverseOrigin eOrigin, uint unControllerDeviceIndex, ref VRControllerState_t pControllerState, uint unControllerStateSize, ref TrackedDevicePose_t pTrackedDevicePose)
 		{
+#if !UNITY_METRO
 			if ((System.Environment.OSVersion.Platform == System.PlatformID.MacOSX) ||
 					(System.Environment.OSVersion.Platform == System.PlatformID.Unix))
 			{
@@ -2265,7 +2278,7 @@ namespace Valve.VR
 				state_packed.Unpack(ref pControllerState);
 				return packed_result;
 			}
-
+#endif
 			bool result = FnTable.GetControllerStateWithPose(eOrigin, unControllerDeviceIndex, ref pControllerState, unControllerStateSize, ref pTrackedDevicePose);
 			return result;
 		}
@@ -2891,9 +2904,9 @@ namespace Valve.VR
 			HmdColor_t result = FnTable.GetCurrentFadeColor(bBackground);
 			return result;
 		}
-		public void FadeGrid(float fSeconds, bool bFadeIn)
+		public void FadeGrid(float fSeconds, bool bFadeGridIn)
 		{
-			FnTable.FadeGrid(fSeconds, bFadeIn);
+			FnTable.FadeGrid(fSeconds, bFadeGridIn);
 		}
 		public float GetCurrentGridAlpha()
 		{
@@ -3302,6 +3315,11 @@ namespace Valve.VR
 			EVROverlayError result = FnTable.GetOverlayTransformCursor(ulOverlayHandle, ref pvHotspot);
 			return result;
 		}
+		public EVROverlayError SetOverlayTransformProjection(ulong ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, ref HmdMatrix34_t pmatTrackingOriginToOverlayTransform, ref VROverlayProjection_t pProjection, EVREye eEye)
+		{
+			EVROverlayError result = FnTable.SetOverlayTransformProjection(ulOverlayHandle, eTrackingOrigin, ref pmatTrackingOriginToOverlayTransform, ref pProjection, eEye);
+			return result;
+		}
 		public EVROverlayError ShowOverlay(ulong ulOverlayHandle)
 		{
 			EVROverlayError result = FnTable.ShowOverlay(ulOverlayHandle);
@@ -3336,6 +3354,7 @@ namespace Valve.VR
 		}
 		public bool PollNextOverlayEvent(ulong ulOverlayHandle, ref VREvent_t pEvent, uint uncbVREvent)
 		{
+#if !UNITY_METRO
 			if ((System.Environment.OSVersion.Platform == System.PlatformID.MacOSX) ||
 					(System.Environment.OSVersion.Platform == System.PlatformID.Unix))
 			{
@@ -3348,7 +3367,7 @@ namespace Valve.VR
 				event_packed.Unpack(ref pEvent);
 				return packed_result;
 			}
-
+#endif
 			bool result = FnTable.PollNextOverlayEvent(ulOverlayHandle, ref pEvent, uncbVREvent);
 			return result;
 		}
@@ -3741,7 +3760,7 @@ namespace Valve.VR
 		{
 			IntPtr pchRenderModelNameUtf8 = Utils.ToUtf8(pchRenderModelName);
 			IntPtr pchComponentNameUtf8 = Utils.ToUtf8(pchComponentName);
-
+#if !UNITY_METRO
 			if ((System.Environment.OSVersion.Platform == System.PlatformID.MacOSX) ||
 					(System.Environment.OSVersion.Platform == System.PlatformID.Unix))
 			{
@@ -3754,7 +3773,7 @@ namespace Valve.VR
 				state_packed.Unpack(ref pControllerState);
 				return packed_result;
 			}
-
+#endif
 			bool result = FnTable.GetComponentState(pchRenderModelNameUtf8, pchComponentNameUtf8, ref pControllerState, ref pState, ref pComponentState);
 			Marshal.FreeHGlobal(pchRenderModelNameUtf8);
 			Marshal.FreeHGlobal(pchComponentNameUtf8);
@@ -4695,9 +4714,13 @@ namespace Valve.VR
 		Prop_DisplaySupportsAnalogGain_Bool = 2085,
 		Prop_DisplayMinAnalogGain_Float = 2086,
 		Prop_DisplayMaxAnalogGain_Float = 2087,
+		Prop_CameraExposureTime_Float = 2088,
+		Prop_CameraGlobalGain_Float = 2089,
 		Prop_DashboardScale_Float = 2091,
 		Prop_IpdUIRangeMinMeters_Float = 2100,
 		Prop_IpdUIRangeMaxMeters_Float = 2101,
+		Prop_Hmd_SupportsHDCP14LegacyCompat_Bool = 2102,
+		Prop_Hmd_SupportsMicMonitoring_Bool = 2103,
 		Prop_DriverRequestedMuraCorrectionMode_Int32 = 2200,
 		Prop_DriverRequestedMuraFeather_InnerLeft_Int32 = 2201,
 		Prop_DriverRequestedMuraFeather_InnerRight_Int32 = 2202,
@@ -4792,6 +4815,8 @@ namespace Valve.VR
 		Submit_TextureWithDepth = 16,
 		Submit_FrameDiscontinuty = 32,
 		Submit_VulkanTextureWithArrayData = 64,
+		Submit_GlArrayTexture = 128,
+		Submit_Reserved2 = 32768,
 	}
 	public enum EVRState
 	{
@@ -5144,8 +5169,11 @@ namespace Valve.VR
 		VRApplication_SteamWatchdog = 6,
 		VRApplication_Bootstrapper = 7,
 		VRApplication_WebHelper = 8,
-		VRApplication_OpenXR = 9,
-		VRApplication_Max = 10,
+		VRApplication_OpenXRInstance = 9,
+		VRApplication_OpenXRScene = 10,
+		VRApplication_OpenXROverlay = 11,
+		VRApplication_Prism = 12,
+		VRApplication_Max = 13,
 	}
 	public enum EVRFirmwareError
 	{
@@ -5225,6 +5253,15 @@ namespace Valve.VR
 		Init_FailedForVrMonitor = 144,
 		Init_PropertyManagerInitFailed = 145,
 		Init_WebServerFailed = 146,
+		Init_IllegalTypeTransition = 147,
+		Init_MismatchedRuntimes = 148,
+		Init_InvalidProcessId = 149,
+		Init_VRServiceStartupFailed = 150,
+		Init_PrismNeedsNewDrivers = 151,
+		Init_PrismStartupTimedOut = 152,
+		Init_CouldNotStartPrism = 153,
+		Init_CreateDriverDirectDeviceFailed = 154,
+		Init_PrismExitedUnexpectedly = 155,
 		Driver_Failed = 200,
 		Driver_Unknown = 201,
 		Driver_HmdUnknown = 202,
@@ -5340,6 +5377,9 @@ namespace Valve.VR
 		Compositor_CreateOverlayInvalidCall = 488,
 		Compositor_CreateOverlayAlreadyInitialized = 489,
 		Compositor_FailedToCreateMailbox = 490,
+		Compositor_WindowInterfaceIsNull = 491,
+		Compositor_SystemLayerCreateInstance = 492,
+		Compositor_SystemLayerCreateSession = 493,
 		VendorSpecific_UnableToConnectToOculusRuntime = 1000,
 		VendorSpecific_WindowsNotInDevMode = 1001,
 		VendorSpecific_HmdFound_CantOpenDevice = 1101,
@@ -5457,6 +5497,7 @@ namespace Valve.VR
 		PropertyNotSet = 201,
 		UnknownProperty = 202,
 		InvalidParameter = 203,
+		NotImplemented = 300,
 	}
 	public enum EVRApplicationProperty
 	{
@@ -5547,6 +5588,7 @@ namespace Valve.VR
 		VROverlayTransform_DashboardTab = 5,
 		VROverlayTransform_DashboardThumb = 6,
 		VROverlayTransform_Mountable = 7,
+		VROverlayTransform_Projection = 8,
 	}
 	public enum VROverlayFlags
 	{
@@ -5818,40 +5860,42 @@ namespace Valve.VR
 		public float m9;
 		public float m10;
 		public float m11;
+#if UNITY_5_3_OR_NEWER
 
-		public Vector3 GetPosition()
+	public Vector3 GetPosition()
+	{
+		return new Vector3(m3, m7, -m11);
+	}
+
+	public bool IsRotationValid()
+	{
+		return ((m2 != 0 || m6 != 0 || m10 != 0) && (m1 != 0 || m5 != 0 || m9 != 0));
+	}
+
+	public Quaternion GetRotation()
+	{
+		if (IsRotationValid())
 		{
-			return new Vector3(m3, m7, -m11);
+			float w = Mathf.Sqrt(Mathf.Max(0, 1 + m0 + m5 + m10)) / 2;
+			float x = Mathf.Sqrt(Mathf.Max(0, 1 + m0 - m5 - m10)) / 2;
+			float y = Mathf.Sqrt(Mathf.Max(0, 1 - m0 + m5 - m10)) / 2;
+			float z = Mathf.Sqrt(Mathf.Max(0, 1 - m0 - m5 + m10)) / 2;
+
+			_copysign(ref x, -m9 - -m6);
+			_copysign(ref y, -m2 - -m8);
+			_copysign(ref z, m4 - m1);
+
+			return new Quaternion(x, y, z, w);
 		}
+		return Quaternion.identity;
+	}
 
-		public bool IsRotationValid()
-		{
-			return ((m2 != 0 || m6 != 0 || m10 != 0) && (m1 != 0 || m5 != 0 || m9 != 0));
-		}
-
-		public Quaternion GetRotation()
-		{
-			if (IsRotationValid())
-			{
-				float w = Mathf.Sqrt(Mathf.Max(0, 1 + m0 + m5 + m10)) / 2;
-				float x = Mathf.Sqrt(Mathf.Max(0, 1 + m0 - m5 - m10)) / 2;
-				float y = Mathf.Sqrt(Mathf.Max(0, 1 - m0 + m5 - m10)) / 2;
-				float z = Mathf.Sqrt(Mathf.Max(0, 1 - m0 - m5 + m10)) / 2;
-
-				_copysign(ref x, -m9 - -m6);
-				_copysign(ref y, -m2 - -m8);
-				_copysign(ref z, m4 - m1);
-
-				return new Quaternion(x, y, z, w);
-			}
-			return Quaternion.identity;
-		}
-
-		private static void _copysign(ref float sizeval, float signval)
-		{
-			if (signval > 0 != sizeval > 0)
-				sizeval = -sizeval;
-		}
+	private static void _copysign(ref float sizeval, float signval)
+	{
+		if (signval > 0 != sizeval > 0)
+			sizeval = -sizeval;
+	}
+#endif
 	}
 	[StructLayout(LayoutKind.Sequential)]
 	public struct HmdMatrix33_t
@@ -5951,6 +5995,12 @@ namespace Valve.VR
 	{
 		public HmdVector2_t vTopLeft;
 		public HmdVector2_t vBottomRight;
+	}
+	[StructLayout(LayoutKind.Sequential)]
+	public struct VRBoneTransform_t
+	{
+		public HmdVector4_t position;
+		public HmdQuaternionf_t orientation;
 	}
 	[StructLayout(LayoutKind.Sequential)]
 	public struct DistortionCoordinates_t
@@ -6100,6 +6150,7 @@ namespace Valve.VR
 	{
 		public ulong overlayHandle;
 		public ulong devicePath;
+		public ulong memoryBlockId;
 	}
 	[StructLayout(LayoutKind.Sequential)]
 	public struct VREvent_Status_t
@@ -6352,12 +6403,6 @@ namespace Valve.VR
 		}
 	}
 	[StructLayout(LayoutKind.Sequential)]
-	public struct VRBoneTransform_t
-	{
-		public HmdVector4_t position;
-		public HmdQuaternionf_t orientation;
-	}
-	[StructLayout(LayoutKind.Sequential)]
 	public struct CameraVideoStreamFrameHeader_t
 	{
 		public EVRTrackedCameraFrameType eFrameType;
@@ -6496,6 +6541,14 @@ namespace Valve.VR
 	{
 		public EVROverlayIntersectionMaskPrimitiveType m_nPrimitiveType;
 		public VROverlayIntersectionMaskPrimitive_Data_t m_Primitive;
+	}
+	[StructLayout(LayoutKind.Sequential)]
+	public struct VROverlayProjection_t
+	{
+		public float fLeft;
+		public float fRight;
+		public float fTop;
+		public float fBottom;
 	}
 	[StructLayout(LayoutKind.Sequential)]
 	public struct VROverlayView_t
@@ -7610,12 +7663,12 @@ namespace Valve.VR
 		public const string IVRApplications_Version = "IVRApplications_007";
 		public const string IVRChaperone_Version = "IVRChaperone_004";
 		public const string IVRChaperoneSetup_Version = "IVRChaperoneSetup_006";
-		public const string IVRCompositor_Version = "IVRCompositor_026";
+		public const string IVRCompositor_Version = "IVRCompositor_027";
 		public const uint k_unVROverlayMaxKeyLength = 128;
 		public const uint k_unVROverlayMaxNameLength = 128;
 		public const uint k_unMaxOverlayCount = 128;
 		public const uint k_unMaxOverlayIntersectionMaskPrimitivesCount = 32;
-		public const string IVROverlay_Version = "IVROverlay_024";
+		public const string IVROverlay_Version = "IVROverlay_025";
 		public const string IVROverlayView_Version = "IVROverlayView_003";
 		public const uint k_unHeadsetViewMaxWidth = 3840;
 		public const uint k_unHeadsetViewMaxHeight = 2160;
@@ -7650,6 +7703,7 @@ namespace Valve.VR
 		public const string k_pch_SteamVR_PlayAreaColor_String = "playAreaColor";
 		public const string k_pch_SteamVR_TrackingLossColor_String = "trackingLossColor";
 		public const string k_pch_SteamVR_ShowStage_Bool = "showStage";
+		public const string k_pch_SteamVR_DrawTrackingReferences_Bool = "drawTrackingReferences";
 		public const string k_pch_SteamVR_ActivateMultipleDrivers_Bool = "activateMultipleDrivers";
 		public const string k_pch_SteamVR_UsingSpeakers_Bool = "usingSpeakers";
 		public const string k_pch_SteamVR_SpeakersForwardYawOffsetDegrees_Float = "speakersForwardYawOffsetDegrees";
@@ -7660,6 +7714,8 @@ namespace Valve.VR
 		public const string k_pch_SteamVR_MaxRecommendedResolution_Int32 = "maxRecommendedResolution";
 		public const string k_pch_SteamVR_MotionSmoothing_Bool = "motionSmoothing";
 		public const string k_pch_SteamVR_MotionSmoothingOverride_Int32 = "motionSmoothingOverride";
+		public const string k_pch_SteamVR_FramesToThrottle_Int32 = "framesToThrottle";
+		public const string k_pch_SteamVR_AdditionalFramesToPredict_Int32 = "additionalFramesToPredict";
 		public const string k_pch_SteamVR_DisableAsyncReprojection_Bool = "disableAsync";
 		public const string k_pch_SteamVR_ForceFadeOnBadTracking_Bool = "forceFadeOnBadTracking";
 		public const string k_pch_SteamVR_DefaultMirrorView_Int32 = "mirrorView";
@@ -7702,6 +7758,8 @@ namespace Valve.VR
 		public const string k_pch_SteamVR_OverlayRenderQuality = "overlayRenderQuality_2";
 		public const string k_pch_SteamVR_BlockOculusSDKOnOpenVRLaunchOption_Bool = "blockOculusSDKOnOpenVRLaunchOption";
 		public const string k_pch_SteamVR_BlockOculusSDKOnAllLaunches_Bool = "blockOculusSDKOnAllLaunches";
+		public const string k_pch_SteamVR_HDCPLegacyCompatibility_Bool = "hdcp14legacyCompatibility";
+		public const string k_pch_SteamVR_UsePrism_Bool = "usePrism";
 		public const string k_pch_DirectMode_Section = "direct_mode";
 		public const string k_pch_DirectMode_Enable_Bool = "enable";
 		public const string k_pch_DirectMode_Count_Int32 = "count";
@@ -7794,6 +7852,7 @@ namespace Valve.VR
 		public const string k_pch_audio_LastHmdPlaybackDeviceId_String = "lastHmdPlaybackDeviceId";
 		public const string k_pch_audio_VIVEHDMIGain = "viveHDMIGain";
 		public const string k_pch_audio_DualSpeakerAndJackOutput_Bool = "dualSpeakerAndJackOutput";
+		public const string k_pch_audio_MuteMicMonitor_Bool = "muteMicMonitor";
 		public const string k_pch_Power_Section = "power";
 		public const string k_pch_Power_PowerOffOnExit_Bool = "powerOffOnExit";
 		public const string k_pch_Power_TurnOffScreensTimeout_Float = "turnOffScreensTimeout";
@@ -7807,6 +7866,7 @@ namespace Valve.VR
 		public const string k_pch_Dashboard_Position = "position";
 		public const string k_pch_Dashboard_DesktopScale = "desktopScale";
 		public const string k_pch_Dashboard_DashboardScale = "dashboardScale";
+		public const string k_pch_Dashboard_UseStandaloneSystemLayer = "standaloneSystemLayer";
 		public const string k_pch_modelskin_Section = "modelskins";
 		public const string k_pch_Driver_Enable_Bool = "enable";
 		public const string k_pch_Driver_BlockedBySafemode_Bool = "blocked_by_safe_mode";
@@ -8259,3 +8319,5 @@ namespace Valve.VR
 
 
 }
+#endif
+

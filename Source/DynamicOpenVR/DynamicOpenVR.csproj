@@ -6,6 +6,7 @@
     <TargetFramework>net4.7.2</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+    <DefineConstants>UNITY_5_3_OR_NEWER</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(Configuration) == Release">
     <DebugType>none</DebugType>

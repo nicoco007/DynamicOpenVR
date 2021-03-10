@@ -28,6 +28,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Valve.VR;
+using Zenject;
 using Logger = IPA.Logging.Logger;
 
 namespace DynamicOpenVR.BeatSaber
@@ -35,6 +36,7 @@ namespace DynamicOpenVR.BeatSaber
     [Plugin(RuntimeOptions.SingleStartInit)]
     internal class Plugin
     {
+        private const string kAppCoreSceneContextName = "AppCoreSceneContext";
         private static readonly string kActionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
 
         public static VectorInput leftTriggerValue { get; private set; }
@@ -49,6 +51,7 @@ namespace DynamicOpenVR.BeatSaber
         private readonly Logger _logger;
         private readonly Harmony _harmonyInstance;
 
+        private SceneContext _appCoreSceneContext;
         private OpenVRHelper _openVRHelper;
 
         [Init]
@@ -110,13 +113,52 @@ namespace DynamicOpenVR.BeatSaber
             leftHandPose?.Dispose();
             rightHandPose?.Dispose();
             thumbstick?.Dispose();
+
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            OpenVREventHandler.instance.eventTriggered -= OnOpenVREventTriggered;
+
+            if (_appCoreSceneContext)
+            {
+                _appCoreSceneContext.PostInstall -= AppCoreSceneContext_PostInstall;
+            }
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (scene.name == "PCInit")
             {
-                _openVRHelper = Resources.FindObjectsOfTypeAll<OpenVRHelper>().First();
+                GameObject sceneContextObject = scene.GetRootGameObjects().FirstOrDefault(go => go.name == kAppCoreSceneContextName);
+
+                if (!sceneContextObject)
+                {
+                    _logger.Error($"Could not find {kAppCoreSceneContextName}!");
+                }
+
+                _appCoreSceneContext = sceneContextObject.GetComponent<SceneContext>();
+
+                if (_appCoreSceneContext.HasInstalled)
+                {
+                    AppCoreSceneContext_PostInstall();
+                }
+                else
+                {
+                    _appCoreSceneContext.PostInstall += AppCoreSceneContext_PostInstall;
+                }
+            }
+        }
+
+        private void AppCoreSceneContext_PostInstall()
+        {
+            DiContainer container = _appCoreSceneContext.Container;
+            IVRPlatformHelper vrPlatformHelper = container.Resolve<IVRPlatformHelper>();
+
+            if (vrPlatformHelper is OpenVRHelper openVRHelper)
+            {
+                _openVRHelper = openVRHelper;
+            }
+            else
+            {
+                _logger.Error($"{nameof(IVRPlatformHelper)} isn't an instance of {nameof(OpenVRHelper)}; are you using SteamVR?");
             }
         }
 

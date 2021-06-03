@@ -19,8 +19,8 @@ using UnityEngine;
 namespace DynamicOpenVR.IO
 {
     public class Vector2Input : AnalogInput
-	{
-		public Vector2Input(string name) : base(name) { }
+    {
+        public Vector2Input(string name) : base(name) { }
 
         /// <summary>
         /// The current state of this axis of the analog action.

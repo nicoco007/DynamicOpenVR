@@ -16,9 +16,9 @@
 
 namespace DynamicOpenVR.IO
 {
-	public class HapticVibrationOutput : OVRAction
-	{
-		public HapticVibrationOutput(string name) : base(name) { }
+    public class HapticVibrationOutput : OVRAction
+    {
+        public HapticVibrationOutput(string name) : base(name) { }
 
         /// <summary>
         /// Triggers a haptic vibration action.
@@ -26,9 +26,9 @@ namespace DynamicOpenVR.IO
         /// <param name="durationSeconds">How long to trigger the haptic event for.</param>
         /// <param name="magnitude">The magnitude of the haptic event. This value must be between 0.0 and 1.0.</param>
         /// <param name="frequency">The frequency in cycles per second of the haptic event.</param>
-		public void TriggerHapticVibration(float durationSeconds, float magnitude, float frequency = 150f)
-		{
-			OpenVRFacade.TriggerHapticVibrationAction(handle, 0, durationSeconds, frequency, magnitude);
-		}
-	}
+        public void TriggerHapticVibration(float durationSeconds, float magnitude, float frequency = 150f)
+        {
+            OpenVRFacade.TriggerHapticVibrationAction(handle, 0, durationSeconds, frequency, magnitude);
+        }
+    }
 }

@@ -25,6 +25,7 @@ using DynamicOpenVR.DefaultBindings;
 using DynamicOpenVR.Exceptions;
 using UnityEngine;
 using Logger = DynamicOpenVR.Logging.Logger;
+using Newtonsoft.Json.Serialization;
 
 namespace DynamicOpenVR
 {
@@ -33,21 +34,21 @@ namespace DynamicOpenVR
         private static OpenVRActionManager _instance;
 
         public static OpenVRActionManager instance
-		{
-			get
-			{
+        {
+            get
+            {
                 // check for null since we don't want to create another object if the current one is marked for destruction
                 if (_instance == null)
-				{
+                {
                     Logger.Info($"Creating instance of {nameof(OpenVRActionManager)}");
 
-					GameObject go = new GameObject(nameof(OpenVRActionManager));
-					DontDestroyOnLoad(go);
-					_instance = go.AddComponent<OpenVRActionManager>();
+                    var go = new GameObject(nameof(OpenVRActionManager));
+                    DontDestroyOnLoad(go);
+                    _instance = go.AddComponent<OpenVRActionManager>();
                 }
 
-				return _instance;
-			}
+                return _instance;
+            }
         }
 
         public string actionManifestPath
@@ -67,6 +68,13 @@ namespace DynamicOpenVR
         private readonly Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
         private readonly HashSet<string> _actionSetNames = new HashSet<string>();
         private readonly List<ulong> _actionSetHandles = new List<ulong>();
+        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy()
+            }
+        };
 
         public void Initialize(string actionManifestPath)
         {
@@ -90,7 +98,7 @@ namespace DynamicOpenVR
                 TryAddActionSet(actionSetName);
             }
 
-            foreach (var action in _actions.Values.ToList())
+            foreach (OVRAction action in _actions.Values.ToList())
             {
                 TryUpdateHandle(action);
             }
@@ -107,32 +115,32 @@ namespace DynamicOpenVR
                 OpenVRFacade.UpdateActionState(_actionSetHandles);
             }
 
-            foreach (var action in _actions.Values.OfType<OVRInput>().ToList())
+            foreach (OVRInput input in _actions.Values.OfType<OVRInput>().ToList())
             {
                 try
                 {
-                    action.UpdateData();
+                    input.UpdateData();
                 }
                 catch (OpenVRInputException ex)
                 {
-                    Logger.Error($"An unexpected OpenVR error occurred when fetching data for action '{action.name}'. Action has been disabled.");
+                    Logger.Error($"An unexpected OpenVR error occurred when fetching data for action '{input.name}'. Action has been disabled.");
                     Logger.Error(ex);
 
-                    DeregisterAction(action);
+                    DeregisterAction(input);
                 }
                 catch (NullReferenceException ex)
                 {
-                    Logger.Error($"A null reference exception occurred when fetching data for action '{action.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
+                    Logger.Error($"A null reference exception occurred when fetching data for action '{input.name}'. This is most likely caused by an internal OpenVR issue. Action has been disabled.");
                     Logger.Error(ex);
 
-                    DeregisterAction(action);
+                    DeregisterAction(input);
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"An unexpected error occurred when fetching data for action '{action.name}'. Action has been disabled.");
+                    Logger.Error($"An unexpected error occurred when fetching data for action '{input.name}'. Action has been disabled.");
                     Logger.Error(ex);
 
-                    DeregisterAction(action);
+                    DeregisterAction(input);
                 }
             }
         }
@@ -143,7 +151,7 @@ namespace DynamicOpenVR
             {
                 throw new InvalidOperationException("Action was already registered.");
             }
-            
+
             Logger.Trace($"Registering action '{action.name}' ({action.id})");
 
             _actions.Add(action.id, action);
@@ -151,7 +159,7 @@ namespace DynamicOpenVR
             if (initialized)
             {
                 string actionSetName = action.GetActionSetName();
-                
+
                 if (!_actionSetNames.Contains(actionSetName))
                 {
                     TryAddActionSet(actionSetName);
@@ -205,7 +213,7 @@ namespace DynamicOpenVR
 
             unchecked
             {
-                foreach (string action in actionManifests.SelectMany(am => am.actions).Select(a => a.Name).OrderBy(n => n, StringComparer.InvariantCulture))
+                foreach (string action in actionManifests.SelectMany(am => am.actions).Select(a => a.name).OrderBy(n => n, StringComparer.InvariantCulture))
                 {
                     version = version * 17 + (uint)action.GetHashCode();
                 }
@@ -224,17 +232,17 @@ namespace DynamicOpenVR
                 localization = CombineLocalizations(actionManifests)
             };
 
-            foreach (string actionSetName in manifest.actionSets.Select(a => a.Name))
+            foreach (string actionSetName in manifest.actionSets.Select(a => a.name))
             {
                 Logger.Trace($"Found defined action set '{actionSetName}'");
             }
 
-            foreach (string actionName in manifest.actions.Select(a => a.Name))
+            foreach (string actionName in manifest.actions.Select(a => a.name))
             {
                 Logger.Trace($"Found defined action '{actionName}'");
             }
 
-            foreach (string controllerType in manifest.defaultBindings.Select(a => a.ControllerType))
+            foreach (string controllerType in manifest.defaultBindings.Select(a => a.controllerType))
             {
                 Logger.Trace($"Found default binding for controller '{controllerType}'");
             }
@@ -245,7 +253,7 @@ namespace DynamicOpenVR
             {
                 writer.WriteLine(JsonConvert.SerializeObject(manifest, Formatting.Indented));
             }
-		}
+        }
 
         private void TryUpdateHandle(OVRAction action)
         {
@@ -353,9 +361,9 @@ namespace DynamicOpenVR
                 };
 
                 string fileName = $"default_bindings_{defaultBinding.controllerType}.json";
-                combinedBindings.Add(new ManifestDefaultBinding { ControllerType = controllerType, BindingUrl = fileName });
+                combinedBindings.Add(new ManifestDefaultBinding { controllerType = controllerType, bindingUrl = fileName });
 
-                using (StreamWriter writer = new StreamWriter(Path.Combine("DynamicOpenVR", fileName)))
+                using (var writer = new StreamWriter(Path.Combine("DynamicOpenVR", fileName)))
                 {
                     writer.WriteLine(JsonConvert.SerializeObject(defaultBinding, Formatting.Indented));
                 }
@@ -368,7 +376,7 @@ namespace DynamicOpenVR
         {
             var final = new Dictionary<string, BindingCollection>();
 
-            foreach (var bindingSet in bindingSets)
+            foreach (DefaultBinding bindingSet in bindingSets)
             {
                 foreach (KeyValuePair<string, BindingCollection> kvp in bindingSet.bindings)
                 {
@@ -379,7 +387,7 @@ namespace DynamicOpenVR
                     {
                         final.Add(actionSetName, new BindingCollection());
                     }
-                    
+
                     final[actionSetName].chords.AddRange(bindings.chords);
                     final[actionSetName].haptics.AddRange(bindings.haptics);
                     final[actionSetName].poses.AddRange(bindings.poses);
@@ -395,9 +403,9 @@ namespace DynamicOpenVR
         {
             var combinedLocalizations = new Dictionary<string, Dictionary<string, string>>();
 
-            foreach (var manifest in manifests)
+            foreach (ActionManifest manifest in manifests)
             {
-                foreach (var language in manifest.localization)
+                foreach (Dictionary<string, string> language in manifest.localization)
                 {
                     if (!language.ContainsKey("language_tag"))
                     {
@@ -406,10 +414,10 @@ namespace DynamicOpenVR
 
                     if (!combinedLocalizations.ContainsKey(language["language_tag"]))
                     {
-                        combinedLocalizations.Add(language["language_tag"], new Dictionary<string, string>() { {"language_tag", language["language_tag"] } });
+                        combinedLocalizations.Add(language["language_tag"], new Dictionary<string, string>() { { "language_tag", language["language_tag"] } });
                     }
 
-                    foreach (var kvp in language.Where(kvp => kvp.Key != "language_tag"))
+                    foreach (KeyValuePair<string, string> kvp in language.Where(kvp => kvp.Key != "language_tag"))
                     {
                         if (combinedLocalizations.ContainsKey(kvp.Key))
                         {
@@ -425,5 +433,5 @@ namespace DynamicOpenVR
 
             return combinedLocalizations.Values.ToList();
         }
-	}
+    }
 }

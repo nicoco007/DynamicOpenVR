@@ -17,6 +17,7 @@
 using System;
 using Valve.VR;
 
+#pragma warning disable IDE1006
 namespace DynamicOpenVR.Exceptions
 {
     public class OpenVRInitException : Exception

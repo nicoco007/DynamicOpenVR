@@ -15,7 +15,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -77,7 +76,7 @@ namespace DynamicOpenVR.BeatSaber
             }
 
             _logger.Info("Successfully initialized OpenVR API");
-                
+
             // adding the manifest to config is more of a quality of life thing
             try
             {
@@ -124,7 +123,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             if (_openVRHelper == null) return;
 
-            EVREventType eventType = (EVREventType)evt.eventType;
+            var eventType = (EVREventType)evt.eventType;
 
             if (eventType == EVREventType.VREvent_InputFocusReleased && evt.data.process.pid == 0)
             {
@@ -179,20 +178,20 @@ namespace DynamicOpenVR.BeatSaber
 
             beatSaberManifest["action_manifest_path"] = kActionManifestPath;
 
-            JObject vrManifest = new JObject
+            var vrManifest = new JObject
             {
                 { "applications", new JArray { beatSaberManifest } }
             };
 
             WriteBeatSaberManifest(manifestPath, vrManifest);
-            
+
             JObject appConfig = ReadAppConfig(appConfigPath);
             JArray manifestPaths = appConfig["manifest_paths"].Value<JArray>();
-            List<JToken> existing = manifestPaths.Where(p => p.Value<string>() == manifestPath).ToList();
+            var existing = manifestPaths.Where(p => p.Value<string>() == manifestPath).ToList();
             bool updated = false;
 
             // only rewrite if path isn't in list already or is not at the top
-            if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 1)
+            if (manifestPaths.IndexOf(existing.FirstOrDefault()) != 0 || existing.Count > 1)
             {
                 _logger.Info($"Adding '{manifestPath}' to app config");
 
@@ -252,10 +251,10 @@ namespace DynamicOpenVR.BeatSaber
             }
 
             JObject beatSaberManifest;
-            
+
             _logger.Trace($"Reading '{globalManifestPath}'");
 
-            using (StreamReader reader = new StreamReader(globalManifestPath))
+            using (var reader = new StreamReader(globalManifestPath))
             {
                 JObject globalManifest = JsonConvert.DeserializeObject<JObject>(reader.ReadToEnd());
                 beatSaberManifest = globalManifest["applications"]?.Value<JArray>()?.FirstOrDefault(a => a["app_key"]?.Value<string>() == "steam.app.620980")?.Value<JObject>();
@@ -281,10 +280,10 @@ namespace DynamicOpenVR.BeatSaber
 
                 return appConfig;
             }
-            
+
             _logger.Trace($"Reading '{configPath}'");
 
-            using (StreamReader reader = new StreamReader(configPath))
+            using (var reader = new StreamReader(configPath))
             {
                 appConfig = JsonConvert.DeserializeObject<JObject>(reader.ReadToEnd());
             }
@@ -308,7 +307,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             _logger.Info($"Writing manifest to '{manifestPath}'");
 
-            using (StreamWriter writer = new StreamWriter(manifestPath))
+            using (var writer = new StreamWriter(manifestPath))
             {
                 writer.Write(JsonConvert.SerializeObject(beatSaberManifest, Formatting.Indented));
             }
@@ -318,7 +317,7 @@ namespace DynamicOpenVR.BeatSaber
         {
             _logger.Info($"Writing app config to '{configPath}'");
 
-            using (StreamWriter writer = new StreamWriter(configPath))
+            using (var writer = new StreamWriter(configPath))
             {
                 writer.Write(JsonConvert.SerializeObject(appConfig, Formatting.Indented));
             }
@@ -328,14 +327,14 @@ namespace DynamicOpenVR.BeatSaber
         {
             _logger.Info("Registering actions");
 
-            leftTriggerValue  = new VectorInput("/actions/main/in/lefttriggervalue");
+            leftTriggerValue = new VectorInput("/actions/main/in/lefttriggervalue");
             rightTriggerValue = new VectorInput("/actions/main/in/righttriggervalue");
-            menu              = new BooleanInput("/actions/main/in/menu");
-            leftSlice         = new HapticVibrationOutput("/actions/main/out/leftslice");
-            rightSlice        = new HapticVibrationOutput("/actions/main/out/rightslice");
-            leftHandPose      = new PoseInput("/actions/main/in/lefthandpose");
-            rightHandPose     = new PoseInput("/actions/main/in/righthandpose");
-            thumbstick        = new Vector2Input("/actions/main/in/thumbstick");
+            menu = new BooleanInput("/actions/main/in/menu");
+            leftSlice = new HapticVibrationOutput("/actions/main/out/leftslice");
+            rightSlice = new HapticVibrationOutput("/actions/main/out/rightslice");
+            leftHandPose = new PoseInput("/actions/main/in/lefthandpose");
+            rightHandPose = new PoseInput("/actions/main/in/righthandpose");
+            thumbstick = new Vector2Input("/actions/main/in/thumbstick");
         }
 
         private void ApplyHarmonyPatches()

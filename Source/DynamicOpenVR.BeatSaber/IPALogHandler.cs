@@ -21,7 +21,7 @@ namespace DynamicOpenVR.BeatSaber
 {
     internal class IPALogHandler : ILogHandler
     {
-        private Logger _logger;
+        private readonly Logger _logger;
 
         public IPALogHandler(Logger logger)
         {

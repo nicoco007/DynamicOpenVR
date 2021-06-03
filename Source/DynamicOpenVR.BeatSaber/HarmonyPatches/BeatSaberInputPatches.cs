@@ -24,126 +24,121 @@ using UnityEngine.XR;
 // ReSharper disable InconsistentNaming
 namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
-	[HarmonyPatch(typeof(VRControllersInputManager))]
-	[HarmonyPatch("TriggerValue", MethodType.Normal)]
+    [HarmonyPatch(typeof(VRControllersInputManager))]
+    [HarmonyPatch("TriggerValue", MethodType.Normal)]
     internal class VRControllersInputManager_TriggerValue
-	{
+    {
         [HarmonyPriority(Priority.First)]
-		public static bool Prefix(XRNode node, ref float __result)
-		{
-			if (node == XRNode.LeftHand)
-			{
-				__result = Plugin.leftTriggerValue.value;
-				return false;
-			}
+        public static bool Prefix(XRNode node, ref float __result)
+        {
+            if (node == XRNode.LeftHand)
+            {
+                __result = Plugin.leftTriggerValue.value;
+                return false;
+            }
 
-			if (node == XRNode.RightHand)
-			{
-				__result = Plugin.rightTriggerValue.value;
-				return false;
-			}
+            if (node == XRNode.RightHand)
+            {
+                __result = Plugin.rightTriggerValue.value;
+                return false;
+            }
 
-			return true;
-		}
-	}
+            return true;
+        }
+    }
 
-	[HarmonyPatch(typeof(VRControllersInputManager))]
-	[HarmonyPatch("MenuButtonDown", MethodType.Normal)]
+    [HarmonyPatch(typeof(VRControllersInputManager))]
+    [HarmonyPatch("MenuButtonDown", MethodType.Normal)]
     internal class VRControllersInputManager_MenuButtonDown
-	{
+    {
         // ReSharper disable once RedundantAssignment
         [HarmonyPriority(Priority.First)]
         public static bool Prefix(ref bool __result)
-		{
-			__result = Plugin.menu.activeChange;
+        {
+            __result = Plugin.menu.activeChange;
 
-			return false;
-		}
-	}
+            return false;
+        }
+    }
 
-	[HarmonyPatch(typeof(VRControllersInputManager))]
-	[HarmonyPatch("MenuButton", MethodType.Normal)]
+    [HarmonyPatch(typeof(VRControllersInputManager))]
+    [HarmonyPatch("MenuButton", MethodType.Normal)]
     internal class MenuButtonPatch
-	{
+    {
         // ReSharper disable once RedundantAssignment
         [HarmonyPriority(Priority.First)]
-		public static bool Prefix(ref bool __result)
-		{
-			__result = Plugin.menu.state;
+        public static bool Prefix(ref bool __result)
+        {
+            __result = Plugin.menu.state;
 
-			return false;
-		}
-	}
+            return false;
+        }
+    }
 
-	[HarmonyPatch(typeof(OpenVRHelper))]
-	[HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
+    [HarmonyPatch(typeof(OpenVRHelper))]
+    [HarmonyPatch("TriggerHapticPulse", MethodType.Normal)]
     internal class OpenVRHelper_TriggerHapticPulse
-	{
-        [HarmonyPriority(Priority.Last)]
-		public static bool Prefix(XRNode node, float strength)
-		{
-			if (node == XRNode.LeftHand)
-			{
-				Plugin.leftSlice.TriggerHapticVibration(0.01f, strength, 25f);
-				return false;
-			}
-
-			if (node == XRNode.RightHand)
-			{
-				Plugin.rightSlice.TriggerHapticVibration(0.01f, strength, 25f);
-				return false;
-			}
-			
-			return true;
-		}
-	}
-
-	[HarmonyPatch(typeof(OpenVRHelper))]
-	[HarmonyPatch("Update", MethodType.Normal)]
-	internal class OpenVRHelper_Update
     {
-		private static bool _scrollingLastFrame;
-		private static FieldInfo _joystickWasCenteredThisFrameEvent;
-		private static FieldInfo _joystickWasNotCenteredThisFrameEvent;
-
-		static OpenVRHelper_Update()
+        [HarmonyPriority(Priority.Last)]
+        public static bool Prefix(XRNode node, float strength)
         {
-			_joystickWasCenteredThisFrameEvent = typeof(OpenVRHelper).GetField("joystickWasCenteredThisFrameEvent", BindingFlags.NonPublic | BindingFlags.Instance);
-			_joystickWasNotCenteredThisFrameEvent = typeof(OpenVRHelper).GetField("joystickWasNotCenteredThisFrameEvent", BindingFlags.NonPublic | BindingFlags.Instance);
-		}
-
-		public static bool Prefix(OpenVRHelper __instance)
-        {
-			Vector2 vector = Plugin.thumbstick.vector;
-
-			if (vector.sqrMagnitude <= 0.01f)
-			{
-				if (_scrollingLastFrame)
-				{
-					_scrollingLastFrame = false;
-					InvokeEvent(__instance, _joystickWasCenteredThisFrameEvent);
-				}
-			}
-			else
+            if (node == XRNode.LeftHand)
             {
-				_scrollingLastFrame = true;
-				InvokeEvent(__instance, _joystickWasNotCenteredThisFrameEvent, vector);
-			}
+                Plugin.leftSlice.TriggerHapticVibration(0.01f, strength, 25f);
+                return false;
+            }
 
-			// prevent OpenVRHelper from consuming events
-			return false;
+            if (node == XRNode.RightHand)
+            {
+                Plugin.rightSlice.TriggerHapticVibration(0.01f, strength, 25f);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(OpenVRHelper))]
+    [HarmonyPatch("Update", MethodType.Normal)]
+    internal class OpenVRHelper_Update
+    {
+        private static readonly FieldInfo kJoystickWasCenteredThisFrameEvent = typeof(OpenVRHelper).GetField("joystickWasCenteredThisFrameEvent", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo kJoystickWasNotCenteredThisFrameEvent = typeof(OpenVRHelper).GetField("joystickWasNotCenteredThisFrameEvent", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static bool _scrollingLastFrame;
+
+        public static bool Prefix(OpenVRHelper __instance)
+        {
+            Vector2 vector = Plugin.thumbstick.vector;
+
+            if (vector.sqrMagnitude <= 0.01f)
+            {
+                if (_scrollingLastFrame)
+                {
+                    _scrollingLastFrame = false;
+                    InvokeEvent(__instance, kJoystickWasCenteredThisFrameEvent);
+                }
+            }
+            else
+            {
+                _scrollingLastFrame = true;
+                InvokeEvent(__instance, kJoystickWasNotCenteredThisFrameEvent, vector);
+            }
+
+            // prevent OpenVRHelper from consuming events
+            return false;
         }
 
-		private static void InvokeEvent<T>(T obj, FieldInfo field, params object[] args)
+        private static void InvokeEvent<T>(T obj, FieldInfo field, params object[] args)
         {
-			var multicastDelegate = (MulticastDelegate)field.GetValue(obj);
+            var multicastDelegate = (MulticastDelegate)field.GetValue(obj);
 
-			if (multicastDelegate == null) return;
+            if (multicastDelegate == null) return;
 
-			foreach (Delegate handler in multicastDelegate.GetInvocationList())
-			{
-				handler.Method.Invoke(handler.Target, args);
-			}
-		}
+            foreach (Delegate handler in multicastDelegate.GetInvocationList())
+            {
+                handler.Method.Invoke(handler.Target, args);
+            }
+        }
     }
 }

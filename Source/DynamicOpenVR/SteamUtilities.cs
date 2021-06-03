@@ -88,10 +88,10 @@ namespace DynamicOpenVR
 
             // DirectoryInfo accepts either a file path or a directory path, and most of its properties work for either.
             // However, its Exists property only works for a directory path.
-            DirectoryInfo directory = new DirectoryInfo(path);
+            var directory = new DirectoryInfo(path);
             if (File.Exists(path) || directory.Exists)
             {
-                List<string> parts = new List<string>();
+                var parts = new List<string>();
 
                 DirectoryInfo parentDirectory = directory.Parent;
                 while (parentDirectory != null)

@@ -24,7 +24,7 @@ namespace DynamicOpenVR.BeatSaber.Native
         {
             uint type = (uint)buttons | (uint)icon;
 
-            return (DialogResult) NativeMethods.MessageBox(IntPtr.Zero, message, title, type);
+            return (DialogResult)NativeMethods.MessageBox(IntPtr.Zero, message, title, type);
         }
     }
 }

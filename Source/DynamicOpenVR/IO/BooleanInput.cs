@@ -18,11 +18,11 @@ using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-	public class BooleanInput : OVRInput
+    public class BooleanInput : OVRInput
     {
         private InputDigitalActionData_t _actionData;
 
-		public BooleanInput(string name) : base(name) { }
+        public BooleanInput(string name) : base(name) { }
 
         /// <summary>
         /// Is set to True if this action is bound to an input source that is present in the system and is in an action set that is active.
@@ -32,12 +32,12 @@ namespace DynamicOpenVR.IO
         /// <summary>
         /// The current state of this digital action. True means the user wants to perform this action.
         /// </summary>
-		public bool state => _actionData.bState;
+        public bool state => _actionData.bState;
 
         /// <summary>
         /// If the state changed from disabled to enabled since it was last checked.
         /// </summary>
-		public bool activeChange => _actionData.bState && _actionData.bChanged;
+        public bool activeChange => _actionData.bState && _actionData.bChanged;
 
         /// <summary>
         /// If the state changed from enabled to disabled since it was last checked.

@@ -47,7 +47,7 @@ namespace DynamicOpenVR.IO
         /// Whether the device is currently tracking properly or not.
         /// </summary>
         /// <returns></returns>
-        public bool isTracking => _actionData.pose.eTrackingResult == ETrackingResult.Running_OK;
+        public bool isTracking => _actionData.pose.eTrackingResult == ETrackingResult.Running_OK;
 
         private InputPoseActionData_t _actionData;
         private Pose _pose;

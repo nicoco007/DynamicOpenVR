@@ -41,7 +41,7 @@
         /// The message box contains three push buttons: Yes, No, and Cancel. 
         /// </summary>
         YesNoCancel = 0x00000003u,
-        
+
         /// <summary>
         /// An exclamation-point icon appears in the message box.
         /// </summary>

@@ -35,7 +35,7 @@ namespace DynamicOpenVR
                 {
                     Logger.Info($"Creating instance of {nameof(OpenVREventHandler)}");
 
-                    GameObject go = new GameObject(nameof(OpenVREventHandler));
+                    var go = new GameObject(nameof(OpenVREventHandler));
                     DontDestroyOnLoad(go);
                     _instance = go.AddComponent<OpenVREventHandler>();
                 }

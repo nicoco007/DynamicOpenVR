@@ -22,7 +22,7 @@ namespace DynamicOpenVR
 {
     internal static class NativeMethods
     {
-        [DllImport("kernel32.dll", SetLastError=true)]
+        [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern int QueryFullProcessImageName([In] IntPtr hProcess, [In] int dwFlags, [Out] StringBuilder lpExeName, ref int lpdwSize);
     }
 }

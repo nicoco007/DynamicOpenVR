@@ -15,28 +15,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace DynamicOpenVR.DefaultBindings
 {
     internal class DefaultBinding
     {
-        [JsonProperty(PropertyName = "action_manifest_version")]
         public uint actionManifestVersion { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
         public string name { get; set; }
 
-        [JsonProperty(PropertyName = "description")]
         public string description { get; set; }
 
-        [JsonProperty(PropertyName = "controller_type")]
         public string controllerType { get; set; }
 
-        [JsonProperty(PropertyName = "category")]
         public string category { get; set; }
 
-        [JsonProperty(PropertyName = "bindings")]
         public Dictionary<string, BindingCollection> bindings { get; set; }
     }
 }

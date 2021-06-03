@@ -18,31 +18,31 @@ using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-	public class SkeletalSummaryData
-	{
-		public float thumbCurl { get; }
-		public float indexCurl { get; }
-		public float middleCurl { get; }
-		public float ringCurl { get; }
-		public float littleCurl { get; }
+    public class SkeletalSummaryData
+    {
+        public float thumbCurl { get; }
+        public float indexCurl { get; }
+        public float middleCurl { get; }
+        public float ringCurl { get; }
+        public float littleCurl { get; }
 
-		public float thumbIndexSplay { get; }
-		public float indexMiddleSplay { get; }
-		public float middleRingSplay { get; }
-		public float ringLittleSplay { get; }
+        public float thumbIndexSplay { get; }
+        public float indexMiddleSplay { get; }
+        public float middleRingSplay { get; }
+        public float ringLittleSplay { get; }
 
-		internal SkeletalSummaryData(VRSkeletalSummaryData_t summaryDataStruct)
-		{
-			thumbCurl  = summaryDataStruct.flFingerCurl0;
-			indexCurl  = summaryDataStruct.flFingerCurl1;
-			middleCurl = summaryDataStruct.flFingerCurl2;
-			ringCurl   = summaryDataStruct.flFingerCurl3;
-			littleCurl = summaryDataStruct.flFingerCurl4;
+        internal SkeletalSummaryData(VRSkeletalSummaryData_t summaryDataStruct)
+        {
+            thumbCurl = summaryDataStruct.flFingerCurl0;
+            indexCurl = summaryDataStruct.flFingerCurl1;
+            middleCurl = summaryDataStruct.flFingerCurl2;
+            ringCurl = summaryDataStruct.flFingerCurl3;
+            littleCurl = summaryDataStruct.flFingerCurl4;
 
-			thumbIndexSplay  = summaryDataStruct.flFingerSplay0;
-			indexMiddleSplay = summaryDataStruct.flFingerSplay1;
-			middleRingSplay  = summaryDataStruct.flFingerSplay2;
-			ringLittleSplay  = summaryDataStruct.flFingerSplay3;
-		}
-	}
+            thumbIndexSplay = summaryDataStruct.flFingerSplay0;
+            indexMiddleSplay = summaryDataStruct.flFingerSplay1;
+            middleRingSplay = summaryDataStruct.flFingerSplay2;
+            ringLittleSplay = summaryDataStruct.flFingerSplay3;
+        }
+    }
 }

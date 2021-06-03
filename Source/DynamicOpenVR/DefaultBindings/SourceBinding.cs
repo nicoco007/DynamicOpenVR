@@ -15,19 +15,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace DynamicOpenVR.DefaultBindings
 {
     internal class SourceBinding
     {
-        [JsonProperty(PropertyName = "path")]
         public string path { get; set; }
 
-        [JsonProperty(PropertyName = "mode")]
         public string mode { get; set; }
 
-        [JsonProperty(PropertyName = "inputs")]
         public Dictionary<string, SourceInput> inputs { get; set; }
     }
 }

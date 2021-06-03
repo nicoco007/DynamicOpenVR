@@ -32,7 +32,7 @@ namespace DynamicOpenVR
 
             EVRInitError error = EVRInitError.None;
             CVRSystem system = OpenVR.Init(ref error);
-            
+
             if (error != EVRInitError.None)
             {
                 throw new OpenVRInitException(error);

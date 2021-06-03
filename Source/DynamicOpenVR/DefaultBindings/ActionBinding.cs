@@ -16,15 +16,15 @@
 
 namespace DynamicOpenVR.Bindings
 {
-    public abstract class ActionBinding
+    internal abstract class ActionBinding
     {
-        internal string Type { get; }
-        internal string Path { get; }
+        public string type { get; }
+        public string path { get; }
 
         protected ActionBinding(string type, string path)
         {
-            Type = type;
-            Path = path;
+            this.type = type;
+            this.path = path;
         }
     }
 }

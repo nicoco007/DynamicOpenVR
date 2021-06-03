@@ -20,16 +20,13 @@ namespace DynamicOpenVR.Manifest
 {
     internal class ManifestAction
     {
-        [JsonProperty(PropertyName = "name")]
-        internal string Name { get; set; }
+        public string name { get; set; }
 
-        [JsonProperty(PropertyName = "requirement")]
-        internal string Requirement { get; set; }
+        public string requirement { get; set; }
 
-        [JsonProperty(PropertyName = "type")]
-        internal string Type { get; set; }
+        public string type { get; set; }
 
-        [JsonProperty(PropertyName = "skeleton", NullValueHandling = NullValueHandling.Ignore)]
-        internal string Skeleton { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string skeleton { get; set; }
     }
 }

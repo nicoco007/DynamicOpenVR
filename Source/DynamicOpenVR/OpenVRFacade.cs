@@ -22,87 +22,87 @@ using Valve.VR;
 
 namespace DynamicOpenVR
 {
-	internal static class OpenVRFacade
-	{
-		internal static bool IsRuntimeInstalled()
+    internal static class OpenVRFacade
+    {
+        internal static bool IsRuntimeInstalled()
         {
-			return OpenVR.IsRuntimeInstalled();
+            return OpenVR.IsRuntimeInstalled();
         }
 
-		internal static void SetActionManifestPath(string manifestPath)
-		{
-			Logger.Info($"Setting action manifest path to '{manifestPath}'");
+        internal static void SetActionManifestPath(string manifestPath)
+        {
+            Logger.Info($"Setting action manifest path to '{manifestPath}'");
 
-			EVRInputError error = OpenVR.Input.SetActionManifestPath(manifestPath);
+            EVRInputError error = OpenVR.Input.SetActionManifestPath(manifestPath);
 
-			if (error != EVRInputError.None)
-			{
-				throw new OpenVRInputException($"Could not set action manifest path: {error}", error);
-			}
-		}
+            if (error != EVRInputError.None)
+            {
+                throw new OpenVRInputException($"Could not set action manifest path: {error}", error);
+            }
+        }
 
-		internal static ulong GetActionSetHandle(string actionSetName)
-		{
-			ulong handle = default;
+        internal static ulong GetActionSetHandle(string actionSetName)
+        {
+            ulong handle = default;
 
-			EVRInputError error = OpenVR.Input.GetActionSetHandle(actionSetName, ref handle);
+            EVRInputError error = OpenVR.Input.GetActionSetHandle(actionSetName, ref handle);
 
-			if (error != EVRInputError.None)
-			{
-				throw new OpenVRInputException($"Could not get handle for action set '{actionSetName}': {error}", error);
-			}
+            if (error != EVRInputError.None)
+            {
+                throw new OpenVRInputException($"Could not get handle for action set '{actionSetName}': {error}", error);
+            }
 
-			return handle;
-		}
+            return handle;
+        }
 
-		internal static ulong GetActionHandle(string actionName)
-		{
-			ulong handle = default;
+        internal static ulong GetActionHandle(string actionName)
+        {
+            ulong handle = default;
 
-			EVRInputError error = OpenVR.Input.GetActionHandle(actionName, ref handle);
+            EVRInputError error = OpenVR.Input.GetActionHandle(actionName, ref handle);
 
-			if (error != EVRInputError.None)
-			{
-				throw new OpenVRInputException($"Could not get handle for action '{actionName}': {error}", error);
-			}
+            if (error != EVRInputError.None)
+            {
+                throw new OpenVRInputException($"Could not get handle for action '{actionName}': {error}", error);
+            }
 
-			return handle;
-		}
+            return handle;
+        }
 
-		internal static void UpdateActionState(List<ulong> handles)
-		{
-			VRActiveActionSet_t[] activeActionSets = new VRActiveActionSet_t[handles.Count];
+        internal static void UpdateActionState(List<ulong> handles)
+        {
+            var activeActionSets = new VRActiveActionSet_t[handles.Count];
 
-			for (int i = 0; i < handles.Count; i++)
-			{
-				activeActionSets[i] = new VRActiveActionSet_t
-				{
-					ulActionSet = handles[i],
-					ulRestrictedToDevice = OpenVR.k_ulInvalidInputValueHandle
-				};
-			}
+            for (int i = 0; i < handles.Count; i++)
+            {
+                activeActionSets[i] = new VRActiveActionSet_t
+                {
+                    ulActionSet = handles[i],
+                    ulRestrictedToDevice = OpenVR.k_ulInvalidInputValueHandle
+                };
+            }
 
-			EVRInputError error = OpenVR.Input.UpdateActionState(activeActionSets, (uint)Marshal.SizeOf(typeof(VRActiveActionSet_t)));
+            EVRInputError error = OpenVR.Input.UpdateActionState(activeActionSets, (uint)Marshal.SizeOf(typeof(VRActiveActionSet_t)));
 
-			if (error != EVRInputError.None && error != EVRInputError.NoData)
-			{
-				throw new OpenVRInputException($"Could not update action states: {error}", error);
-			}
-		}
+            if (error != EVRInputError.None && error != EVRInputError.NoData)
+            {
+                throw new OpenVRInputException($"Could not update action states: {error}", error);
+            }
+        }
 
-		internal static InputAnalogActionData_t GetAnalogActionData(ulong actionHandle)
-		{
-			InputAnalogActionData_t actionData = default;
+        internal static InputAnalogActionData_t GetAnalogActionData(ulong actionHandle)
+        {
+            InputAnalogActionData_t actionData = default;
 
-			EVRInputError error = OpenVR.Input.GetAnalogActionData(actionHandle, ref actionData, (uint)Marshal.SizeOf(typeof(InputAnalogActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+            EVRInputError error = OpenVR.Input.GetAnalogActionData(actionHandle, ref actionData, (uint)Marshal.SizeOf(typeof(InputAnalogActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
 
-			if (error != EVRInputError.None && error != EVRInputError.NoData)
-			{
-				throw new OpenVRInputException($"Could not get analog data for action with handle {actionHandle}: {error}", error);
-			}
+            if (error != EVRInputError.None && error != EVRInputError.NoData)
+            {
+                throw new OpenVRInputException($"Could not get analog data for action with handle {actionHandle}: {error}", error);
+            }
 
-			return actionData;
-		}
+            return actionData;
+        }
 
         internal static InputDigitalActionData_t GetDigitalActionData(ulong actionHandle)
         {
@@ -132,8 +132,8 @@ namespace DynamicOpenVR
             return actionData;
         }
 
-		internal static InputPoseActionData_t GetPoseActionData(ulong actionHandle, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
-		{
+        internal static InputPoseActionData_t GetPoseActionData(ulong actionHandle, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
+        {
             InputPoseActionData_t actionData = default;
 
             EVRInputError error = OpenVR.Input.GetPoseActionDataRelativeToNow(actionHandle, origin, 0, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
@@ -143,21 +143,21 @@ namespace DynamicOpenVR
             }
 
             return actionData;
-		}
+        }
 
-		internal static VRSkeletalSummaryData_t GetSkeletalSummaryData(ulong actionHandle)
-		{
-			VRSkeletalSummaryData_t summaryData = default;
+        internal static VRSkeletalSummaryData_t GetSkeletalSummaryData(ulong actionHandle)
+        {
+            VRSkeletalSummaryData_t summaryData = default;
 
-			EVRInputError error = OpenVR.Input.GetSkeletalSummaryData(actionHandle, EVRSummaryType.FromDevice, ref summaryData);
+            EVRInputError error = OpenVR.Input.GetSkeletalSummaryData(actionHandle, EVRSummaryType.FromDevice, ref summaryData);
 
-			if (error != EVRInputError.None && error != EVRInputError.NoData)
-			{
-				throw new OpenVRInputException($"Could not get skeletal summary data for action with handle {actionHandle}: {error}", error);
-			}
+            if (error != EVRInputError.None && error != EVRInputError.NoData)
+            {
+                throw new OpenVRInputException($"Could not get skeletal summary data for action with handle {actionHandle}: {error}", error);
+            }
 
-			return summaryData;
-		}
+            return summaryData;
+        }
 
         internal static void TriggerHapticVibrationAction(ulong actionHandle, float startSecondsFromNow, float durationSeconds, float frequency, float amplitude)
         {
@@ -168,5 +168,5 @@ namespace DynamicOpenVR
                 throw new OpenVRInputException($"Failed to trigger haptic feedback vibration for action with handle {actionHandle}: {error}", error);
             }
         }
-	}
+    }
 }

@@ -21,7 +21,7 @@ namespace DynamicOpenVR.BeatSaber.Native
 {
     internal static class NativeMethods
     {
-        [DllImport("user32.dll", SetLastError = true, CharSet= CharSet.Auto)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         internal static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
     }
 }

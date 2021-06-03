@@ -1,56 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>DynamicOpenVR.BeatSaber</RootNamespace>
-    <AssemblyName>DynamicOpenVR.BeatSaber</AssemblyName>
+    <RootNamespace>DynamicOpenVR</RootNamespace>
+    <AssemblyName>DynamicOpenVR</AssemblyName>
     <TargetFramework>net4.7.2</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AutomatedBuild>false</AutomatedBuild>
     <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
-    <SteamExecutable>C:\Program Files (x86)\Steam\steam.exe</SteamExecutable>
+    <DefineConstants>UNITY_5_3_OR_NEWER</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(Configuration) == Release">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\Libraries\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="HMLib">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMLib.dll</HintPath>
-    </Reference>
-    <Reference Include="IPA.Injector">
-      <HintPath>..\..\Libraries\IPA.Injector.dll</HintPath>
-    </Reference>
-    <Reference Include="IPA.Loader">
-      <HintPath>..\..\Libraries\IPA.Loader.dll</HintPath>
-    </Reference>
-    <Reference Include="Main">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\Libraries\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\Libraries\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>..\..\Libraries\UnityEngine.VRModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>..\..\Libraries\UnityEngine.XRModule.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="manifest.json" />
-    <EmbeddedResource Include="Resources\icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DynamicOpenVR\DynamicOpenVR.csproj" />
   </ItemGroup>
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
@@ -60,16 +37,16 @@
   </Target>
   <Target Name="Organize" AfterTargets="AfterBuild">
     <ItemGroup>
-      <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR.BeatSaber\**\*.*" />
+      <CopyToOutput Include="$(ProjectDir)..\..\Packaging\DynamicOpenVR\**\*.*" />
     </ItemGroup>
 
     <!-- clean up -->
     <RemoveDir Directories="$(PublishDir)" />
     
-    <!-- create Plugins folder and move plugin DLL/PDB inside -->
-    <MakeDir Directories="$(PublishDir)Plugins" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)Plugins" />
-    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Plugins" Condition="$(DebugType) == 'portable'" />
+    <!-- create Libs folder and move DLL/PDB inside -->
+    <MakeDir Directories="$(PublishDir)Libs" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)Libs" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Libs" Condition="$(DebugType) == 'portable'" />
 
     <!-- copy static files -->
     <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -86,7 +63,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.11.0">
+    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.10.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -14,26 +14,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace DynamicOpenVR.Manifest
 {
     internal class ActionManifest
     {
-        [JsonProperty(PropertyName = "version")]
-        internal uint version { get; set; } = 0;
+        public uint version { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "actions")]
-        internal List<ManifestAction> actions { get; set; } = new List<ManifestAction>();
+        public List<ManifestAction> actions { get; set; } = new List<ManifestAction>();
 
-        [JsonProperty(PropertyName = "action_sets")]
-        internal List<ManifestActionSet> actionSets { get; set; } = new List<ManifestActionSet>();
+        public List<ManifestActionSet> actionSets { get; set; } = new List<ManifestActionSet>();
 
-        [JsonProperty(PropertyName = "default_bindings")]
-        internal List<ManifestDefaultBinding> defaultBindings { get; set; } = new List<ManifestDefaultBinding>();
+        public List<ManifestDefaultBinding> defaultBindings { get; set; } = new List<ManifestDefaultBinding>();
 
-        [JsonProperty(PropertyName = "localization")]
-        internal List<Dictionary<string, string>> localization { get; set; } = new List<Dictionary<string, string>>();
+        public List<Dictionary<string, string>> localization { get; set; } = new List<Dictionary<string, string>>();
     }
 }

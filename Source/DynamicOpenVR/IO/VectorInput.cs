@@ -16,9 +16,9 @@
 
 namespace DynamicOpenVR.IO
 {
-	public class VectorInput : AnalogInput
-	{
-		public VectorInput(string name) : base(name) { }
+    public class VectorInput : AnalogInput
+    {
+        public VectorInput(string name) : base(name) { }
 
         /// <summary>
         /// The current state of this axis of the analog action.

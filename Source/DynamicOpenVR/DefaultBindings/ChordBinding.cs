@@ -15,16 +15,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace DynamicOpenVR.DefaultBindings
 {
     internal class ChordBinding
     {
-        [JsonProperty(PropertyName = "output")]
         public string output { get; set; }
 
-        [JsonProperty(PropertyName = "inputs")]
         public List<List<string>> inputs { get; set; }
     }
 }

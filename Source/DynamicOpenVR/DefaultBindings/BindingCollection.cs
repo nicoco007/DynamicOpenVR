@@ -15,25 +15,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace DynamicOpenVR.DefaultBindings
 {
     internal class BindingCollection
     {
-        [JsonProperty(PropertyName = "sources")]
         public List<SourceBinding> sources { get; set; } = new List<SourceBinding>();
 
-        [JsonProperty(PropertyName = "haptics")]
         public List<HapticBinding> haptics { get; set; } = new List<HapticBinding>();
 
-        [JsonProperty(PropertyName = "poses")]
         public List<PoseBinding> poses { get; set; } = new List<PoseBinding>();
 
-        [JsonProperty(PropertyName = "skeleton")]
         public List<SkeletonBinding> skeleton { get; set; } = new List<SkeletonBinding>();
 
-        [JsonProperty(PropertyName = "chords")]
         public List<ChordBinding> chords { get; set; } = new List<ChordBinding>();
     }
 }

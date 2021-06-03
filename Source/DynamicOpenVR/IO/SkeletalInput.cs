@@ -18,7 +18,7 @@ using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-	public class SkeletalInput : OVRInput
+    public class SkeletalInput : OVRInput
     {
         private InputSkeletalActionData_t _actionData;
         private VRSkeletalSummaryData_t _summaryData;

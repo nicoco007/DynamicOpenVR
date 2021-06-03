@@ -14,16 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 
-using Newtonsoft.Json;
-
 namespace DynamicOpenVR.Manifest
 {
     internal class ManifestActionSet
     {
-        [JsonProperty(PropertyName = "name")]
-        internal string Name { get; set; }
+        public string name { get; set; }
 
-        [JsonProperty(PropertyName = "usage")]
-        internal string Usage { get; set; }
+        public string usage { get; set; }
     }
 }

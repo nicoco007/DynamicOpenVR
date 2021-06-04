@@ -1,4 +1,22 @@
-﻿using System.IO;
+﻿// <copyright file="AppConfigConfirmationModal.cs" company="Nicolas Gnyra">
+// DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
+// Copyright © 2019-2021 Nicolas Gnyra
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// </copyright>
+
+using System.IO;
 using System.Linq;
 using HMUI;
 using Newtonsoft.Json;
@@ -11,6 +29,10 @@ namespace DynamicOpenVR.BeatSaber
 {
     internal class AppConfigConfirmationModal : MonoBehaviour
     {
+        private ModalView _modalView;
+        private MainMenuViewController _mainMenuViewController;
+        private JObject _appConfig;
+
         public static AppConfigConfirmationModal Create(JObject updatedAppConfig)
         {
             Transform viewControllers = GameObject.Find("/ViewControllers").transform;
@@ -99,10 +121,6 @@ namespace DynamicOpenVR.BeatSaber
 
             return modal;
         }
-
-        private ModalView _modalView;
-        private MainMenuViewController _mainMenuViewController;
-        private JObject _appConfig;
 
         private void OnMainMenuViewControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {

@@ -1,18 +1,20 @@
-﻿// DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
+﻿// <copyright file="Plugin.cs" company="Nicolas Gnyra">
+// DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
 // Copyright © 2019-2021 Nicolas Gnyra
-
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Affero General Public License for more details.
-
+//
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
+// </copyright>
 
 using System;
 using System.IO;
@@ -41,15 +43,6 @@ namespace DynamicOpenVR.BeatSaber
 
         private static readonly string kActionManifestPath = Path.Combine(UnityGame.InstallPath, "DynamicOpenVR", "action_manifest.json");
 
-        public static VectorInput leftTriggerValue { get; private set; }
-        public static VectorInput rightTriggerValue { get; private set; }
-        public static BooleanInput menu { get; private set; }
-        public static HapticVibrationOutput leftSlice { get; private set; }
-        public static HapticVibrationOutput rightSlice { get; private set; }
-        public static PoseInput leftHandPose { get; private set; }
-        public static PoseInput rightHandPose { get; private set; }
-        public static Vector2Input thumbstick { get; private set; }
-
         private readonly Logger _logger;
         private readonly Harmony _harmonyInstance;
 
@@ -64,6 +57,22 @@ namespace DynamicOpenVR.BeatSaber
 
             Logging.Logger.handler = new IPALogHandler(logger);
         }
+
+        public static VectorInput leftTriggerValue { get; private set; }
+
+        public static VectorInput rightTriggerValue { get; private set; }
+
+        public static BooleanInput menu { get; private set; }
+
+        public static HapticVibrationOutput leftSlice { get; private set; }
+
+        public static HapticVibrationOutput rightSlice { get; private set; }
+
+        public static PoseInput leftHandPose { get; private set; }
+
+        public static PoseInput rightHandPose { get; private set; }
+
+        public static Vector2Input thumbstick { get; private set; }
 
         [OnStart]
         public void OnStart()
@@ -131,7 +140,10 @@ namespace DynamicOpenVR.BeatSaber
 
         private void OnOpenVREventTriggered(VREvent_t evt)
         {
-            if (_openVRHelper == null) return;
+            if (_openVRHelper == null)
+            {
+                return;
+            }
 
             var eventType = (EVREventType)evt.eventType;
 
@@ -169,7 +181,10 @@ namespace DynamicOpenVR.BeatSaber
         {
             var multicastDelegate = (MulticastDelegate)obj.GetType().GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
 
-            if (multicastDelegate == null) return;
+            if (multicastDelegate == null)
+            {
+                return;
+            }
 
             foreach (Delegate handler in multicastDelegate.GetInvocationList())
             {
@@ -185,7 +200,7 @@ namespace DynamicOpenVR.BeatSaber
 
             var vrManifest = new JObject
             {
-                { "applications", new JArray { beatSaberManifest } }
+                { "applications", new JArray { beatSaberManifest } },
             };
 
             WriteBeatSaberManifest(kManifestPath, vrManifest);

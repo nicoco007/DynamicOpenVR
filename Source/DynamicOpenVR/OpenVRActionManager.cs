@@ -1,37 +1,52 @@
+// <copyright file="OpenVRActionManager.cs" company="Nicolas Gnyra">
 // DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
 // Copyright © 2019-2021 Nicolas Gnyra
-
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Affero General Public License for more details.
-
+//
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
+// </copyright>
 
-using DynamicOpenVR.IO;
-using DynamicOpenVR.Manifest;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DynamicOpenVR.DefaultBindings;
 using DynamicOpenVR.Exceptions;
+using DynamicOpenVR.IO;
+using DynamicOpenVR.Manifest;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using Logger = DynamicOpenVR.Logging.Logger;
-using Newtonsoft.Json.Serialization;
 
 namespace DynamicOpenVR
 {
     public class OpenVRActionManager : MonoBehaviour
     {
         private static OpenVRActionManager _instance;
+
+        private readonly Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
+        private readonly HashSet<string> _actionSetNames = new HashSet<string>();
+        private readonly List<ulong> _actionSetHandles = new List<ulong>();
+        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy(),
+            },
+        };
+
+        private string _actionManifestPath;
 
         public static OpenVRActionManager instance
         {
@@ -55,26 +70,16 @@ namespace DynamicOpenVR
         {
             get
             {
-                if (!initialized) throw new Exception(nameof(OpenVRActionManager) + " is not initialized");
+                if (!initialized)
+                {
+                    throw new Exception(nameof(OpenVRActionManager) + " is not initialized");
+                }
 
                 return _actionManifestPath;
             }
         }
 
         public bool initialized { get; private set; }
-
-        private string _actionManifestPath;
-
-        private readonly Dictionary<string, OVRAction> _actions = new Dictionary<string, OVRAction>();
-        private readonly HashSet<string> _actionSetNames = new HashSet<string>();
-        private readonly List<ulong> _actionSetHandles = new List<ulong>();
-        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new SnakeCaseNamingStrategy()
-            }
-        };
 
         public void Initialize(string actionManifestPath)
         {
@@ -108,7 +113,10 @@ namespace DynamicOpenVR
 
         public void Update()
         {
-            if (!initialized) return; // do nothing until initialized
+            if (!initialized)
+            {
+                return; // do nothing until initialized
+            }
 
             if (_actionSetHandles != null)
             {
@@ -229,7 +237,7 @@ namespace DynamicOpenVR
                 actions = actionManifests.SelectMany(m => m.actions).ToList(),
                 actionSets = actionManifests.SelectMany(m => m.actionSets).ToList(),
                 defaultBindings = defaultBindings,
-                localization = CombineLocalizations(actionManifests)
+                localization = CombineLocalizations(actionManifests),
             };
 
             foreach (string actionSetName in manifest.actionSets.Select(a => a.name))
@@ -290,7 +298,10 @@ namespace DynamicOpenVR
         {
             Logger.Trace($"Registering action set '{actionSetName}'");
 
-            if (_actionSetNames.Contains(actionSetName)) throw new InvalidOperationException($"Action set '{actionSetName}' has already been registered");
+            if (_actionSetNames.Contains(actionSetName))
+            {
+                throw new InvalidOperationException($"Action set '{actionSetName}' has already been registered");
+            }
 
             try
             {
@@ -357,7 +368,7 @@ namespace DynamicOpenVR
                     description = "Action bindings for Beat Saber.",
                     controllerType = controllerType,
                     category = "steamvr_input",
-                    bindings = MergeBindings(defaultBindings.Where(b => b.controllerType == controllerType))
+                    bindings = MergeBindings(defaultBindings.Where(b => b.controllerType == controllerType)),
                 };
 
                 string fileName = $"default_bindings_{defaultBinding.controllerType}.json";

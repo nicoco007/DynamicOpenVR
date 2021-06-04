@@ -3,10 +3,11 @@
   <PropertyGroup>
     <RootNamespace>DynamicOpenVR</RootNamespace>
     <AssemblyName>DynamicOpenVR</AssemblyName>
-    <TargetFramework>net4.7.2</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
     <DefineConstants>UNITY_5_3_OR_NEWER</DefineConstants>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="$(Configuration) == Release">
     <DebugType>none</DebugType>
@@ -29,6 +30,9 @@
       <HintPath>..\..\Libraries\UnityEngine.XRModule.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
       <!-- prevent any referenced DLLs from being copied to the output folder -->
@@ -47,6 +51,7 @@
     <MakeDir Directories="$(PublishDir)Libs" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)Libs" />
     <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PublishDir)Libs" Condition="$(DebugType) == 'portable'" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="$(PublishDir)Libs" Condition="$(DebugType) == 'portable'" />
 
     <!-- copy static files -->
     <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -64,6 +69,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.11.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

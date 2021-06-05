@@ -16,6 +16,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -37,9 +38,8 @@ namespace DynamicOpenVR.BeatSaber
 
         public static AppConfigConfirmationModal Create(JObject updatedAppConfig)
         {
-            Transform viewControllers = GameObject.Find("/ViewControllers").transform;
             DiContainer container = Resources.FindObjectsOfTypeAll<SceneContext>().First(sc => sc.gameObject.scene.name == "MainMenu").Container;
-            GameObject modalViewObject = container.InstantiatePrefab(viewControllers.Find("GameplaySetupViewController/ColorsOverrideSettings/Settings/Detail/ColorSchemeDropDown/DropdownTableView").gameObject);
+            GameObject modalViewObject = container.InstantiatePrefab(container.Resolve<GameplaySetupViewController>().transform.Find("ColorsOverrideSettings/Settings/Detail/ColorSchemeDropDown/DropdownTableView").gameObject);
             modalViewObject.name = "DynamicOpenVR Modal";
 
             DestroyImmediate(modalViewObject.GetComponent<TableView>());
@@ -60,8 +60,8 @@ namespace DynamicOpenVR.BeatSaber
                 }
             }
 
-            Transform mainMenuViewControllerTransform = viewControllers.Find("MainMenuViewController");
-            MainMenuViewController mainMenuViewController = mainMenuViewControllerTransform.GetComponent<MainMenuViewController>();
+            MainMenuViewController mainMenuViewController = container.Resolve<MainMenuViewController>();
+            Transform mainMenuViewControllerTransform = mainMenuViewController.transform;
 
             var rectTransform = (RectTransform)modalViewObject.transform;
             rectTransform.anchorMin = Vector2.one * 0.5f;
@@ -71,7 +71,7 @@ namespace DynamicOpenVR.BeatSaber
             rectTransform.sizeDelta = new Vector2(110, 65);
             rectTransform.SetParent(mainMenuViewControllerTransform, false);
 
-            Material fontMaterial = Resources.FindObjectsOfTypeAll<Material>().First(m => m.name == "Teko-Medium SDF Curved Softer");
+            Material fontMaterial = mainMenuViewControllerTransform.Find("MainContent/SoloButton/Text").GetComponent<CurvedTextMeshPro>().fontMaterial;
             var textObject = new GameObject("Text");
             CurvedTextMeshPro text = textObject.AddComponent<CurvedTextMeshPro>();
             text.text = "DynamicOpenVR.BeatSaber has created file called beatsaber.vrmanifest in your game's folder and would like to permanently register it" +
@@ -85,33 +85,15 @@ namespace DynamicOpenVR.BeatSaber
             text.fontSize = 3;
             text.alignment = TMPro.TextAlignmentOptions.Left;
             text.overflowMode = TMPro.TextOverflowModes.Truncate;
-            ((RectTransform)text.transform).sizeDelta = new Vector2(100, 50);
-            ((RectTransform)text.transform).anchoredPosition = new Vector2(0, 5);
             textObject.transform.SetParent(rectTransform, false);
 
-            var noButtonTransform = (RectTransform)Instantiate(viewControllers.Find("SettingsViewController/BottomPanel/CancelButton"));
-            noButtonTransform.anchorMin = new Vector2(0.5f, 0);
-            noButtonTransform.anchorMax = new Vector2(0.5f, 0);
-            noButtonTransform.anchoredPosition = new Vector2(-20, 8);
-            noButtonTransform.SetParent(rectTransform, false);
-            Button noButton = noButtonTransform.GetComponent<Button>();
-            noButton.onClick.RemoveAllListeners();
-            Transform noButtonTextTransform = noButtonTransform.Find("Content/Text");
-            Destroy(noButtonTextTransform.GetComponent("LocalizedTextMeshProUGUI"));
-            CurvedTextMeshPro noButtonText = noButtonTextTransform.GetComponent<CurvedTextMeshPro>();
-            noButtonText.text = "No";
+            var textTransform = (RectTransform)textObject.transform;
+            textTransform.sizeDelta = new Vector2(100, 50);
+            textTransform.anchoredPosition = new Vector2(0, 5);
 
-            var yesButtonTransform = (RectTransform)Instantiate(viewControllers.Find("SettingsViewController/BottomPanel/OkButton"));
-            yesButtonTransform.anchorMin = new Vector2(0.5f, 0);
-            yesButtonTransform.anchorMax = new Vector2(0.5f, 0);
-            yesButtonTransform.anchoredPosition = new Vector2(20, 8);
-            yesButtonTransform.SetParent(rectTransform, false);
-            Button yesButton = yesButtonTransform.GetComponent<Button>();
-            yesButton.onClick.RemoveAllListeners();
-            Transform yesButtonTextTransform = yesButtonTransform.Find("Content/Text");
-            Destroy(yesButtonTextTransform.GetComponent("LocalizedTextMeshProUGUI"));
-            CurvedTextMeshPro yesButtonText = yesButtonTextTransform.GetComponent<CurvedTextMeshPro>();
-            yesButtonText.text = "Yes";
+            Transform settingsNavigationControllerTransform = container.Resolve<SettingsNavigationController>().transform;
+            Button noButton = CreateButton(settingsNavigationControllerTransform.Find("BottomPanel/CancelButton"), "NoButton", "No", new Vector2(-20, 8), rectTransform);
+            Button yesButton = CreateButton(settingsNavigationControllerTransform.Find("BottomPanel/OkButton"), "YesButton", "Yes", new Vector2(20, 8), rectTransform);
 
             AppConfigConfirmationModal modal = modalViewObject.AddComponent<AppConfigConfirmationModal>();
             modal._modalView = modalViewObject.GetComponent<ModalView>();
@@ -173,6 +155,27 @@ namespace DynamicOpenVR.BeatSaber
             return path;
         }
 
+        private static Button CreateButton(Transform template, string name, string text, Vector2 position, Transform parent)
+        {
+            var transform = (RectTransform)Instantiate(template);
+            transform.name = name;
+            transform.anchorMin = new Vector2(0.5f, 0);
+            transform.anchorMax = new Vector2(0.5f, 0);
+            transform.anchoredPosition = position;
+            transform.SetParent(parent, false);
+
+            Button button = transform.GetComponent<Button>();
+            button.onClick.RemoveAllListeners();
+
+            Transform textTransform = transform.Find("Content/Text");
+            Destroy(textTransform.GetComponent("LocalizedTextMeshProUGUI"));
+
+            CurvedTextMeshPro textMesh = textTransform.GetComponent<CurvedTextMeshPro>();
+            textMesh.text = text;
+
+            return button;
+        }
+
         private void OnMainMenuViewControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             _modalView.Show(false);
@@ -192,6 +195,11 @@ namespace DynamicOpenVR.BeatSaber
 
         private void WriteAppConfig(string configPath, JObject appConfig)
         {
+            if (appConfig == null)
+            {
+                throw new ArgumentNullException(nameof(appConfig));
+            }
+
             using (var writer = new StreamWriter(configPath))
             {
                 writer.Write(JsonConvert.SerializeObject(appConfig, Formatting.Indented));

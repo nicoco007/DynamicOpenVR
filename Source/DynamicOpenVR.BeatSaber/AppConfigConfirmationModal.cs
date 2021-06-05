@@ -16,6 +16,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using HMUI;
@@ -72,11 +74,11 @@ namespace DynamicOpenVR.BeatSaber
             Material fontMaterial = Resources.FindObjectsOfTypeAll<Material>().First(m => m.name == "Teko-Medium SDF Curved Softer");
             var textObject = new GameObject("Text");
             CurvedTextMeshPro text = textObject.AddComponent<CurvedTextMeshPro>();
-            text.text = "DynamicOpenVR.BeatSaber has created a .vrmanifest file in your game's root folder and would like to permanently register it within SteamVR. " +
-                        $"The file has been created at \"{Plugin.kManifestPath}\" and will be added to the global SteamVR app configuration at \"{Plugin.kAppConfigPath}\".\n\n" +
+            text.text = "DynamicOpenVR.BeatSaber has created file called beatsaber.vrmanifest in your game's folder and would like to permanently register it" +
+                        $"with SteamVR by adding it to the global SteamVR app configuration at <b>{GetExactPath(Plugin.kAppConfigPath)}</b>.\n\n" +
                         "Doing this allows SteamVR to properly recognize that the game is now using the new input system when the game is not running. " +
-                        "However, it may cause issues on certain systems. You can opt to skip this temporarily and run the game as-is to confirm that " +
-                        "everything works as expected, and you will be prompted with this message again the next time you start the game.\n\n" +
+                        "However, since DynamicOpenVR can in rare instances cause input to completely stop working, you can opt to skip this temporarily and" +
+                        "run the game as-is to confirm that everything works as expected and you will be prompted with this message again the next time you start the game.\n\n" +
                         "Can DynamicOpenVR.BeatSaber proceed with the changes?";
 
             text.fontMaterial = fontMaterial;
@@ -120,6 +122,55 @@ namespace DynamicOpenVR.BeatSaber
             mainMenuViewController.didActivateEvent += modal.OnMainMenuViewControllerActivated;
 
             return modal;
+        }
+
+        /// <summary>
+        /// Gets the exact case used on the file system for an existing file or directory.
+        /// Adapted from https://stackoverflow.com/a/29578292/3133529.
+        /// </summary>
+        /// <param name="path">A relative or absolute path.</param>
+        /// <returns>True if the exact path was found.  False otherwise.</returns>
+        /// <remarks>
+        /// This supports drive-lettered paths and UNC paths, but a UNC root
+        /// will be returned in title case (e.g., \\Server\Share).
+        /// </remarks>
+        private static string GetExactPath(string path)
+        {
+            // DirectoryInfo accepts either a file path or a directory path, and most of its properties work for either.
+            // However, its Exists property only works for a directory path.
+            var directory = new DirectoryInfo(path);
+            if (File.Exists(path) || directory.Exists)
+            {
+                var parts = new List<string>();
+
+                DirectoryInfo parentDirectory = directory.Parent;
+                while (parentDirectory != null)
+                {
+                    FileSystemInfo entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
+                    parts.Add(entry.Name);
+
+                    directory = parentDirectory;
+                    parentDirectory = directory.Parent;
+                }
+
+                // Handle the root part (i.e., drive letter or UNC \\server\share).
+                string root = directory.FullName;
+                if (root.Contains(':'))
+                {
+                    root = root.ToUpper();
+                }
+                else
+                {
+                    string[] rootParts = root.Split('\\');
+                    root = string.Join("\\", rootParts.Select(part => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(part)));
+                }
+
+                parts.Add(root);
+                parts.Reverse();
+                path = Path.Combine(parts.ToArray());
+            }
+
+            return path;
         }
 
         private void OnMainMenuViewControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)

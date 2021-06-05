@@ -1,5 +1,5 @@
 ﻿// <copyright file="NativeMethods.cs" company="Nicolas Gnyra">
-// DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
+// DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
 // Copyright © 2019-2021 Nicolas Gnyra
 //
 // This program is free software: you can redistribute it and/or modify

@@ -207,7 +207,7 @@ namespace DynamicOpenVR.BeatSaber
 
             JObject appConfig = ReadAppConfig(kAppConfigPath);
             JArray manifestPaths = appConfig["manifest_paths"].Value<JArray>();
-            var existing = manifestPaths.Where(p => p.Value<string>() == kManifestPath).ToList();
+            var existing = manifestPaths.Where(p => string.Equals(p.Value<string>(), kManifestPath, StringComparison.InvariantCultureIgnoreCase)).ToList();
             bool updated = false;
 
             // only rewrite if path isn't in list already or is not at the top
@@ -229,7 +229,7 @@ namespace DynamicOpenVR.BeatSaber
                 _logger.Info("Manifest is already in app config");
             }
 
-            if (!manifestPaths.Any(s => s.Value<string>().Equals(kGlobalManifestPath, StringComparison.InvariantCultureIgnoreCase)))
+            if (!manifestPaths.Any(s => string.Equals(s.Value<string>(), kGlobalManifestPath, StringComparison.InvariantCultureIgnoreCase)))
             {
                 _logger.Info($"Adding '{kGlobalManifestPath}' to app config");
 

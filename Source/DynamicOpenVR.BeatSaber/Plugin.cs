@@ -97,6 +97,7 @@ namespace DynamicOpenVR.BeatSaber
         [OnExit]
         public void OnExit()
         {
+            unityXRActions?.Dispose();
             beatSaberActions?.Dispose();
 
             SceneManager.sceneLoaded -= OnSceneLoaded;

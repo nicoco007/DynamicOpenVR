@@ -76,7 +76,7 @@ namespace DynamicOpenVR.BeatSaber
             // Awake will run before before OnSceneLoaded gets invoked so we can make changes before the first SceneContext initializes.
             _harmonyInstance.Patch(
                 AccessTools.Method(typeof(SceneContext), nameof(SceneContext.Awake)),
-                prefix: new HarmonyMethod(AccessTools.Method(typeof(Plugin), nameof(InvokePreSceneContextAwake)), before: new string[] { "com.nicoco007.open-xr-tracker-profiles" }));
+                prefix: new HarmonyMethod(AccessTools.Method(typeof(Plugin), nameof(InvokePreSceneContextAwake)), before: new string[] { "com.nicoco007.openxr-feature-manager" }));
         }
 
         private static event Action _preSceneContextAwake;

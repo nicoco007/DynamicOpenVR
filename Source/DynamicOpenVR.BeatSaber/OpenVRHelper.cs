@@ -19,6 +19,7 @@
 using System;
 using DynamicOpenVR.IO;
 using UnityEngine;
+using UnityEngine.SpatialTracking;
 using UnityEngine.XR;
 
 namespace DynamicOpenVR.BeatSaber
@@ -44,6 +45,14 @@ namespace DynamicOpenVR.BeatSaber
 
         public new bool GetNodePose(XRNode nodeType, int idx, out Vector3 pos, out Quaternion rot)
         {
+            if (nodeType == XRNode.Head)
+            {
+                PoseDataFlags flags = PoseDataSource.GetDataFromSource(TrackedPoseDriver.TrackedPose.Head, out Pose pose);
+                pos = pose.position;
+                rot = pose.rotation;
+                return flags.HasFlag(PoseDataFlags.Position) && flags.HasFlag(PoseDataFlags.Rotation);
+            }
+
             PoseInput poseInput = nodeType switch
             {
                 XRNode.LeftHand => Plugin.beatSaberActions.leftHandPose,

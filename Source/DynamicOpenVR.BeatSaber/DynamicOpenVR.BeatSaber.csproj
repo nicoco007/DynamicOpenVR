@@ -6,7 +6,6 @@
     <TargetFramework>net472</TargetFramework>
     <AutomatedBuild>false</AutomatedBuild>
     <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
-    <SteamExecutable>C:\Program Files (x86)\Steam\steam.exe</SteamExecutable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>10</LangVersion>
     <Version>0.5.0</Version>

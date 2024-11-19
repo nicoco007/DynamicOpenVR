@@ -16,10 +16,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+extern alias UnityXROpenVR;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using DynamicOpenVR.BeatSaber.InputCollections;
 using DynamicOpenVR.IO;
 using DynamicOpenVR.SteamVR;
@@ -29,10 +32,11 @@ using IPA;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Unity.XR.OpenVR;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Management;
+using UnityXROpenVR::Unity.XR.OpenVR;
+using Valve.VR;
 using Zenject;
 using Logger = IPA.Logging.Logger;
 
@@ -149,6 +153,7 @@ namespace DynamicOpenVR.BeatSaber
             manager.StopSubsystems();
             manager.DeinitializeLoader();
 
+            // TODO: properly support fpfc toggle
             if (Environment.GetCommandLineArgs().Contains("fpfc"))
             {
                 return;
@@ -176,6 +181,22 @@ namespace DynamicOpenVR.BeatSaber
                 _logger.Error($"Failed to add loader to {nameof(XRManagerSettings)}");
                 return;
             }
+
+            _logger.Info("Initializing OpenVR");
+
+            EVRInitError error = EVRInitError.None;
+
+            do
+            {
+                OpenVR.Init(ref error);
+
+                if (error == EVRInitError.Init_AnotherAppLaunching)
+                {
+                    _logger.Trace("Another app is launching (SteamVR Home?); trying again...");
+                    Thread.Sleep(250);
+                }
+            }
+            while (error == EVRInitError.Init_AnotherAppLaunching);
 
             _logger.Info($"Initializing {nameof(OpenVRLoader)}");
 

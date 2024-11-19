@@ -16,16 +16,41 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+extern alias UnityXROpenVR;
+
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using DynamicOpenVR.IO;
+using IPA.Utilities.Async;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
 using UnityEngine.XR;
+using UnityXROpenVR::Unity.XR.OpenVR;
+using UnityXROpenVR::Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber
 {
     internal class OpenVRHelper : UnityXRHelper, IVRPlatformHelper
     {
+        public new void Start()
+        {
+            OpenVREvents.AddListener(EVREventType.VREvent_InputFocusCaptured, OnInputFocusCaptured);
+            OpenVREvents.AddListener(EVREventType.VREvent_InputFocusReleased, OnInputFocusReleased);
+            OpenVREvents.AddListener(EVREventType.VREvent_DashboardActivated, OnDashboardActivated);
+            OpenVREvents.AddListener(EVREventType.VREvent_DashboardDeactivated, OnDashboardDeactivated);
+            base.Start();
+        }
+
+        public new void OnDestroy()
+        {
+            OpenVREvents.RemoveListener(EVREventType.VREvent_InputFocusCaptured, OnInputFocusCaptured);
+            OpenVREvents.RemoveListener(EVREventType.VREvent_InputFocusReleased, OnInputFocusReleased);
+            OpenVREvents.RemoveListener(EVREventType.VREvent_DashboardActivated, OnDashboardActivated);
+            OpenVREvents.RemoveListener(EVREventType.VREvent_DashboardDeactivated, OnDashboardDeactivated);
+            base.OnDestroy();
+        }
+
         public new Vector2 GetAnyJoystickMaxAxis()
         {
             return new Vector2(
@@ -106,15 +131,28 @@ namespace DynamicOpenVR.BeatSaber
             return input.value;
         }
 
-        private void Update()
+        private void OnInputFocusCaptured(VREvent_t evt)
         {
-            BooleanInput headsetOnHead = Plugin.beatSaberActions.headsetOnHead;
-
-            if (headsetOnHead.enabledChange || headsetOnHead.disabledChange)
+            if (evt.data.process.oldPid == 0)
             {
-                userPresence = headsetOnHead.state;
+                SetUserPresenceAsync(false);
             }
         }
+
+        private void OnInputFocusReleased(VREvent_t evt)
+        {
+            if (evt.data.process.pid == 0)
+            {
+                SetUserPresenceAsync(true);
+            }
+        }
+
+        private void OnDashboardActivated(VREvent_t evt) => SetUserPresenceAsync(false);
+
+        private void OnDashboardDeactivated(VREvent_t evt) => SetUserPresenceAsync(true);
+
+        // TODO: this sometimes hard crashes the game without the UnityMainThreadTaskScheduler, unclear why
+        private void SetUserPresenceAsync(bool value) => UnityMainThreadTaskScheduler.Factory.StartNew(() => userPresence = value).ContinueWith(task => Debug.LogError(task.Exception), CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, UnityMainThreadTaskScheduler.Default);
 
         private float AbsMax(float a, float b) => Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
     }

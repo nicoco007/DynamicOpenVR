@@ -138,7 +138,13 @@ namespace DynamicOpenVR
         {
             InputPoseActionData_t actionData = default;
 
-            EVRInputError error = OpenVR.Input.GetPoseActionDataForNextFrame(actionHandle, origin, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+            // After some testing, this seems to be the calculation WaitForPoses does for its game poses.
+            // Note that this should only be used in Update; BeforeRender should use GetPoseActionDataForNextFrame.
+            // TODO: display frequency and vsync to photons should be relatively constant - at least within a frame. no need to call these every single time.
+            float frameDuration = 1f / GetFloatTrackedDeviceProperty(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_DisplayFrequency_Float);
+            float fPredictedSecondsFromNow = frameDuration + OpenVR.Compositor.GetFrameTimeRemaining() + GetFloatTrackedDeviceProperty(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_SecondsFromVsyncToPhotons_Float);
+
+            EVRInputError error = OpenVR.Input.GetPoseActionDataRelativeToNow(actionHandle, origin, fPredictedSecondsFromNow, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
             if (error is not EVRInputError.None and not EVRInputError.NoData)
             {
                 throw new OpenVRInputException($"Could not get pose data for action with handle {actionHandle}: {error}", error);
@@ -169,6 +175,19 @@ namespace DynamicOpenVR
             {
                 throw new OpenVRInputException($"Failed to trigger haptic feedback vibration for action with handle {actionHandle}: {error}", error);
             }
+        }
+
+        private static float GetFloatTrackedDeviceProperty(uint unDeviceIndex, ETrackedDeviceProperty prop)
+        {
+            ETrackedPropertyError error = ETrackedPropertyError.TrackedProp_Success;
+            float value = OpenVR.System.GetFloatTrackedDeviceProperty(unDeviceIndex, prop, ref error);
+
+            if (error is not ETrackedPropertyError.TrackedProp_Success)
+            {
+                throw new OpenVRTrackedPropertyError($"Could not get float property {prop} for device at index {unDeviceIndex}: {error}", unDeviceIndex, error);
+            }
+
+            return value;
         }
     }
 }

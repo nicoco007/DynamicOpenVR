@@ -1,4 +1,4 @@
-﻿// <copyright file="OpenVRInitException.cs" company="Nicolas Gnyra">
+﻿// <copyright file="OpenVRException.cs" company="Nicolas Gnyra">
 // DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
 // Copyright © 2019-2023 Nicolas Gnyra
 //
@@ -16,24 +16,25 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-using Valve.VR;
+using System;
 
-#pragma warning disable IDE1006
 namespace DynamicOpenVR.Exceptions
 {
-    public class OpenVRInitException : OpenVRException
+    public class OpenVRException : Exception
     {
-        internal OpenVRInitException(string message)
+        internal OpenVRException()
+            : base()
+        {
+        }
+
+        internal OpenVRException(string message)
             : base(message)
         {
         }
 
-        internal OpenVRInitException(EVRInitError error)
-            : base("Failed to initialize OpenVR: " + error)
+        internal OpenVRException(string message, Exception innerException)
+            : base(message, innerException)
         {
-            Error = error;
         }
-
-        public EVRInitError Error { get; } = EVRInitError.None;
     }
 }

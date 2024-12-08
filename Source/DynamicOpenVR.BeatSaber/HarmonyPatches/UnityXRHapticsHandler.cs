@@ -16,11 +16,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using DynamicOpenVR.IO;
 using HarmonyLib;
 using UnityEngine.XR;
@@ -32,7 +29,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
         private static readonly MethodInfo kTargetMethod = AccessTools.Method(typeof(InputDevice), nameof(InputDevice.SendHapticImpulse));
         private static readonly MethodInfo kOverrideMethod = AccessTools.Method(typeof(UnityXRHapticsHandler), nameof(Handle));
 
-        private static bool Handle(InputDevice instance, uint channel, float amplitude, float duration)
+        private static bool Handle(ref InputDevice instance, uint channel, float amplitude, float duration)
         {
             if (!instance.isValid || !instance.characteristics.HasFlag(InputDeviceCharacteristics.Controller) || !instance.characteristics.HasFlag(InputDeviceCharacteristics.HeldInHand))
             {
@@ -59,75 +56,23 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
             return true;
         }
 
-        [HarmonyPatch]
-        internal static class KnucklesUnityXRHapticsHandler_HapticsCoroutine
+        [HarmonyPatch(typeof(UnityXRController), nameof(UnityXRController.UpdateHapticsHandler))]
+        internal static class UnityXRController_UpdateHapticsHandler
         {
-            private static readonly FieldInfo kTargetField = AccessTools.Field(AccessTools.TypeByName("KnucklesUnityXRHapticsHandler+<HapticsCoroutine>d__9"), "<device>5__2");
-            private static readonly CodeMatch[] kCodeMatches = new[]
-            {
-                new CodeMatch(i => i.opcode == OpCodes.Ldflda && ((FieldInfo)i.operand) == kTargetField),
-                new CodeMatch(i => i.opcode == OpCodes.Ldc_I4_0),
-                new CodeMatch(i => i.opcode == OpCodes.Ldloc_1),
-                new CodeMatch(i => i.opcode == OpCodes.Ldfld),
-                new CodeMatch(i => i.opcode == OpCodes.Ldloc_1),
-                new CodeMatch(i => i.opcode == OpCodes.Ldfld),
-                new CodeMatch(i => i.opcode == OpCodes.Call && ((MethodInfo)i.operand) == kTargetMethod),
-            };
-
-            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-            {
-                CodeMatcher cm = new CodeMatcher(instructions, generator).MatchForward(false, kCodeMatches);
-
-                if (cm.IsInvalid)
-                {
-                    throw new InvalidOperationException("InputDevice.SendHapticImpulse parameters and call not found");
-                }
-
-                cm.RemoveInstruction();
-                cm.Insert(new CodeInstruction(OpCodes.Ldfld, kTargetField));
-
-                cm.MatchForward(false, kCodeMatches.Last());
-
-                cm.RemoveInstruction();
-                cm.Insert(new CodeInstruction(OpCodes.Call, kOverrideMethod));
-
-                return cm.InstructionEnumeration();
-            }
-
-            // since the IEnumerator class is compiler-generated with numbers that may vary between versions added to the end, we look for the type based on the method's name
-            public static MethodBase TargetMethod() => AccessTools.Method(typeof(KnucklesUnityXRHapticsHandler).GetNestedTypes(BindingFlags.NonPublic).First(t => t.Name.StartsWith("<HapticsCoroutine>")), "MoveNext");
+            // don't use KnucklesUnityXRHapticsHandler
+            public static bool Prefix() => false;
         }
 
-        [HarmonyPatch(typeof(DefaultUnityXRHapticsHandler), "TriggerHapticPulse")]
+        [HarmonyPatch(typeof(DefaultUnityXRHapticsHandler), nameof(DefaultUnityXRHapticsHandler.TriggerHapticPulse))]
         internal static class DefaultUnityXRHapticsHandler_TriggerHapticPulse
         {
-            private static readonly CodeMatch[] kCodeMatches = new[]
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
-                new CodeMatch(i => i.opcode == OpCodes.Ldloca_S && ((LocalVariableInfo)i.operand).LocalType == typeof(InputDevice)),
-                new CodeMatch(i => i.opcode == OpCodes.Ldc_I4_0),
-                new CodeMatch(i => i.opcode == OpCodes.Ldarg_1),
-                new CodeMatch(i => i.opcode == OpCodes.Ldarg_2),
-                new CodeMatch(i => i.opcode == OpCodes.Call && ((MethodInfo)i.operand) == kTargetMethod),
-            };
-
-            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-            {
-                CodeMatcher cm = new CodeMatcher(instructions, generator).MatchForward(false, kCodeMatches);
-
-                if (cm.IsInvalid)
-                {
-                    throw new InvalidOperationException("InputDevice.SendHapticImpulse parameters and call not found");
-                }
-
-                cm.RemoveInstruction();
-                cm.Insert(new CodeInstruction(OpCodes.Ldloc_0));
-
-                cm.MatchForward(false, kCodeMatches.Last());
-
-                cm.RemoveInstruction();
-                cm.Insert(new CodeInstruction(OpCodes.Call, kOverrideMethod));
-
-                return cm.InstructionEnumeration();
+                return new CodeMatcher(instructions)
+                    .MatchForward(true, new CodeMatch(i => i.Calls(kTargetMethod)))
+                    .ThrowIfInvalid("InputDevice.SendHapticImpulse call not found")
+                    .SetOperandAndAdvance(kOverrideMethod)
+                    .InstructionEnumeration();
             }
         }
     }

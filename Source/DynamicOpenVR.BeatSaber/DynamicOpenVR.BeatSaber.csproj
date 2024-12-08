@@ -10,10 +10,7 @@
     <LangVersion>10</LangVersion>
     <Version>0.5.0</Version>
     <Copyright>Copyright © Nicolas Gnyra 2019-2023</Copyright>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration) == Release">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="DynamicOpenVR.BeatSaber.csproj.user" />

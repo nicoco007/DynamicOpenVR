@@ -22,9 +22,11 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using UnityEngine.XR;
+using Zenject;
 
 namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
+    [HarmonyPatch(typeof(MainSystemInit), nameof(MainSystemInit.InstallBindings), new[] { typeof(DiContainer), typeof(bool) })]
     internal static class MainSystemInit_InstallBindings
     {
         private static readonly MethodInfo kXRSettingsLoadedDeviceNameGetter = AccessTools.DeclaredPropertyGetter(typeof(XRSettings), nameof(XRSettings.loadedDeviceName));

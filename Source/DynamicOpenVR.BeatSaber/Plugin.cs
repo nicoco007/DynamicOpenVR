@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using DynamicOpenVR.BeatSaber.HarmonyPatches;
 using DynamicOpenVR.BeatSaber.Input;
 using DynamicOpenVR.BeatSaber.InputCollections;
 using DynamicOpenVR.IO;
@@ -77,19 +76,7 @@ namespace DynamicOpenVR.BeatSaber
             _harmonyInstance = new Harmony("com.nicoco007.dynamicopenvr.beatsaber");
 
             Logging.Logger.handler = new IPALogHandler(logger);
-
-            // We need to run the replacement logic after the splash screen scene unloads but before anything else.
-            // Awake will run before before OnSceneLoaded gets invoked so we can make changes before the first SceneContext initializes.
-            _harmonyInstance.Patch(
-                AccessTools.Method(typeof(SceneContext), nameof(SceneContext.Awake)),
-                prefix: new HarmonyMethod(AccessTools.Method(typeof(Plugin), nameof(InvokePreSceneContextAwake)), before: new string[] { "com.nicoco007.openxr-feature-manager" }));
-
-            _harmonyInstance.Patch(
-                AccessTools.Method(typeof(MainSystemInit), nameof(MainSystemInit.InstallBindings), new[] { typeof(DiContainer), typeof(bool) }),
-                transpiler: new HarmonyMethod(AccessTools.Method(typeof(MainSystemInit_InstallBindings), nameof(MainSystemInit_InstallBindings.Transpiler))));
         }
-
-        private static event Action _preSceneContextAwake;
 
         public static UnityXRActions unityXRActions { get; private set; }
 
@@ -101,7 +88,6 @@ namespace DynamicOpenVR.BeatSaber
             _logger.Info("Starting " + typeof(Plugin).Namespace);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
-            _preSceneContextAwake += InitializeOpenVR;
         }
 
         [OnExit]
@@ -111,23 +97,24 @@ namespace DynamicOpenVR.BeatSaber
             beatSaberActions?.Dispose();
 
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            _preSceneContextAwake -= InitializeOpenVR;
-        }
-
-        private static void InvokePreSceneContextAwake()
-        {
-            _preSceneContextAwake?.Invoke();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == "MainMenu" && _updatedAppConfig != null)
+            switch (scene.name)
             {
-                SceneContext sceneContext = Resources.FindObjectsOfTypeAll<SceneContext>().First(sc => sc.gameObject.scene.name == "MainMenu");
-                sceneContext.OnPostInstall.AddListener(() =>
-                {
-                    AppConfigConfirmationModal.Create(sceneContext.Container, _updatedAppConfig);
-                });
+                case "GameLoader":
+                    InitializeOpenVR();
+                    break;
+
+                case "MainMenu" when _updatedAppConfig != null:
+                    // TODO: this should be a patch on a menu installer
+                    SceneContext sceneContext = Resources.FindObjectsOfTypeAll<SceneContext>().First(sc => sc.gameObject.scene.name == "MainMenu");
+                    sceneContext.OnPostInstall.AddListener(() =>
+                    {
+                        AppConfigConfirmationModal.Create(sceneContext.Container, _updatedAppConfig);
+                    });
+                    break;
             }
         }
 
@@ -142,6 +129,7 @@ namespace DynamicOpenVR.BeatSaber
 
             OpenVRActionManager.instance.Configure("Beat Saber", kActionManifestPath);
 
+            // TODO: most patches rely on OpenVRActionManager running; they should be dynamically added/removed when the loader starts/stops
             ApplyHarmonyPatches();
             RegisterActionSet();
 

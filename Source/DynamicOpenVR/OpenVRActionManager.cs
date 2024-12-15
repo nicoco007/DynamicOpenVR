@@ -25,15 +25,12 @@ using DynamicOpenVR.IO;
 using DynamicOpenVR.SteamVR.Actions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using UnityEngine;
 using Logger = DynamicOpenVR.Logging.Logger;
 
 namespace DynamicOpenVR
 {
-    public class OpenVRActionManager : MonoBehaviour
+    public class OpenVRActionManager
     {
-        private static OpenVRActionManager _instance;
-
         private readonly Dictionary<string, OVRAction> _actions = new();
         private readonly HashSet<string> _actionSetNames = new();
         private readonly List<ulong> _actionSetHandles = new();
@@ -50,30 +47,13 @@ namespace DynamicOpenVR
         private string _actionManifestPath;
         private string _gameName;
 
-        public static OpenVRActionManager instance
-        {
-            get
-            {
-                // check for actual null reference since we don't want to create another object if the current one is marked for destruction
-                if (_instance is null)
-                {
-                    Logger.Info($"Creating instance of {nameof(OpenVRActionManager)}");
-
-                    var go = new GameObject(nameof(OpenVRActionManager));
-                    DontDestroyOnLoad(go);
-                    go.hideFlags = HideFlags.HideAndDontSave;
-                    _instance = go.AddComponent<OpenVRActionManager>();
-                }
-
-                return _instance;
-            }
-        }
+        public static OpenVRActionManager instance { get; } = new();
 
         public string actionManifestPath
         {
             get
             {
-                if (!initialized)
+                if (!configured)
                 {
                     throw new Exception(nameof(OpenVRActionManager) + " is not initialized");
                 }
@@ -82,19 +62,31 @@ namespace DynamicOpenVR
             }
         }
 
-        public bool initialized { get; private set; }
+        public bool configured { get; private set; }
 
-        public void Initialize(string gameName, string actionManifestPath)
+        public bool enabled { get; private set; }
+
+        public void Configure(string gameName, string actionManifestPath)
         {
-            if (initialized)
-            {
-                throw new InvalidOperationException("Already initialized");
-            }
-
-            Logger.Info($"Initializing {nameof(OpenVRActionManager)}");
-
             _actionManifestPath = actionManifestPath;
             _gameName = gameName;
+
+            configured = true;
+        }
+
+        public void Start()
+        {
+            if (!configured)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (enabled)
+            {
+                return;
+            }
+
+            Logger.Info($"Starting {nameof(OpenVRActionManager)}");
 
             CombineAndWriteManifest();
 
@@ -112,12 +104,22 @@ namespace DynamicOpenVR
                 TryUpdateHandle(action);
             }
 
-            initialized = true;
+            enabled = true;
+        }
+
+        public void Stop()
+        {
+            Logger.Info($"Stopping {nameof(OpenVRActionManager)}");
+
+            _actionSetNames.Clear();
+            _actionSetHandles.Clear();
+
+            enabled = false;
         }
 
         public void Update()
         {
-            if (!initialized)
+            if (!enabled)
             {
                 return; // do nothing until initialized
             }
@@ -168,7 +170,7 @@ namespace DynamicOpenVR
 
             _actions.Add(action.id, action);
 
-            if (initialized)
+            if (enabled)
             {
                 string actionSetName = action.GetActionSetName();
 

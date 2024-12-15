@@ -224,6 +224,7 @@ csharp_using_directive_placement = outside_namespace:error
 dotnet_diagnostic.SA1101.severity = silent
 
 dotnet_diagnostic.SA1300.severity = silent
+dotnet_diagnostic.SA1303.severity = silent
 dotnet_diagnostic.SA1304.severity = silent
 dotnet_diagnostic.SA1307.severity = silent
 dotnet_diagnostic.SA1309.severity = silent

@@ -17,33 +17,43 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
-using IPA.Utilities;
-using UnityEngine;
 using UnityEngine.XR;
-using Zenject;
 
 namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
-    [HarmonyPatch(typeof(MainSystemInit), nameof(MainSystemInit.InstallBindings), new[] { typeof(DiContainer), typeof(bool) })]
     internal static class MainSystemInit_InstallBindings
     {
-        private static void Postfix(DiContainer container, UnityXRHelper ____unityXRHelperPrefab)
+        private static readonly MethodInfo kXRSettingsLoadedDeviceNameGetter = AccessTools.DeclaredPropertyGetter(typeof(XRSettings), nameof(XRSettings.loadedDeviceName));
+        private static readonly MethodInfo kStringIndexOfMethod = AccessTools.DeclaredMethod(typeof(string), nameof(string.IndexOf), new Type[] { typeof(string), typeof(StringComparison) });
+
+        internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
         {
-            if (XRSettings.loadedDeviceName.IndexOf("OpenVR", StringComparison.OrdinalIgnoreCase) == -1)
-            {
-                return;
-            }
+            Label? label = default;
 
-            if (container.HasBinding<IVRPlatformHelper>())
-            {
-                container.Unbind<IVRPlatformHelper>();
-            }
-
-            GameObject gameObject = new(nameof(OpenVRHelper));
-            ____unityXRHelperPrefab.CopyComponent(typeof(OpenVRHelper), gameObject);
-
-            container.Bind<IVRPlatformHelper>().To<OpenVRHelper>().FromComponentOn(gameObject).AsSingle();
+            return new CodeMatcher(instructions, ilGenerator)
+                .MatchForward(
+                    true,
+                    new CodeMatch(i => i.Calls(kXRSettingsLoadedDeviceNameGetter)),
+                    new CodeMatch(OpCodes.Ldstr, "OpenXR"),
+                    new CodeMatch(OpCodes.Ldc_I4_5), // StringComparison.OrdinalIgnoreCase
+                    new CodeMatch(i => i.Calls(kStringIndexOfMethod)),
+                    new CodeMatch(OpCodes.Ldc_I4_0),
+                    new CodeMatch(i => i.Branches(out label)))
+                .ThrowIfInvalid("OpenXR string comparison not found")
+                .CreateLabelWithOffsets(1, out Label label2)
+                .SetAndAdvance(OpCodes.Bge_S, label2)
+                .InsertAndAdvance(
+                    new CodeInstruction(OpCodes.Call, kXRSettingsLoadedDeviceNameGetter),
+                    new CodeInstruction(OpCodes.Ldstr, "OpenVR"),
+                    new CodeInstruction(OpCodes.Ldc_I4_5),
+                    new CodeInstruction(OpCodes.Callvirt, kStringIndexOfMethod),
+                    new CodeInstruction(OpCodes.Ldc_I4_0),
+                    new CodeInstruction(OpCodes.Blt_S, label))
+                .InstructionEnumeration();
         }
     }
 }

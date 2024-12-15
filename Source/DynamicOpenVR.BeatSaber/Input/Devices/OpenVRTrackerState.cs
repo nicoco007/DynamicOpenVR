@@ -1,4 +1,4 @@
-﻿// <copyright file="UnityXRHapticsHandler.cs" company="Nicolas Gnyra">
+﻿// <copyright file="OpenVRTrackerState.cs" company="Nicolas Gnyra">
 // DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
 // Copyright © 2019-2023 Nicolas Gnyra
 //
@@ -16,17 +16,27 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-using HarmonyLib;
+using UnityEngine;
+using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.Utilities;
 
-namespace DynamicOpenVR.BeatSaber.HarmonyPatches
+namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    internal static class UnityXRHapticsHandler
+    internal struct OpenVRTrackerState : IInputStateTypeInfo
     {
-        [HarmonyPatch(typeof(UnityXRController), nameof(UnityXRController.UpdateHapticsHandler))]
-        internal static class UnityXRController_UpdateHapticsHandler
-        {
-            // don't use KnucklesUnityXRHapticsHandler
-            public static bool Prefix() => false;
-        }
+        [InputControl(layout = "Integer")]
+        public int trackingState; // TODO: this should be an enum
+
+        [InputControl(layout = "Button")]
+        public bool isTracked;
+
+        [InputControl(layout = "Vector3")]
+        public Vector3 devicePosition;
+
+        [InputControl(layout = "Quaternion")]
+        public Quaternion deviceRotation;
+
+        public FourCC format => new('O', 'V', 'R', 'T');
     }
 }

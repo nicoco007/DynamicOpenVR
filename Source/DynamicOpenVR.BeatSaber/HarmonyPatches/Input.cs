@@ -19,10 +19,13 @@
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using UnityEngine;
 
 namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
+#pragma warning disable IDE0065, SA1200
+    using Input = UnityEngine.Input;
+#pragma warning restore IDE0065, SA1200
+
     [HarmonyPatch]
     internal static class Input_GetAxis
     {

@@ -1,4 +1,4 @@
-﻿// <copyright file="UnityXRHapticsHandler.cs" company="Nicolas Gnyra">
+﻿// <copyright file="XRTracker.cs" company="Nicolas Gnyra">
 // DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
 // Copyright © 2019-2023 Nicolas Gnyra
 //
@@ -16,17 +16,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-using HarmonyLib;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Layouts;
 
-namespace DynamicOpenVR.BeatSaber.HarmonyPatches
+namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    internal static class UnityXRHapticsHandler
+    /// <summary>
+    /// A base Input System <see cref="TrackedDevice"/> for XR trackers.
+    /// </summary>
+    [InputControlLayout(isGenericTypeOfDevice = true, displayName = "XR Tracker")]
+    public class XRTracker : TrackedDevice
     {
-        [HarmonyPatch(typeof(UnityXRController), nameof(UnityXRController.UpdateHapticsHandler))]
-        internal static class UnityXRController_UpdateHapticsHandler
-        {
-            // don't use KnucklesUnityXRHapticsHandler
-            public static bool Prefix() => false;
-        }
     }
 }

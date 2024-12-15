@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using DynamicOpenVR.BeatSaber.HarmonyPatches;
+using DynamicOpenVR.BeatSaber.Input;
 using DynamicOpenVR.BeatSaber.InputCollections;
 using DynamicOpenVR.IO;
 using DynamicOpenVR.SteamVR;
@@ -81,6 +83,10 @@ namespace DynamicOpenVR.BeatSaber
             _harmonyInstance.Patch(
                 AccessTools.Method(typeof(SceneContext), nameof(SceneContext.Awake)),
                 prefix: new HarmonyMethod(AccessTools.Method(typeof(Plugin), nameof(InvokePreSceneContextAwake)), before: new string[] { "com.nicoco007.openxr-feature-manager" }));
+
+            _harmonyInstance.Patch(
+                AccessTools.Method(typeof(MainSystemInit), nameof(MainSystemInit.InstallBindings), new[] { typeof(DiContainer), typeof(bool) }),
+                transpiler: new HarmonyMethod(AccessTools.Method(typeof(MainSystemInit_InstallBindings), nameof(MainSystemInit_InstallBindings.Transpiler))));
         }
 
         private static event Action _preSceneContextAwake;
@@ -134,6 +140,11 @@ namespace DynamicOpenVR.BeatSaber
 
             _initializing = true;
 
+            OpenVRActionManager.instance.Configure("Beat Saber", kActionManifestPath);
+
+            ApplyHarmonyPatches();
+            RegisterActionSet();
+
             XRManagerSettings manager = XRGeneralSettings.Instance.Manager;
 
             if (!manager.isInitializationComplete)
@@ -153,12 +164,6 @@ namespace DynamicOpenVR.BeatSaber
             manager.StopSubsystems();
             manager.DeinitializeLoader();
 
-            // TODO: properly support fpfc toggle
-            if (Environment.GetCommandLineArgs().Contains("fpfc"))
-            {
-                return;
-            }
-
             // This should match the contents of OpenVRSettings.asset since it's read by the native plugin first
             OpenVRSettings settings = ScriptableObject.CreateInstance<OpenVRSettings>();
             settings.name = "OpenVRSettings";
@@ -169,8 +174,8 @@ namespace DynamicOpenVR.BeatSaber
 
             _logger.Trace($"Creating {nameof(OpenVRLoader)}");
 
-            OpenVRLoader loader = ScriptableObject.CreateInstance<OpenVRLoader>();
-            loader.name = "Open VR Loader";
+            OpenVRLoader loader = ScriptableObject.CreateInstance<OpenVRLoaderWithInputSystem>();
+            loader.name = "OpenVR Loader";
 
             // add to registered loaders or else TryAddLoader won't work
             manager.m_RegisteredLoaders.Add(loader);
@@ -217,11 +222,6 @@ namespace DynamicOpenVR.BeatSaber
             }
 
             manager.StartSubsystems();
-
-            RegisterActionSet();
-            ApplyHarmonyPatches();
-
-            OpenVRActionManager.instance.Initialize("Beat Saber", kActionManifestPath);
 
             try
             {

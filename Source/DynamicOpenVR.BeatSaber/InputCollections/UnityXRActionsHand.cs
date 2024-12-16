@@ -49,6 +49,8 @@ namespace DynamicOpenVR.BeatSaber.InputCollections
 
         public BooleanInput primary2DAxisTouch { get; init; }
 
+        public SkeletalInput skeleton { get; init; }
+
         public HapticVibrationOutput haptics { get; init; }
 
         public void Dispose()

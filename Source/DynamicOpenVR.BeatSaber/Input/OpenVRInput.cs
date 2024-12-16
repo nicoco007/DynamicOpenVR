@@ -19,10 +19,8 @@
 using DynamicOpenVR.BeatSaber.Input.Devices;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
-using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
-using Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input
 {
@@ -32,15 +30,8 @@ namespace DynamicOpenVR.BeatSaber.Input
         private const string kControllerProductName = "OpenVR Input Controller";
         private const string kTrackerProductName = "OpenVR Tracker";
 
-        private static readonly TrackedDevicePose_t[] kRenderPoses = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
-        private static readonly TrackedDevicePose_t[] kGamePoses = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
-
-        internal static TrackedDevicePose_t[] currentPoses { get; private set; }
-
-        internal static void AddDevices()
+        internal static void RegisterLayoutsAndAddDevices()
         {
-            InputSystem.onBeforeUpdate += OnBeforeUpdate;
-
             InputSystem.RegisterLayout<OpenVRInputController>(nameof(OpenVRInputController), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kControllerProductName));
             RegisterController(InputDeviceCharacteristics.Left, "Left");
             RegisterController(InputDeviceCharacteristics.Right, "Right");
@@ -61,14 +52,12 @@ namespace DynamicOpenVR.BeatSaber.Input
             RegisterTracker(InputDeviceTrackerCharacteristics.TrackerKeyboard, "Keyboard");
         }
 
-        internal static void RemoveDevices()
+        internal static void RemoveLayouts()
         {
             // RemoveLayout will recursively remove devices as well
             InputSystem.RemoveLayout(nameof(OpenVRInputController));
             InputSystem.RemoveLayout(nameof(OpenVRTracker));
             InputSystem.RemoveLayout(nameof(XRTracker));
-
-            InputSystem.onBeforeUpdate -= OnBeforeUpdate;
         }
 
         private static void RegisterController(InputDeviceCharacteristics characteristics, string name)
@@ -101,21 +90,6 @@ namespace DynamicOpenVR.BeatSaber.Input
                 },
                 true,
                 $"{kTrackerProductName} ({name})");
-        }
-
-        private static void OnBeforeUpdate()
-        {
-            InputUpdateType updateType = InputState.currentUpdateType;
-
-            if (updateType == InputUpdateType.BeforeRender)
-            {
-                // only need to do this once per frame
-                OpenVR.Compositor.GetLastPoses(kRenderPoses, kGamePoses);
-            }
-
-            currentPoses = updateType == InputUpdateType.BeforeRender ? kRenderPoses : kGamePoses;
-
-            OpenVRActionManager.instance.Update();
         }
     }
 }

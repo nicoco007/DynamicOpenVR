@@ -19,13 +19,35 @@
 extern alias UnityXROpenVR;
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.XR.Hands;
 using UnityXROpenVR::Unity.XR.OpenVR;
+using Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input
 {
     internal class OpenVRLoaderWithInputSystem : OpenVRLoader
     {
+        private readonly TrackedDevicePose_t[] _renderPoses = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+        private readonly TrackedDevicePose_t[] _gamePoses = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+
+        private XRHandSubsystem _handSubsystem;
+
+        internal static TrackedDevicePose_t[] currentPoses { get; private set; }
+
+        public override bool Initialize()
+        {
+            List<XRHandSubsystemDescriptor> list = new();
+            SubsystemManager.GetSubsystemDescriptors(list);
+            CreateSubsystem<XRHandSubsystemDescriptor, XRHandSubsystem>(list, OpenVRHandProvider.id);
+            _handSubsystem = GetLoadedSubsystem<XRHandSubsystem>();
+
+            return base.Initialize();
+        }
+
         public override bool Start()
         {
             if (!base.Start())
@@ -36,7 +58,12 @@ namespace DynamicOpenVR.BeatSaber.Input
             try
             {
                 OpenVRActionManager.instance.Start();
-                OpenVRInput.AddDevices();
+                OpenVRInput.RegisterLayoutsAndAddDevices();
+
+                StartSubsystem<XRHandSubsystem>();
+
+                InputSystem.onBeforeUpdate += OnBeforeUpdate;
+
                 return true;
             }
             catch (Exception ex)
@@ -52,8 +79,13 @@ namespace DynamicOpenVR.BeatSaber.Input
 
             try
             {
-                OpenVRInput.RemoveDevices();
+                InputSystem.onBeforeUpdate -= OnBeforeUpdate;
+
+                StopSubsystem<XRHandSubsystem>();
+
+                OpenVRInput.RemoveLayouts();
                 OpenVRActionManager.instance.Stop();
+
                 result = true;
             }
             catch (Exception ex)
@@ -63,6 +95,23 @@ namespace DynamicOpenVR.BeatSaber.Input
             }
 
             return base.Stop() && result;
+        }
+
+        private void OnBeforeUpdate()
+        {
+            InputUpdateType updateType = InputState.currentUpdateType;
+
+            if (updateType == InputUpdateType.BeforeRender)
+            {
+                // only need to do this once per frame
+                OpenVR.Compositor.GetLastPoses(_renderPoses, _gamePoses);
+            }
+
+            currentPoses = updateType == InputUpdateType.BeforeRender ? _renderPoses : _gamePoses;
+
+            OpenVRActionManager.instance.Update(); // TODO: pass updateType
+
+            _handSubsystem.TryUpdateHands(updateType == InputUpdateType.BeforeRender ? XRHandSubsystem.UpdateType.BeforeRender : XRHandSubsystem.UpdateType.Dynamic);
         }
     }
 }

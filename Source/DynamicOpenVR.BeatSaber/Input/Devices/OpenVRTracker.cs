@@ -37,7 +37,7 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         public void OnUpdate()
         {
             InputOriginInfo_t originInfo = GetOriginInfo();
-            TrackedDevicePose_t pose = OpenVRInput.currentPoses[originInfo.trackedDeviceIndex];
+            TrackedDevicePose_t pose = OpenVRLoaderWithInputSystem.currentPoses[originInfo.trackedDeviceIndex]; // TODO: this is kind of lame; is there a way to avoid a static property?
             HmdMatrix34_t matrix = pose.mDeviceToAbsoluteTracking;
 
             bool isTracked = pose.bPoseIsValid && pose.eTrackingResult is ETrackingResult.Running_OK or ETrackingResult.Running_OutOfRange or ETrackingResult.Calibrating_OutOfRange;

@@ -194,6 +194,18 @@
       "name": "/actions/unity/out/right_haptics",
       "requirement": "suggested",
       "type": "vibration"
+    },
+    {
+      "name": "/actions/customavatars/in/lefthandanim",
+      "requirement": "suggested",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/left"
+    },
+    {
+      "name": "/actions/customavatars/in/righthandanim",
+      "requirement": "suggested",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/right"
     }
   ],
   "action_sets": [
@@ -203,6 +215,10 @@
     },
     {
       "name": "/actions/unity",
+      "usage": "leftright"
+    },
+    {
+      "name": "/actions/customavatars",
       "usage": "leftright"
     }
   ],
@@ -249,7 +265,10 @@
       "/actions/unity/in/right_primary_2d_axis": "Right Primary 2D Axis",
       "/actions/unity/in/right_primary_2d_axis_click": "Right Primary 2D Axis Click",
       "/actions/unity/in/right_primary_2d_axis_touch": "Right Primary 2D Axis Touch",
-      "/actions/unity/out/right_haptics": "Right Haptic Vibration"
+      "/actions/unity/out/right_haptics": "Right Haptic Vibration",
+      "/actions/customavatars": "Custom Avatars",
+      "/actions/customavatars/in/lefthandanim": "Left Hand Animation",
+      "/actions/customavatars/in/righthandanim": "Right Hand Animation"
     }
   ]
 }

@@ -127,6 +127,7 @@ namespace DynamicOpenVR.BeatSaber
 
             _initializing = true;
 
+            OpenVRHandProvider.Register();
             OpenVRActionManager.instance.Configure("Beat Saber", kActionManifestPath);
 
             // TODO: most patches rely on OpenVRActionManager running; they should be dynamically added/removed when the loader starts/stops
@@ -366,6 +367,7 @@ namespace DynamicOpenVR.BeatSaber
                     primary2DAxis = new Vector2Input("/actions/unity/in/left_primary_2d_axis"),
                     primary2DAxisClick = new BooleanInput("/actions/unity/in/left_primary_2d_axis_click"),
                     primary2DAxisTouch = new BooleanInput("/actions/unity/in/left_primary_2d_axis_touch"),
+                    skeleton = new SkeletalInput("/actions/customavatars/in/lefthandanim", onlyUpdateSummaryData: false),
                     haptics = new HapticVibrationOutput("/actions/unity/out/left_haptics"),
                 },
                 right = new UnityXRActionsHand
@@ -383,6 +385,7 @@ namespace DynamicOpenVR.BeatSaber
                     primary2DAxis = new Vector2Input("/actions/unity/in/right_primary_2d_axis"),
                     primary2DAxisClick = new BooleanInput("/actions/unity/in/right_primary_2d_axis_click"),
                     primary2DAxisTouch = new BooleanInput("/actions/unity/in/right_primary_2d_axis_touch"),
+                    skeleton = new SkeletalInput("/actions/customavatars/in/righthandanim", onlyUpdateSummaryData: false),
                     haptics = new HapticVibrationOutput("/actions/unity/out/right_haptics"),
                 },
             };

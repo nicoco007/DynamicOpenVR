@@ -167,6 +167,16 @@ namespace DynamicOpenVR
             return summaryData;
         }
 
+        internal static void GetSkeletalBoneData(ulong actionHandle, VRBoneTransform_t[] transforms, EVRSkeletalTransformSpace transformSpace = EVRSkeletalTransformSpace.Model, EVRSkeletalMotionRange motionRange = EVRSkeletalMotionRange.WithoutController)
+        {
+            EVRInputError error = OpenVR.Input.GetSkeletalBoneData(actionHandle, transformSpace, motionRange, transforms);
+
+            if (error is not EVRInputError.None and not EVRInputError.NoData)
+            {
+                throw new OpenVRInputException($"Could not get skeletal bone data for action with handle {actionHandle}: {error}", error);
+            }
+        }
+
         internal static void TriggerHapticVibrationAction(ulong actionHandle, float startSecondsFromNow, float durationSeconds, float frequency, float amplitude)
         {
             EVRInputError error = OpenVR.Input.TriggerHapticVibrationAction(actionHandle, startSecondsFromNow, durationSeconds, frequency, amplitude, OpenVR.k_ulInvalidInputValueHandle);

@@ -120,6 +120,20 @@ namespace DynamicOpenVR
             return actionData;
         }
 
+        internal static uint GetBoneCount(ulong actionHandle)
+        {
+            uint boneCount = 0;
+
+            EVRInputError error = OpenVR.Input.GetBoneCount(actionHandle, ref boneCount);
+
+            if (error is not EVRInputError.None and not EVRInputError.NoData)
+            {
+                throw new OpenVRInputException($"Could not get bone count for action with handle {actionHandle}: {error}", error);
+            }
+
+            return boneCount;
+        }
+
         internal static InputSkeletalActionData_t GetSkeletalActionData(ulong actionHandle)
         {
             InputSkeletalActionData_t actionData = default;

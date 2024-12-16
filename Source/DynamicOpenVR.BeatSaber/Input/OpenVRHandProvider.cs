@@ -29,42 +29,6 @@ namespace DynamicOpenVR.BeatSaber.Input
     {
         private bool _isValid;
 
-        private enum HandSkeletonBone
-        {
-            Root,
-            Wrist,
-            Thumb0,
-            Thumb1,
-            Thumb2,
-            Thumb3,
-            IndexFinger0,
-            IndexFinger1,
-            IndexFinger2,
-            IndexFinger3,
-            IndexFinger4,
-            MiddleFinger0,
-            MiddleFinger1,
-            MiddleFinger2,
-            MiddleFinger3,
-            MiddleFinger4,
-            RingFinger0,
-            RingFinger1,
-            RingFinger2,
-            RingFinger3,
-            RingFinger4,
-            LittleFinger0,
-            LittleFinger1,
-            LittleFinger2,
-            LittleFinger3,
-            LittleFinger4,
-            AuxThumb,
-            AuxIndexFinger,
-            AuxMiddleFinger,
-            AuxRingFinger,
-            AuxLittleFinger,
-            Count,
-        }
-
         public static string id { get; } = "OpenVR Hands";
 
         public override void GetHandLayout(NativeArray<bool> handJointsInLayout)
@@ -163,34 +127,34 @@ namespace DynamicOpenVR.BeatSaber.Input
 
             SetJoint(joints, bones, rootPose, handedness, XRHandJointID.Wrist, HandSkeletonBone.Wrist);
 
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbMetacarpal, HandSkeletonBone.Thumb0);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbProximal, HandSkeletonBone.Thumb1);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbDistal, HandSkeletonBone.Thumb2);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbTip, HandSkeletonBone.Thumb3);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbMetacarpal, HandSkeletonBone.ThumbMetacarpal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbProximal, HandSkeletonBone.ThumbProximal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbDistal, HandSkeletonBone.ThumbDistal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.ThumbTip, HandSkeletonBone.ThumbTip);
 
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexMetacarpal, HandSkeletonBone.IndexFinger0);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexProximal, HandSkeletonBone.IndexFinger1);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexIntermediate, HandSkeletonBone.IndexFinger2);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexDistal, HandSkeletonBone.IndexFinger3);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexTip, HandSkeletonBone.IndexFinger4);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexMetacarpal, HandSkeletonBone.IndexMetacarpal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexProximal, HandSkeletonBone.IndexProximal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexIntermediate, HandSkeletonBone.IndexIntermediate);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexDistal, HandSkeletonBone.IndexDistal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.IndexTip, HandSkeletonBone.IndexTip);
 
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleMetacarpal, HandSkeletonBone.MiddleFinger0);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleProximal, HandSkeletonBone.MiddleFinger1);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleIntermediate, HandSkeletonBone.MiddleFinger2);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleDistal, HandSkeletonBone.MiddleFinger3);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleTip, HandSkeletonBone.MiddleFinger4);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleMetacarpal, HandSkeletonBone.MiddleMetacarpal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleProximal, HandSkeletonBone.MiddleProximal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleIntermediate, HandSkeletonBone.MiddleIntermediate);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleDistal, HandSkeletonBone.MiddleDistal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.MiddleTip, HandSkeletonBone.MiddleTip);
 
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingMetacarpal, HandSkeletonBone.RingFinger0);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingProximal, HandSkeletonBone.RingFinger1);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingIntermediate, HandSkeletonBone.RingFinger2);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingDistal, HandSkeletonBone.RingFinger3);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingTip, HandSkeletonBone.RingFinger4);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingMetacarpal, HandSkeletonBone.RingMetacarpal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingProximal, HandSkeletonBone.RingProximal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingIntermediate, HandSkeletonBone.RingIntermediate);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingDistal, HandSkeletonBone.RingDistal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.RingTip, HandSkeletonBone.RingTip);
 
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleMetacarpal, HandSkeletonBone.LittleFinger0);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleProximal, HandSkeletonBone.LittleFinger1);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleIntermediate, HandSkeletonBone.LittleFinger2);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleDistal, HandSkeletonBone.LittleFinger3);
-            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleTip, HandSkeletonBone.LittleFinger4);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleMetacarpal, HandSkeletonBone.LittleMetacarpal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleProximal, HandSkeletonBone.LittleProximal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleIntermediate, HandSkeletonBone.LittleIntermediate);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleDistal, HandSkeletonBone.LittleDistal);
+            SetJoint(joints, bones, rootPose, handedness, XRHandJointID.LittleTip, HandSkeletonBone.LittleTip);
 
             return successFlags;
         }

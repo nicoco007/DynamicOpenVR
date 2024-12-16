@@ -24,12 +24,11 @@ namespace DynamicOpenVR.IO
 {
     public class SkeletalInput : PoseInput
     {
-        private readonly VRBoneTransform_t[] _boneData = new VRBoneTransform_t[31];
-        private readonly BoneTransform[] _bones = new BoneTransform[31];
         private readonly bool _onlyUpdateSummaryData;
 
+        private VRBoneTransform_t[] _boneData;
+        private BoneTransform[] _bones;
         private InputSkeletalActionData_t _actionData;
-        private VRSkeletalSummaryData_t _summaryData;
 
         public SkeletalInput(string name, bool onlyUpdateSummaryData = true)
             : base(name)
@@ -48,7 +47,20 @@ namespace DynamicOpenVR.IO
         /// <summary>
         /// Gets the summary data of the skeleton (finger curl and splay).
         /// </summary>
-        public SkeletalSummaryData summaryData => new(_summaryData);
+        public SkeletalSummaryData summaryData { get; private set; }
+
+        internal override void Initialize()
+        {
+            base.Initialize();
+
+            if (!_onlyUpdateSummaryData)
+            {
+                uint count = OpenVRFacade.GetBoneCount(handle);
+
+                _boneData = new VRBoneTransform_t[count];
+                _bones = new BoneTransform[count];
+            }
+        }
 
         /// <inheritdoc/>
         internal override void UpdateData()
@@ -56,7 +68,7 @@ namespace DynamicOpenVR.IO
             base.UpdateData();
 
             _actionData = OpenVRFacade.GetSkeletalActionData(handle);
-            _summaryData = OpenVRFacade.GetSkeletalSummaryData(handle);
+            summaryData = new SkeletalSummaryData(OpenVRFacade.GetSkeletalSummaryData(handle));
 
             if (!_onlyUpdateSummaryData)
             {

@@ -20,7 +20,7 @@ using Valve.VR;
 
 namespace DynamicOpenVR.IO
 {
-    public class SkeletalSummaryData
+    public struct SkeletalSummaryData
     {
         internal SkeletalSummaryData(VRSkeletalSummaryData_t summaryDataStruct)
         {

@@ -19,7 +19,6 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DynamicOpenVR.Logging;
 
 namespace DynamicOpenVR.IO
 {
@@ -31,7 +30,7 @@ namespace DynamicOpenVR.IO
         {
             if (!kNameRegex.IsMatch(name))
             {
-                throw new Exception($"Unexpected action name '{name}'; name should only contain letters, numbers, dashes, and underscores.");
+                throw new ArgumentException($"Unexpected action name '{name}'; name should only contain letters, numbers, dashes, and underscores.", nameof(name));
             }
 
             this.name = name.ToLowerInvariant();
@@ -54,15 +53,9 @@ namespace DynamicOpenVR.IO
             return string.Join("/", name.Split('/').Take(3));
         }
 
-        internal void UpdateHandle()
+        internal virtual void Initialize()
         {
             handle = OpenVRFacade.GetActionHandle(name);
-
-            if (handle <= 0)
-            {
-                Logger.Error($"Got invalid handle for action '{name}'. Make sure it is defined in the action manifest and try again.");
-                OpenVRActionManager.instance.DeregisterAction(this);
-            }
         }
     }
 }

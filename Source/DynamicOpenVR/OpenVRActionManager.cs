@@ -101,7 +101,7 @@ namespace DynamicOpenVR
 
             foreach (OVRAction action in _actions.Values.ToList())
             {
-                TryUpdateHandle(action);
+                TryInitialize(action);
             }
 
             enabled = true;
@@ -179,7 +179,7 @@ namespace DynamicOpenVR
                     TryAddActionSet(actionSetName);
                 }
 
-                TryUpdateHandle(action);
+                TryInitialize(action);
             }
         }
 
@@ -269,13 +269,19 @@ namespace DynamicOpenVR
             }
         }
 
-        private void TryUpdateHandle(OVRAction action)
+        private void TryInitialize(OVRAction action)
         {
-            Logger.Trace($"Updating handle for action '{action.name}' ({action.id})");
+            Logger.Trace($"Initializing action '{action.name}' ({action.id})");
 
             try
             {
-                action.UpdateHandle();
+                action.Initialize();
+
+                if (action.handle <= 0)
+                {
+                    Logger.Error($"Got invalid handle for action '{action.name}'. Make sure it is defined in the action manifest and try again.");
+                    DeregisterAction(action);
+                }
             }
             catch (OpenVRInputException ex)
             {

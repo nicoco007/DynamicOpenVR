@@ -16,7 +16,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-using System.Linq;
 using UnityEngine;
 using Valve.VR;
 
@@ -24,10 +23,7 @@ namespace DynamicOpenVR.IO
 {
     public class PoseInput : OVRInput
     {
-        private static readonly ETrackingResult[] kValidTrackingResults = { ETrackingResult.Running_OK, ETrackingResult.Running_OutOfRange, ETrackingResult.Calibrating_OutOfRange };
-
         private InputPoseActionData_t _actionData;
-        private Pose _pose;
 
         public PoseInput(string name)
             : base(name)
@@ -44,27 +40,31 @@ namespace DynamicOpenVR.IO
 
         public bool isPoseValid => _actionData.pose.bPoseIsValid;
 
-        public Pose pose => _pose;
+        public Pose pose { get; private set; }
 
-        public Vector3 position => _pose.position;
+        public Vector3 position { get; private set; }
 
-        public Quaternion rotation => _pose.rotation;
+        public Quaternion rotation { get; private set; }
 
-        public Vector3 velocity => ToVector3(_actionData.pose.vVelocity);
+        public Vector3 velocity { get; private set; }
 
-        public Vector3 angularVelocity => ToVector3(_actionData.pose.vAngularVelocity);
+        public Vector3 angularVelocity { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the device is currently tracking properly or not.
         /// </summary>
-        public bool isTracking => _actionData.pose.bPoseIsValid && kValidTrackingResults.Contains(_actionData.pose.eTrackingResult);
+        public bool isTracking => _actionData.pose.bPoseIsValid && _actionData.pose.eTrackingResult is ETrackingResult.Running_OK or ETrackingResult.Running_OutOfRange or ETrackingResult.Calibrating_OutOfRange;
 
         /// <inheritdoc/>
         internal override void UpdateData()
         {
             _actionData = OpenVRFacade.GetPoseActionData(handle);
             HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
-            _pose = new Pose(rawMatrix.GetPosition(), rawMatrix.GetRotation());
+            position = rawMatrix.GetPosition();
+            rotation = rawMatrix.GetRotation();
+            pose = new Pose(position, rotation);
+            velocity = ToVector3(_actionData.pose.vVelocity);
+            angularVelocity = ToVector3(_actionData.pose.vAngularVelocity);
         }
 
         private Vector3 ToVector3(HmdVector3_t vector)

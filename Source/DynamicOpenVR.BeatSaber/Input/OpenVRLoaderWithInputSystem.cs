@@ -25,7 +25,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.XR.Hands;
 using UnityXROpenVR::Unity.XR.OpenVR;
-using Valve.VR;
+using UnityXROpenVR::Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input
 {
@@ -36,7 +36,7 @@ namespace DynamicOpenVR.BeatSaber.Input
 
         private XRHandSubsystem _handSubsystem;
 
-        internal static TrackedDevicePose_t[] currentPoses { get; private set; }
+        internal static TrackedDevicePose_t[] currentPoses { get; private set; } = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
 
         public override bool Initialize()
         {

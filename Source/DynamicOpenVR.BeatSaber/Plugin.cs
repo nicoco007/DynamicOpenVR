@@ -37,7 +37,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Management;
 using UnityXROpenVR::Unity.XR.OpenVR;
-using Valve.VR;
+using UnityXROpenVR::Valve.VR;
 using Zenject;
 using Logger = IPA.Logging.Logger;
 

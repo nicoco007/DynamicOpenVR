@@ -21,17 +21,24 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
+using InputDevice = UnityEngine.InputSystem.InputDevice;
 
 namespace DynamicOpenVR.BeatSaber.Input
 {
     internal static class OpenVRInput
     {
         private const string kInterfaceName = nameof(DynamicOpenVR);
+        private const string kHMDProductName = "OpenVR HMD";
         private const string kControllerProductName = "OpenVR Input Controller";
         private const string kTrackerProductName = "OpenVR Tracker";
 
+        private static readonly InputDevice.DeviceFlags kDeviceFlags = InputDevice.DeviceFlags.UpdateBeforeRender | InputDevice.DeviceFlags.DisabledStateHasBeenQueriedFromRuntime | InputDevice.DeviceFlags.CanRunInBackground | InputDevice.DeviceFlags.CanRunInBackgroundHasBeenQueried;
+
         internal static void RegisterLayoutsAndAddDevices()
         {
+            InputSystem.RegisterLayout<OpenVRHMD>(nameof(OpenVRHMD), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kHMDProductName));
+            RegisterHMD();
+
             InputSystem.RegisterLayout<OpenVRInputController>(nameof(OpenVRInputController), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kControllerProductName));
             RegisterController(InputDeviceCharacteristics.Left, "Left");
             RegisterController(InputDeviceCharacteristics.Right, "Right");
@@ -60,6 +67,23 @@ namespace DynamicOpenVR.BeatSaber.Input
             InputSystem.RemoveLayout(nameof(XRTracker));
         }
 
+        private static void RegisterHMD()
+        {
+            InputSystem.s_Manager.AddDevice(
+                new InputDeviceDescription()
+                {
+                    interfaceName = kInterfaceName,
+                    product = kHMDProductName,
+                    capabilities = new XRDeviceDescriptor()
+                    {
+                        characteristics = InputDeviceCharacteristics.TrackedDevice | InputDeviceCharacteristics.HeadMounted,
+                    }.ToJson(),
+                },
+                true,
+                kHMDProductName,
+                deviceFlags: kDeviceFlags);
+        }
+
         private static void RegisterController(InputDeviceCharacteristics characteristics, string name)
         {
             InputSystem.s_Manager.AddDevice(
@@ -73,7 +97,8 @@ namespace DynamicOpenVR.BeatSaber.Input
                     }.ToJson(),
                 },
                 true,
-                $"{kControllerProductName} ({name})");
+                $"{kControllerProductName} ({name})",
+                deviceFlags: kDeviceFlags);
         }
 
         private static void RegisterTracker(InputDeviceTrackerCharacteristics characteristics, string name)
@@ -89,7 +114,8 @@ namespace DynamicOpenVR.BeatSaber.Input
                     }.ToJson(),
                 },
                 true,
-                $"{kTrackerProductName} ({name})");
+                $"{kTrackerProductName} ({name})",
+                deviceFlags: kDeviceFlags);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace DynamicOpenVR.IO
 
         private Vector3 ToVector3(HmdVector3_t vector)
         {
-            return new Vector3(vector.v0, vector.v1, vector.v2);
+            return new Vector3(vector.v0, vector.v1, -vector.v2);
         }
     }
 }

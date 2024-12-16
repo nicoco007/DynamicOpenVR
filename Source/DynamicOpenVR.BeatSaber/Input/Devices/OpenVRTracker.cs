@@ -16,6 +16,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+extern alias UnityXROpenVR;
+
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,7 +25,7 @@ using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
-using Valve.VR;
+using UnityXROpenVR::Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {

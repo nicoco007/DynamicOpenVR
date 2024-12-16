@@ -16,50 +16,17 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-using System;
 using HarmonyLib;
-using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.XR;
-using UnityEngine.XR;
 
 namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
     /// <summary>
-    /// This patch prevents XRInputV1 controllers (provided by the native OpenVR plugin) from being registered automatically and conflicting with our OpenVR Input controllers.
+    /// This patch prevents XRInputV1 devices (provided by the native OpenVR plugin) from being registered automatically and conflicting with our Input System devices.
     /// </summary>
     [HarmonyPatch(typeof(XRLayoutBuilder), nameof(XRLayoutBuilder.OnFindLayoutForDevice))]
     internal static class XRLayoutBuilder_OnFindLayoutForDevice
     {
-        public static bool Prefix(ref InputDeviceDescription description)
-        {
-            if (string.IsNullOrEmpty(description.capabilities))
-            {
-                return true;
-            }
-
-            XRDeviceDescriptor deviceDescriptor;
-            try
-            {
-                deviceDescriptor = XRDeviceDescriptor.FromJson(description.capabilities);
-            }
-            catch (Exception)
-            {
-                return true;
-            }
-
-            if (deviceDescriptor == null)
-            {
-                return true;
-            }
-
-            InputDeviceCharacteristics controllerCharacteristics = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Controller;
-
-            if ((deviceDescriptor.characteristics & controllerCharacteristics) == controllerCharacteristics)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        public static bool Prefix() => false;
     }
 }

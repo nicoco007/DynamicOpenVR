@@ -1,4 +1,4 @@
-﻿// <copyright file="OpenVRHMD.cs" company="Nicolas Gnyra">
+﻿// <copyright file="OpenVRInputHMD.cs" company="Nicolas Gnyra">
 // DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
 // Copyright © 2019-2023 Nicolas Gnyra
 //
@@ -29,8 +29,8 @@ using UnityXROpenVR::Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    [InputControlLayout(stateType = typeof(OpenVRHMDState))]
-    internal class OpenVRHMD : XRHMD, IInputUpdateCallbackReceiver
+    [InputControlLayout(stateType = typeof(OpenVRInputHMDState))]
+    internal class OpenVRInputHMD : XRHMD, IInputUpdateCallbackReceiver
     {
         [InputControl]
         public ButtonControl userPresence { get; set; }
@@ -44,10 +44,10 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
             Matrix4x4 leftEyeTransform = GetEyeTransform(transform, EVREye.Eye_Left);
             Matrix4x4 rightEyeTransform = GetEyeTransform(transform, EVREye.Eye_Right);
 
-            OpenVRHMDState state = new()
+            OpenVRInputHMDState state = new()
             {
                 isTracked = isTracked,
-                trackingState = (int)(isTracked ? InputTrackingState.All : InputTrackingState.None),
+                trackingState = isTracked ? InputTrackingState.Position | InputTrackingState.Rotation | InputTrackingState.Velocity | InputTrackingState.AngularVelocity : InputTrackingState.None,
                 devicePosition = transform.GetPosition(),
                 deviceRotation = transform.rotation,
                 leftEyePosition = leftEyeTransform.GetPosition(),

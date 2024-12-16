@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="DynamicOpenVR.BeatSaber.csproj.user" />
-    <None Include="Input\Devices\OpenVRHMD.cs" />
+    <None Include="Input\Devices\OpenVRInputHMD.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">

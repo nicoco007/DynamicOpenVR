@@ -36,7 +36,7 @@ namespace DynamicOpenVR.BeatSaber.Input
 
         internal static void RegisterLayoutsAndAddDevices()
         {
-            InputSystem.RegisterLayout<OpenVRHMD>(nameof(OpenVRHMD), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kHMDProductName));
+            InputSystem.RegisterLayout<OpenVRInputHMD>(nameof(OpenVRInputHMD), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kHMDProductName));
             RegisterHMD();
 
             InputSystem.RegisterLayout<OpenVRInputController>(nameof(OpenVRInputController), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kControllerProductName));

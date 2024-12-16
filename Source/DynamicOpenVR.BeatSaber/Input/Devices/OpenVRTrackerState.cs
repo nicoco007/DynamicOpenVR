@@ -16,18 +16,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
+using UnityEngine.XR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
     internal struct OpenVRTrackerState : IInputStateTypeInfo
     {
         [InputControl(layout = "Integer")]
-        public int trackingState; // TODO: this should be an enum
+        public InputTrackingState trackingState;
 
+        [MarshalAs(UnmanagedType.I1)]
         [InputControl(layout = "Button")]
         public bool isTracked;
 

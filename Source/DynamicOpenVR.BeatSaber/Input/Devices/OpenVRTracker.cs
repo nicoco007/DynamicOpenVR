@@ -46,7 +46,7 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
             OpenVRTrackerState state = new()
             {
                 isTracked = isTracked,
-                trackingState = (int)(isTracked ? InputTrackingState.All : InputTrackingState.None),
+                trackingState = isTracked ? InputTrackingState.Position | InputTrackingState.Rotation | InputTrackingState.Velocity | InputTrackingState.AngularVelocity : InputTrackingState.None,
                 devicePosition = matrix.GetPosition(),
                 deviceRotation = matrix.GetRotation(),
             };

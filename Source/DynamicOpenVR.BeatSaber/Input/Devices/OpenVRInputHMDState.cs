@@ -1,4 +1,4 @@
-﻿// <copyright file="OpenVRHMDState.cs" company="Nicolas Gnyra">
+﻿// <copyright file="OpenVRInputHMDState.cs" company="Nicolas Gnyra">
 // DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
 // Copyright © 2019-2023 Nicolas Gnyra
 //
@@ -16,18 +16,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
+using UnityEngine.XR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    internal struct OpenVRHMDState : IInputStateTypeInfo
+    internal struct OpenVRInputHMDState : IInputStateTypeInfo
     {
         [InputControl(layout = "Integer")]
-        public int trackingState;
+        public InputTrackingState trackingState;
 
+        [MarshalAs(UnmanagedType.I1)]
         [InputControl(layout = "Button")]
         public bool isTracked;
 
@@ -55,6 +58,7 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         [InputControl(layout = "Quaternion")]
         public Quaternion rightEyeRotation;
 
+        [MarshalAs(UnmanagedType.I1)]
         [InputControl(layout = "Button")]
         public bool userPresence;
 

@@ -34,31 +34,31 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
             switch (axisName)
             {
                 case "TriggerLeftHand":
-                    __result = Plugin.beatSaberActions.leftTrigger.value;
+                    __result = Plugin.unityXRActions.left.trigger.value;
                     break;
 
                 case "TriggerRightHand":
-                    __result = Plugin.beatSaberActions.rightTrigger.value;
+                    __result = Plugin.unityXRActions.right.trigger.value;
                     break;
 
                 case "HorizontalLeftHand":
                 case "Oculus_CrossPlatform_SecondaryThumbstickHorizontal":
-                    __result = Plugin.beatSaberActions.leftThumbstick.vector.x;
+                    __result = Plugin.unityXRActions.left.primary2DAxis.vector.x;
                     break;
 
                 case "HorizontalRightHand":
                 case "Oculus_CrossPlatform_PrimaryThumbstickHorizontal":
-                    __result = Plugin.beatSaberActions.rightThumbstick.vector.x;
+                    __result = Plugin.unityXRActions.right.primary2DAxis.vector.x;
                     break;
 
                 case "VerticalLeftHand":
                 case "Oculus_CrossPlatform_SecondaryThumbstickVertical":
-                    __result = Plugin.beatSaberActions.leftThumbstick.vector.y;
+                    __result = Plugin.unityXRActions.left.primary2DAxis.vector.y;
                     break;
 
                 case "VerticalRightHand":
                 case "Oculus_CrossPlatform_PrimaryThumbstickVertical":
-                    __result = Plugin.beatSaberActions.rightThumbstick.vector.y;
+                    __result = Plugin.unityXRActions.right.primary2DAxis.vector.y;
                     break;
 
                 default:
@@ -83,11 +83,11 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
             switch (buttonName)
             {
                 case "MenuButtonLeftHand":
-                    __result = Plugin.beatSaberActions.leftMenuButton.enabledChange;
+                    __result = Plugin.unityXRActions.left.secondaryButton.enabledChange;
                     break;
 
                 case "MenuButtonRightHand":
-                    __result = Plugin.beatSaberActions.rightMenuButton.enabledChange;
+                    __result = Plugin.unityXRActions.right.secondaryButton.enabledChange;
                     break;
 
                 default:
@@ -106,11 +106,11 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
             switch (buttonName)
             {
                 case "MenuButtonLeftHand":
-                    __result = Plugin.beatSaberActions.leftMenuButton.state;
+                    __result = Plugin.unityXRActions.left.secondaryButton.state;
                     break;
 
                 case "MenuButtonRightHand":
-                    __result = Plugin.beatSaberActions.rightMenuButton.state;
+                    __result = Plugin.unityXRActions.right.secondaryButton.state;
                     break;
 
                 default:
@@ -129,11 +129,11 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
             switch (buttonName)
             {
                 case "MenuButtonLeftHand":
-                    __result = Plugin.beatSaberActions.leftMenuButton.disabledChange;
+                    __result = Plugin.unityXRActions.left.secondaryButton.disabledChange;
                     break;
 
                 case "MenuButtonRightHand":
-                    __result = Plugin.beatSaberActions.rightMenuButton.disabledChange;
+                    __result = Plugin.unityXRActions.right.secondaryButton.disabledChange;
                     break;
 
                 default:

@@ -1,18 +1,18 @@
 {
-   "bindings" : {
-      "/actions/main" : {
-         "sources" : [            
+   "bindings": {
+      "/actions/unity": {
+         "sources": [
             {
-               "inputs" : {
-                  "click" : {
-                     "output" : "/actions/main/in/headset_on_head"
+               "inputs": {
+                  "click": {
+                     "output": "/actions/unity/in/headset_on_head"
                   }
                },
-               "mode" : "button",
-               "path" : "/user/head/proximity"
+               "mode": "button",
+               "path": "/user/head/proximity"
             }
          ]
       }
    },
-   "controller_type" : "holographic_hmd"
+   "controller_type": "holographic_hmd"
 }

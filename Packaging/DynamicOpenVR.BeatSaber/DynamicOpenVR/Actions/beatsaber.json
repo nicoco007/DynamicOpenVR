@@ -1,57 +1,7 @@
 {
   "actions": [
     {
-      "name": "/actions/main/in/left_trigger",
-      "requirement": "mandatory",
-      "type": "vector1"
-    },
-    {
-      "name": "/actions/main/in/right_trigger",
-      "requirement": "mandatory",
-      "type": "vector1"
-    },
-    {
-      "name": "/actions/main/in/left_menu_button",
-      "requirement": "mandatory",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/main/in/right_menu_button",
-      "requirement": "mandatory",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/main/out/left_hand_haptics",
-      "requirement": "suggested",
-      "type": "vibration"
-    },
-    {
-      "name": "/actions/main/out/right_hand_haptics",
-      "requirement": "suggested",
-      "type": "vibration"
-    },
-    {
-      "name": "/actions/main/in/left_hand_pose",
-      "requirement": "mandatory",
-      "type": "pose"
-    },
-    {
-      "name": "/actions/main/in/right_hand_pose",
-      "requirement": "mandatory",
-      "type": "pose"
-    },
-    {
-      "name": "/actions/main/in/left_thumbstick",
-      "requirement": "suggested",
-      "type": "vector2"
-    },
-    {
-      "name": "/actions/main/in/right_thumbstick",
-      "requirement": "suggested",
-      "type": "vector2"
-    },
-    {
-      "name": "/actions/main/in/headset_on_head",
+      "name": "/actions/unity/in/headset_on_head",
       "requirement": "optional",
       "type": "boolean"
     },
@@ -119,6 +69,12 @@
       "name": "/actions/unity/in/left_primary_2d_axis_touch",
       "requirement": "optional",
       "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/left_hand_animation",
+      "requirement": "suggested",
+      "type": "skeleton",
+      "skeleton": "/skeleton/hand/left"
     },
     {
       "name": "/actions/unity/out/left_haptics",
@@ -191,52 +147,26 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/unity/out/right_haptics",
-      "requirement": "suggested",
-      "type": "vibration"
-    },
-    {
-      "name": "/actions/customavatars/in/lefthandanim",
-      "requirement": "suggested",
-      "type": "skeleton",
-      "skeleton": "/skeleton/hand/left"
-    },
-    {
-      "name": "/actions/customavatars/in/righthandanim",
+      "name": "/actions/unity/in/right_hand_animation",
       "requirement": "suggested",
       "type": "skeleton",
       "skeleton": "/skeleton/hand/right"
+    },
+    {
+      "name": "/actions/unity/out/right_haptics",
+      "requirement": "suggested",
+      "type": "vibration"
     }
   ],
   "action_sets": [
     {
-      "name": "/actions/main",
-      "usage": "leftright"
-    },
-    {
       "name": "/actions/unity",
-      "usage": "leftright"
-    },
-    {
-      "name": "/actions/customavatars",
       "usage": "leftright"
     }
   ],
   "localization": [
     {
       "language_tag": "en_us",
-      "/actions/main": "Beat Saber",
-      "/actions/main/in/left_trigger": "Left Trigger Pull",
-      "/actions/main/in/right_trigger": "Right Trigger Pull",
-      "/actions/main/in/left_menu_button": "Left Menu Button",
-      "/actions/main/in/right_menu_button": "Right Menu Button",
-      "/actions/main/out/left_hand_haptics": "Left Hand Haptic Vibration",
-      "/actions/main/out/right_hand_haptics": "Right Hand Haptic Vibration",
-      "/actions/main/in/left_hand_pose": "Left Hand Pose",
-      "/actions/main/in/right_hand_pose": "Right Hand Pose",
-      "/actions/main/in/left_thumbstick": "Left Joystick Position",
-      "/actions/main/in/right_thumbstick": "Right Joystick Position",
-      "/actions/main/in/headset_on_head": "Headset on head (proximity sensor)",
       "/actions/unity": "Unity XR Input",
       "/actions/unity/in/left_pose": "Left Controller Pose",
       "/actions/unity/in/left_primary_button": "Left Primary Button",
@@ -251,6 +181,7 @@
       "/actions/unity/in/left_primary_2d_axis": "Left Primary 2D Axis",
       "/actions/unity/in/left_primary_2d_axis_click": "Left Primary 2D Axis Click",
       "/actions/unity/in/left_primary_2d_axis_touch": "Left Primary 2D Axis Touch",
+      "/actions/unity/in/left_hand_animation": "Left Hand Animation",
       "/actions/unity/out/left_haptics": "Left Haptic Vibration",
       "/actions/unity/in/right_pose": "Right Controller Pose",
       "/actions/unity/in/right_primary_button": "Right Primary Button",
@@ -265,10 +196,8 @@
       "/actions/unity/in/right_primary_2d_axis": "Right Primary 2D Axis",
       "/actions/unity/in/right_primary_2d_axis_click": "Right Primary 2D Axis Click",
       "/actions/unity/in/right_primary_2d_axis_touch": "Right Primary 2D Axis Touch",
-      "/actions/unity/out/right_haptics": "Right Haptic Vibration",
-      "/actions/customavatars": "Custom Avatars",
-      "/actions/customavatars/in/lefthandanim": "Left Hand Animation",
-      "/actions/customavatars/in/righthandanim": "Right Hand Animation"
+      "/actions/unity/in/right_hand_animation": "Right Hand Animation",
+      "/actions/unity/out/right_haptics": "Right Haptic Vibration"
     }
   ]
 }

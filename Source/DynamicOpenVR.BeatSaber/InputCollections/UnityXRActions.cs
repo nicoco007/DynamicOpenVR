@@ -17,11 +17,14 @@
 // </copyright>
 
 using System;
+using DynamicOpenVR.IO;
 
 namespace DynamicOpenVR.BeatSaber.InputCollections
 {
     internal class UnityXRActions : IDisposable
     {
+        public BooleanInput headsetOnHead { get; init; }
+
         public UnityXRActionsHand left { get; init; }
 
         public UnityXRActionsHand right { get; init; }

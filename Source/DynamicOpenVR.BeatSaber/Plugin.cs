@@ -80,8 +80,6 @@ namespace DynamicOpenVR.BeatSaber
 
         public static UnityXRActions unityXRActions { get; private set; }
 
-        public static BeatSaberActions beatSaberActions { get; private set; }
-
         [OnStart]
         public void OnStart()
         {
@@ -94,7 +92,6 @@ namespace DynamicOpenVR.BeatSaber
         public void OnExit()
         {
             unityXRActions?.Dispose();
-            beatSaberActions?.Dispose();
 
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
@@ -332,26 +329,10 @@ namespace DynamicOpenVR.BeatSaber
         {
             _logger.Info("Registering actions");
 
-            // Beat Saber inputs
-            beatSaberActions = new BeatSaberActions()
-            {
-                leftTrigger = new VectorInput("/actions/main/in/left_trigger"),
-                rightTrigger = new VectorInput("/actions/main/in/right_trigger"),
-                leftMenuButton = new BooleanInput("/actions/main/in/left_menu_button"),
-                rightMenuButton = new BooleanInput("/actions/main/in/right_menu_button"),
-                leftHandHaptics = new HapticVibrationOutput("/actions/main/out/left_hand_haptics"),
-                rightHandHaptics = new HapticVibrationOutput("/actions/main/out/right_hand_haptics"),
-                leftHandPose = new PoseInput("/actions/main/in/left_hand_pose"),
-                rightHandPose = new PoseInput("/actions/main/in/right_hand_pose"),
-                leftThumbstick = new Vector2Input("/actions/main/in/left_thumbstick"),
-                rightThumbstick = new Vector2Input("/actions/main/in/right_thumbstick"),
-                headsetOnHead = new BooleanInput("/actions/main/in/headset_on_head"),
-            };
-
-            // Generic Unity InputDevices stuff
             // mappings are based on https://docs.unity3d.com/Manual/xr_input.html
             unityXRActions = new UnityXRActions
             {
+                headsetOnHead = new BooleanInput("/actions/unity/in/headset_on_head"),
                 left = new UnityXRActionsHand
                 {
                     pose = new PoseInput("/actions/unity/in/left_pose"),
@@ -367,7 +348,7 @@ namespace DynamicOpenVR.BeatSaber
                     primary2DAxis = new Vector2Input("/actions/unity/in/left_primary_2d_axis"),
                     primary2DAxisClick = new BooleanInput("/actions/unity/in/left_primary_2d_axis_click"),
                     primary2DAxisTouch = new BooleanInput("/actions/unity/in/left_primary_2d_axis_touch"),
-                    skeleton = new SkeletalInput("/actions/customavatars/in/lefthandanim", onlyUpdateSummaryData: false),
+                    skeleton = new SkeletalInput("/actions/unity/in/lefthandanim", onlyUpdateSummaryData: false),
                     haptics = new HapticVibrationOutput("/actions/unity/out/left_haptics"),
                 },
                 right = new UnityXRActionsHand
@@ -385,7 +366,7 @@ namespace DynamicOpenVR.BeatSaber
                     primary2DAxis = new Vector2Input("/actions/unity/in/right_primary_2d_axis"),
                     primary2DAxisClick = new BooleanInput("/actions/unity/in/right_primary_2d_axis_click"),
                     primary2DAxisTouch = new BooleanInput("/actions/unity/in/right_primary_2d_axis_touch"),
-                    skeleton = new SkeletalInput("/actions/customavatars/in/righthandanim", onlyUpdateSummaryData: false),
+                    skeleton = new SkeletalInput("/actions/unity/in/righthandanim", onlyUpdateSummaryData: false),
                     haptics = new HapticVibrationOutput("/actions/unity/out/right_haptics"),
                 },
             };

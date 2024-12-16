@@ -53,7 +53,7 @@ namespace DynamicOpenVR.IO
             return string.Join("/", name.Split('/').Take(3));
         }
 
-        internal virtual void Initialize()
+        internal void Initialize()
         {
             handle = OpenVRFacade.GetActionHandle(name);
         }

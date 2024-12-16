@@ -348,7 +348,7 @@ namespace DynamicOpenVR.BeatSaber
                     primary2DAxis = new Vector2Input("/actions/unity/in/left_primary_2d_axis"),
                     primary2DAxisClick = new BooleanInput("/actions/unity/in/left_primary_2d_axis_click"),
                     primary2DAxisTouch = new BooleanInput("/actions/unity/in/left_primary_2d_axis_touch"),
-                    skeleton = new SkeletalInput("/actions/unity/in/lefthandanim", onlyUpdateSummaryData: false),
+                    skeleton = new SkeletalInput("/actions/unity/in/left_hand_animation", onlyUpdateSummaryData: false),
                     haptics = new HapticVibrationOutput("/actions/unity/out/left_haptics"),
                 },
                 right = new UnityXRActionsHand
@@ -366,7 +366,7 @@ namespace DynamicOpenVR.BeatSaber
                     primary2DAxis = new Vector2Input("/actions/unity/in/right_primary_2d_axis"),
                     primary2DAxisClick = new BooleanInput("/actions/unity/in/right_primary_2d_axis_click"),
                     primary2DAxisTouch = new BooleanInput("/actions/unity/in/right_primary_2d_axis_touch"),
-                    skeleton = new SkeletalInput("/actions/unity/in/righthandanim", onlyUpdateSummaryData: false),
+                    skeleton = new SkeletalInput("/actions/unity/in/right_hand_animation", onlyUpdateSummaryData: false),
                     haptics = new HapticVibrationOutput("/actions/unity/out/right_haptics"),
                 },
             };

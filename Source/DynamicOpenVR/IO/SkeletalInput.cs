@@ -16,6 +16,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -26,9 +27,9 @@ namespace DynamicOpenVR.IO
     {
         private readonly bool _onlyUpdateSummaryData;
 
-        private VRBoneTransform_t[] _boneData;
-        private BoneTransform[] _bones;
         private InputSkeletalActionData_t _actionData;
+        private VRBoneTransform_t[] _boneData = Array.Empty<VRBoneTransform_t>();
+        private BoneTransform[] _bones = Array.Empty<BoneTransform>();
 
         public SkeletalInput(string name, bool onlyUpdateSummaryData = true)
             : base(name)
@@ -49,19 +50,6 @@ namespace DynamicOpenVR.IO
         /// </summary>
         public SkeletalSummaryData summaryData { get; private set; }
 
-        internal override void Initialize()
-        {
-            base.Initialize();
-
-            if (!_onlyUpdateSummaryData)
-            {
-                uint count = OpenVRFacade.GetBoneCount(handle);
-
-                _boneData = new VRBoneTransform_t[count];
-                _bones = new BoneTransform[count];
-            }
-        }
-
         /// <inheritdoc/>
         internal override void UpdateData()
         {
@@ -70,8 +58,16 @@ namespace DynamicOpenVR.IO
             _actionData = OpenVRFacade.GetSkeletalActionData(handle);
             summaryData = new SkeletalSummaryData(OpenVRFacade.GetSkeletalSummaryData(handle));
 
-            if (!_onlyUpdateSummaryData)
+            if (_actionData.bActive && !_onlyUpdateSummaryData)
             {
+                uint count = OpenVRFacade.GetBoneCount(handle);
+
+                if (count != _boneData.Length || count != _bones.Length)
+                {
+                    _boneData = new VRBoneTransform_t[count];
+                    _bones = new BoneTransform[count];
+                }
+
                 OpenVRFacade.GetSkeletalBoneData(handle, _boneData);
 
                 for (int i = 0; i < _boneData.Length; i++)

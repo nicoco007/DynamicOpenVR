@@ -115,7 +115,7 @@ namespace DynamicOpenVR.BeatSaber.Input
 
             currentPoses = updateType == InputUpdateType.BeforeRender ? _renderPoses : _gamePoses;
 
-            OpenVRActionManager.instance.Update(); // TODO: pass updateType
+            OpenVRActionManager.instance.Update(updateType == InputUpdateType.BeforeRender ? UpdateType.BeforeRender : UpdateType.Dynamic); // TODO: pass updateType
 
             _handSubsystem.TryUpdateHands(updateType == InputUpdateType.BeforeRender ? XRHandSubsystem.UpdateType.BeforeRender : XRHandSubsystem.UpdateType.Dynamic);
         }

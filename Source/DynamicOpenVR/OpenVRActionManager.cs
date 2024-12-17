@@ -117,7 +117,7 @@ namespace DynamicOpenVR
             enabled = false;
         }
 
-        public void Update()
+        public void Update(UpdateType updateType)
         {
             if (!enabled)
             {
@@ -133,7 +133,7 @@ namespace DynamicOpenVR
             {
                 try
                 {
-                    input.UpdateData();
+                    input.UpdateData(updateType);
                 }
                 catch (OpenVRInputException ex)
                 {

@@ -51,9 +51,9 @@ namespace DynamicOpenVR.IO
         public SkeletalSummaryData summaryData { get; private set; }
 
         /// <inheritdoc/>
-        internal override void UpdateData()
+        internal override void UpdateData(UpdateType updateType)
         {
-            base.UpdateData();
+            base.UpdateData(updateType);
 
             _actionData = OpenVRFacade.GetSkeletalActionData(handle);
             summaryData = new SkeletalSummaryData(OpenVRFacade.GetSkeletalSummaryData(handle));

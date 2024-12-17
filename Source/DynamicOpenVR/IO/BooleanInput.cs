@@ -48,7 +48,7 @@ namespace DynamicOpenVR.IO
         public bool disabledChange => !_actionData.bState && _actionData.bChanged;
 
         /// <inheritdoc/>
-        internal override void UpdateData()
+        internal override void UpdateData(UpdateType updateType)
         {
             _actionData = OpenVRFacade.GetDigitalActionData(handle);
         }

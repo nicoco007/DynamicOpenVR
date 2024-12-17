@@ -33,6 +33,7 @@ namespace DynamicOpenVR.IO
         /// <summary>
         /// Update data from OpenVR. Called every frame.
         /// </summary>
-        internal abstract void UpdateData();
+        /// <param name="updateType">The type of update that triggered this call.</param>
+        internal abstract void UpdateData(UpdateType updateType);
     }
 }

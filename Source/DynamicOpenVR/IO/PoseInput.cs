@@ -56,9 +56,9 @@ namespace DynamicOpenVR.IO
         public bool isTracking => _actionData.pose.bPoseIsValid && _actionData.pose.eTrackingResult is ETrackingResult.Running_OK or ETrackingResult.Running_OutOfRange or ETrackingResult.Calibrating_OutOfRange;
 
         /// <inheritdoc/>
-        internal override void UpdateData()
+        internal override void UpdateData(UpdateType updateType)
         {
-            _actionData = OpenVRFacade.GetPoseActionData(handle);
+            _actionData = OpenVRFacade.GetPoseActionData(handle, updateType);
             HmdMatrix34_t rawMatrix = _actionData.pose.mDeviceToAbsoluteTracking;
             position = rawMatrix.GetPosition();
             rotation = rawMatrix.GetRotation();

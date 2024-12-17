@@ -1,4 +1,4 @@
-﻿// <copyright file="AnalogInput.cs" company="Nicolas Gnyra">
+﻿// <copyright file="UpdateType.cs" company="Nicolas Gnyra">
 // DynamicOpenVR - Unity scripts to allow dynamic creation of OpenVR actions at runtime.
 // Copyright © 2019-2024 Nicolas Gnyra
 //
@@ -16,26 +16,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-using Valve.VR;
+using UnityEngine;
 
-namespace DynamicOpenVR.IO
+namespace DynamicOpenVR
 {
-    public abstract class AnalogInput : OVRInput
+    public enum UpdateType
     {
-        protected AnalogInput(string name)
-            : base(name)
-        {
-        }
+        /// <summary>
+        /// Corresponds to timing similar or close to <c>MonoBehaviour.Update</c>.
+        /// </summary>
+        Dynamic,
 
-        /// <inheritdoc/>
-        public override bool isActive => actionData.bActive;
-
-        private protected InputAnalogActionData_t actionData { get; private set; }
-
-        /// <inheritdoc/>
-        internal override void UpdateData(UpdateType updateType)
-        {
-            actionData = OpenVRFacade.GetAnalogActionData(handle);
-        }
+        /// <summary>
+        /// Corresponds to timing similar or close to <see cref="Application.onBeforeRender" />.
+        /// </summary>
+        BeforeRender,
     }
 }

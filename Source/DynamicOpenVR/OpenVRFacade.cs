@@ -148,17 +148,26 @@ namespace DynamicOpenVR
             return actionData;
         }
 
-        internal static InputPoseActionData_t GetPoseActionData(ulong actionHandle, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
+        internal static InputPoseActionData_t GetPoseActionData(ulong actionHandle, UpdateType updateType, ETrackingUniverseOrigin origin = ETrackingUniverseOrigin.TrackingUniverseStanding)
         {
             InputPoseActionData_t actionData = default;
+            EVRInputError error;
 
-            // After some testing, this seems to be the calculation WaitForPoses does for its game poses.
-            // Note that this should only be used in Update; BeforeRender should use GetPoseActionDataForNextFrame.
-            // TODO: display frequency and vsync to photons should be relatively constant - at least within a frame. no need to call these every single time.
-            float frameDuration = 1f / GetFloatTrackedDeviceProperty(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_DisplayFrequency_Float);
-            float fPredictedSecondsFromNow = frameDuration + OpenVR.Compositor.GetFrameTimeRemaining() + GetFloatTrackedDeviceProperty(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_SecondsFromVsyncToPhotons_Float);
+            if (updateType == UpdateType.Dynamic)
+            {
+                // After some testing, this seems to be the calculation WaitForPoses does for its game poses.
+                // Note that this should only be used in Update; BeforeRender should use GetPoseActionDataForNextFrame.
+                // TODO: display frequency and vsync to photons should be relatively constant - at least within a frame. no need to call these every single time.
+                float frameDuration = 1f / GetFloatTrackedDeviceProperty(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_DisplayFrequency_Float);
+                float fPredictedSecondsFromNow = frameDuration + OpenVR.Compositor.GetFrameTimeRemaining() + GetFloatTrackedDeviceProperty(OpenVR.k_unTrackedDeviceIndex_Hmd, ETrackedDeviceProperty.Prop_SecondsFromVsyncToPhotons_Float);
 
-            EVRInputError error = OpenVR.Input.GetPoseActionDataRelativeToNow(actionHandle, origin, fPredictedSecondsFromNow, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+                error = OpenVR.Input.GetPoseActionDataRelativeToNow(actionHandle, origin, fPredictedSecondsFromNow, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+            }
+            else
+            {
+                error = OpenVR.Input.GetPoseActionDataForNextFrame(actionHandle, origin, ref actionData, (uint)Marshal.SizeOf(typeof(InputPoseActionData_t)), OpenVR.k_ulInvalidInputValueHandle);
+            }
+
             if (error is not EVRInputError.None and not EVRInputError.NoData)
             {
                 throw new OpenVRInputException($"Could not get pose data for action with handle {actionHandle}: {error}", error);

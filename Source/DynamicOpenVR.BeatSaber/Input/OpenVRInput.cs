@@ -62,6 +62,7 @@ namespace DynamicOpenVR.BeatSaber.Input
         internal static void RemoveLayouts()
         {
             // RemoveLayout will recursively remove devices as well
+            InputSystem.RemoveLayout(nameof(OpenVRInputHMD));
             InputSystem.RemoveLayout(nameof(OpenVRInputController));
             InputSystem.RemoveLayout(nameof(OpenVRTracker));
             InputSystem.RemoveLayout(nameof(XRTracker));

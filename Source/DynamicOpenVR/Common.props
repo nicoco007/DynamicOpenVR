@@ -5,7 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>10</LangVersion>
     <Version>0.5.0</Version>
-    <Copyright>Copyright © Nicolas Gnyra 2019-2023</Copyright>
+    <Copyright>Copyright © Nicolas Gnyra 2019-2024</Copyright>
   </PropertyGroup>
   <PropertyGroup Condition="$(Configuration) == Release">
     <DebugType>none</DebugType>

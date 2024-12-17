@@ -1,6 +1,6 @@
 ﻿// <copyright file="XRLayoutBuilder.cs" company="Nicolas Gnyra">
 // DynamicOpenVR.BeatSaber - An implementation of DynamicOpenVR as a Beat Saber plugin.
-// Copyright © 2019-2023 Nicolas Gnyra
+// Copyright © 2019-2024 Nicolas Gnyra
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published

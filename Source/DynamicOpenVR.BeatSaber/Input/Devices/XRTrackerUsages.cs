@@ -21,7 +21,7 @@ using UnityEngine.InputSystem.Utilities;
 #pragma warning disable IDE1006
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    public class XRTrackerUsages
+    public static class XRTrackerUsages
     {
         /// <summary>
         /// Device on left foot.

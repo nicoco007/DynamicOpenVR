@@ -21,6 +21,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
 using Valve.VR;
@@ -64,89 +65,91 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
 
             var characteristics = (InputDeviceTrackerCharacteristics)descriptor.characteristics;
 
+            InternedString trackerUsage = default;
             string path = null;
 
             if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftFoot))
             {
                 path = OpenVR.k_pchPathUserFootLeft;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftFoot);
+                trackerUsage = XRTrackerUsages.LeftFoot;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightFoot))
             {
                 path = OpenVR.k_pchPathUserFootRight;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightFoot);
+                trackerUsage = XRTrackerUsages.RightFoot;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftShoulder))
             {
                 path = OpenVR.k_pchPathUserShoulderLeft;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftShoulder);
+                trackerUsage = XRTrackerUsages.LeftShoulder;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightShoulder))
             {
                 path = OpenVR.k_pchPathUserShoulderRight;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightShoulder);
+                trackerUsage = XRTrackerUsages.RightShoulder;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftElbow))
             {
                 path = OpenVR.k_pchPathUserElbowLeft;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftElbow);
+                trackerUsage = XRTrackerUsages.LeftElbow;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightElbow))
             {
                 path = OpenVR.k_pchPathUserElbowRight;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightElbow);
+                trackerUsage = XRTrackerUsages.RightElbow;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftKnee))
             {
                 path = OpenVR.k_pchPathUserKneeLeft;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftKnee);
+                trackerUsage = XRTrackerUsages.LeftKnee;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightKnee))
             {
                 path = OpenVR.k_pchPathUserKneeRight;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightKnee);
+                trackerUsage = XRTrackerUsages.RightKnee;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftWrist))
             {
                 path = OpenVR.k_pchPathUserWristLeft;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftWrist);
+                trackerUsage = XRTrackerUsages.LeftWrist;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightWrist))
             {
                 path = OpenVR.k_pchPathUserWristRight;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightWrist);
+                trackerUsage = XRTrackerUsages.RightWrist;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftAnkle))
             {
                 path = OpenVR.k_pchPathUserAnkleLeft;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftAnkle);
+                trackerUsage = XRTrackerUsages.LeftAnkle;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightAnkle))
             {
                 path = OpenVR.k_pchPathUserAnkleRight;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightAnkle);
+                trackerUsage = XRTrackerUsages.RightAnkle;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerWaist))
             {
                 path = OpenVR.k_pchPathUserWaist;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.Waist);
+                trackerUsage = XRTrackerUsages.Waist;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerChest))
             {
                 path = OpenVR.k_pchPathUserChest;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.Chest);
+                trackerUsage = XRTrackerUsages.Chest;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerCamera))
             {
                 path = OpenVR.k_pchPathUserCamera;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.Camera);
+                trackerUsage = XRTrackerUsages.Camera;
             }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerKeyboard))
             {
                 path = OpenVR.k_pchPathUserKeyboard;
-                InputSystem.SetDeviceUsage(this, XRTrackerUsages.Keyboard);
+                trackerUsage = XRTrackerUsages.Keyboard;
             }
 
+            InputSystem.SetDeviceUsage(this, trackerUsage);
             _handle = GetDeviceHandle(path);
         }
 

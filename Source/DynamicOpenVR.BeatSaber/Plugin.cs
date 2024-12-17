@@ -46,6 +46,8 @@ namespace DynamicOpenVR.BeatSaber
     [Plugin(RuntimeOptions.SingleStartInit)]
     internal class Plugin
     {
+        internal const string kOpenVRLoaderHarmonyCategory = "OpenVRLoader";
+
         internal static readonly string kSteamPath = SteamUtilities.GetSteamHomeDirectory();
         internal static readonly string kManifestPath = Path.Combine(UnityGame.InstallPath, "beatsaber.vrmanifest");
         internal static readonly string kAppConfigPath = Path.Combine(kSteamPath, "config", "appconfig.json");
@@ -64,7 +66,6 @@ namespace DynamicOpenVR.BeatSaber
         private static readonly string kActionManifestPath = Path.Combine(UnityGame.InstallPath, "DynamicOpenVR", "action_manifest.json");
 
         private readonly Logger _logger;
-        private readonly Harmony _harmonyInstance;
 
         private bool _initializing = false;
         private AppConfig _updatedAppConfig;
@@ -73,12 +74,14 @@ namespace DynamicOpenVR.BeatSaber
         public Plugin(Logger logger)
         {
             _logger = logger;
-            _harmonyInstance = new Harmony("com.nicoco007.dynamicopenvr.beatsaber");
+            harmony = new Harmony("com.nicoco007.dynamicopenvr.beatsaber");
 
             Logging.Logger.handler = new IPALogHandler(logger);
         }
 
         public static UnityXRActions unityXRActions { get; private set; }
+
+        internal static Harmony harmony { get; private set; }
 
         [OnStart]
         public void OnStart()
@@ -86,6 +89,8 @@ namespace DynamicOpenVR.BeatSaber
             _logger.Info("Starting " + typeof(Plugin).Namespace);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            harmony.PatchAllUncategorized();
         }
 
         [OnExit]
@@ -94,6 +99,8 @@ namespace DynamicOpenVR.BeatSaber
             unityXRActions?.Dispose();
 
             SceneManager.sceneLoaded -= OnSceneLoaded;
+
+            harmony.UnpatchSelf();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -127,8 +134,6 @@ namespace DynamicOpenVR.BeatSaber
             OpenVRHandProvider.Register();
             OpenVRActionManager.instance.Configure("Beat Saber", kActionManifestPath);
 
-            // TODO: most patches rely on OpenVRActionManager running; they should be dynamically added/removed when the loader starts/stops
-            ApplyHarmonyPatches();
             RegisterActionSet();
 
             XRManagerSettings manager = XRGeneralSettings.Instance.Manager;
@@ -370,13 +375,6 @@ namespace DynamicOpenVR.BeatSaber
                     haptics = new HapticVibrationOutput("/actions/unity/out/right_haptics"),
                 },
             };
-        }
-
-        private void ApplyHarmonyPatches()
-        {
-            _logger.Info("Applying input patches");
-
-            _harmonyInstance.PatchAll();
         }
     }
 }

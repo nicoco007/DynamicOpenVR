@@ -25,6 +25,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     /// This patch prevents XRInputV1 devices (provided by the native OpenVR plugin) from being registered automatically and conflicting with our Input System devices.
     /// </summary>
     [HarmonyPatch(typeof(XRLayoutBuilder), nameof(XRLayoutBuilder.OnFindLayoutForDevice))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class XRLayoutBuilder_OnFindLayoutForDevice
     {
         public static bool Prefix() => false;

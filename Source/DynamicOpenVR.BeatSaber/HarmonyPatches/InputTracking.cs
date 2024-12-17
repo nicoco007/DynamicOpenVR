@@ -24,6 +24,7 @@ using UnityEngine.XR;
 namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
     [HarmonyPatch(typeof(InputTracking), nameof(InputTracking.GetLocalPosition))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal class InputTracking_GetLocalPosition
     {
         [HarmonyPriority(Priority.First)]
@@ -46,6 +47,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(InputTracking), nameof(InputTracking.GetLocalRotation))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal class InputTracking_GetLocalRotation
     {
         [HarmonyPriority(Priority.First)]
@@ -68,6 +70,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(InputTracking), nameof(InputTracking.GetNodeStates))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal class InputTracking_GetNodeStates
     {
         [HarmonyPriority(Priority.First)]

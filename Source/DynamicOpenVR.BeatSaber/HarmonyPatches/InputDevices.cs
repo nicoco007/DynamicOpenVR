@@ -26,6 +26,7 @@ using UnityEngine.XR;
 namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 {
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureUsages))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class InputDevice_TryGetFeatureUsages
     {
         public static bool Prefix(InputDevice __instance, List<InputFeatureUsage> featureUsages, ref bool __result)
@@ -138,6 +139,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
      * primary2DAxisTouch (bool)
      */
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureValue), new Type[] { typeof(InputFeatureUsage<bool>), typeof(bool) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class InputDevice_TryGetFeatureValue_Boolean
     {
         public static bool Prefix(InputDevice __instance, InputFeatureUsage<bool> usage, ref bool value, ref bool __result)
@@ -219,6 +221,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
      * grip (float)
      */
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureValue), new Type[] { typeof(InputFeatureUsage<float>), typeof(float) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class InputDevice_TryGetFeatureValue_Float
     {
         public static bool Prefix(InputDevice __instance, InputFeatureUsage<float> usage, ref float value, ref bool __result)
@@ -267,6 +270,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
      * primary2DAxis (Vector2)
      */
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureValue), new Type[] { typeof(InputFeatureUsage<Vector2>), typeof(Vector2) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class InputDevice_TryGetFeatureValue_Vector2
     {
         public static bool Prefix(InputDevice __instance, InputFeatureUsage<Vector2> usage, ref Vector2 value, ref bool __result)
@@ -313,6 +317,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
      * deviceAngularVelocity (Vector3)
      */
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureValue), new Type[] { typeof(InputFeatureUsage<Vector3>), typeof(Vector3) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class InputDevice_TryGetFeatureValue_Vector3
     {
         public static bool Prefix(InputDevice __instance, InputFeatureUsage<Vector3> usage, ref Vector3 value, ref bool __result)
@@ -365,6 +370,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
      * deviceRotation (Quaternion)
      */
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureValue), new Type[] { typeof(InputFeatureUsage<Quaternion>), typeof(Quaternion) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class InputDevice_TryGetFeatureValue_Quaternion
     {
         public static bool Prefix(InputDevice __instance, InputFeatureUsage<Quaternion> usage, ref Quaternion value, ref bool __result)
@@ -405,6 +411,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.SendHapticImpulse), new Type[] { typeof(uint), typeof(float), typeof(float) })]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class InputDevice_SendHapticImpulse
     {
         public static bool Prefix(InputDevice __instance, float amplitude, float duration, ref bool __result)

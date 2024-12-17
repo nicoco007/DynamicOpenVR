@@ -23,6 +23,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     internal static class UnityXRHapticsHandler
     {
         [HarmonyPatch(typeof(UnityXRController), nameof(UnityXRController.UpdateHapticsHandler))]
+        [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
         internal static class UnityXRController_UpdateHapticsHandler
         {
             // don't use KnucklesUnityXRHapticsHandler

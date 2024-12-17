@@ -27,6 +27,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 #pragma warning restore IDE0065, SA1200
 
     [HarmonyPatch]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class Input_GetAxis
     {
         public static bool Prefix(string axisName, ref float __result)
@@ -76,6 +77,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(Input), nameof(Input.GetButtonDown))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class Input_GetButtonDown
     {
         public static bool Prefix(string buttonName, ref bool __result)
@@ -99,6 +101,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(Input), nameof(Input.GetButton))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class Input_GetButton
     {
         public static bool Prefix(string buttonName, ref bool __result)
@@ -122,6 +125,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(Input), nameof(Input.GetButtonUp))]
+    [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
     internal static class Input_GetButtonUp
     {
         public static bool Prefix(string buttonName, ref bool __result)

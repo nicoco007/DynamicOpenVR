@@ -40,6 +40,8 @@ namespace DynamicOpenVR.BeatSaber.Input
 
         public override bool Initialize()
         {
+            Plugin.harmony.PatchCategory(Plugin.kOpenVRLoaderHarmonyCategory);
+
             List<XRHandSubsystemDescriptor> list = new();
             SubsystemManager.GetSubsystemDescriptors(list);
             CreateSubsystem<XRHandSubsystemDescriptor, XRHandSubsystem>(list, OpenVRHandProvider.id);
@@ -95,6 +97,12 @@ namespace DynamicOpenVR.BeatSaber.Input
             }
 
             return base.Stop() && result;
+        }
+
+        public override bool Deinitialize()
+        {
+            Plugin.harmony.UnpatchCategory(Plugin.kOpenVRLoaderHarmonyCategory);
+            return base.Deinitialize();
         }
 
         private void OnBeforeUpdate()

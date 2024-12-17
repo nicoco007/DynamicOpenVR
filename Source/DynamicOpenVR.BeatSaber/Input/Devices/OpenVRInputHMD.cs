@@ -54,7 +54,7 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
                 rightEyeRotation = rightEyeTransform.rotation,
                 centerEyePosition = (leftEyeTransform.GetPosition() + rightEyeTransform.GetPosition()) * 0.5f,
                 centerEyeRotation = Quaternion.Lerp(leftEyeTransform.rotation, rightEyeTransform.rotation, 0.5f),
-                userPresence = OpenVR.System.IsInputAvailable() && !OpenVR.System.ShouldApplicationPause() && (!Plugin.unityXRActions.headsetOnHead.isActive || Plugin.unityXRActions.headsetOnHead.state),
+                userPresence = OpenVR.System.IsInputAvailable() && (!Plugin.unityXRActions.headsetOnHead.isActive || Plugin.unityXRActions.headsetOnHead.state),
             };
 
             InputSystem.QueueStateEvent(this, state);

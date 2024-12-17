@@ -55,7 +55,7 @@ namespace DynamicOpenVR
             {
                 if (!configured)
                 {
-                    throw new Exception(nameof(OpenVRActionManager) + " is not initialized");
+                    throw new InvalidOperationException($"{nameof(OpenVRActionManager)} is not initialized");
                 }
 
                 return _actionManifestPath;

@@ -30,6 +30,6 @@ namespace DynamicOpenVR.Exceptions
             Error = error;
         }
 
-        public EVRInputError Error { get; }
+        internal EVRInputError Error { get; }
     }
 }

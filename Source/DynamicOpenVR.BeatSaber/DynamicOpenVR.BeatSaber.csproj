@@ -76,7 +76,6 @@
     <!-- since it isn't copied over before compilation, reference the local file -->
     <Reference Include="Unity.XR.OpenVR">
       <HintPath>..\..\Packaging\DynamicOpenVR.BeatSaber\Beat Saber_Data\Managed\Unity.XR.OpenVR.dll</HintPath>
-      <Aliases>UnityXROpenVR</Aliases>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.SpatialTracking.dll</HintPath>

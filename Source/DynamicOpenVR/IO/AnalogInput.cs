@@ -30,7 +30,7 @@ namespace DynamicOpenVR.IO
         /// <inheritdoc/>
         public override bool isActive => actionData.bActive;
 
-        protected InputAnalogActionData_t actionData { get; set; }
+        private protected InputAnalogActionData_t actionData { get; private set; }
 
         /// <inheritdoc/>
         internal override void UpdateData()

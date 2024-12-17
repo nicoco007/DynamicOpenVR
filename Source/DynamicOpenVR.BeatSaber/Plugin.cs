@@ -16,8 +16,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-extern alias UnityXROpenVR;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,11 +31,11 @@ using IPA;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Unity.XR.OpenVR;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Management;
-using UnityXROpenVR::Unity.XR.OpenVR;
-using UnityXROpenVR::Valve.VR;
+using Valve.VR;
 using Zenject;
 using Logger = IPA.Logging.Logger;
 

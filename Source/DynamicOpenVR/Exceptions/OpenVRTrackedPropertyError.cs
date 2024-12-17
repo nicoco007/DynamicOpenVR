@@ -30,8 +30,8 @@ namespace DynamicOpenVR.Exceptions
             Error = error;
         }
 
-        public uint DeviceIndex { get; }
+        internal uint DeviceIndex { get; }
 
-        public ETrackedPropertyError Error { get; }
+        internal ETrackedPropertyError Error { get; }
     }
 }

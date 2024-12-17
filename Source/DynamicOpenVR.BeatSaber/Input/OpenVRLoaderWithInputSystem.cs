@@ -16,16 +16,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
-extern alias UnityXROpenVR;
-
 using System;
 using System.Collections.Generic;
+using Unity.XR.OpenVR;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.XR.Hands;
-using UnityXROpenVR::Unity.XR.OpenVR;
-using UnityXROpenVR::Valve.VR;
+using Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input
 {

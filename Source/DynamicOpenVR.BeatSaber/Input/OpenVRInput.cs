@@ -28,7 +28,7 @@ namespace DynamicOpenVR.BeatSaber.Input
     internal static class OpenVRInput
     {
         private const string kInterfaceName = nameof(DynamicOpenVR);
-        private const string kHMDProductName = "OpenVR HMD";
+        private const string kHMDProductName = "OpenVR Input HMD";
         private const string kControllerProductName = "OpenVR Input Controller";
         private const string kTrackerProductName = "OpenVR Tracker";
 

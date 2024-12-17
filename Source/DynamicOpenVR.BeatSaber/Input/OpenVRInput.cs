@@ -21,7 +21,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
-using InputDevice = UnityEngine.InputSystem.InputDevice;
 
 namespace DynamicOpenVR.BeatSaber.Input
 {
@@ -31,8 +30,6 @@ namespace DynamicOpenVR.BeatSaber.Input
         private const string kHMDProductName = "OpenVR Input HMD";
         private const string kControllerProductName = "OpenVR Input Controller";
         private const string kTrackerProductName = "OpenVR Tracker";
-
-        private static readonly InputDevice.DeviceFlags kDeviceFlags = InputDevice.DeviceFlags.UpdateBeforeRender | InputDevice.DeviceFlags.DisabledStateHasBeenQueriedFromRuntime | InputDevice.DeviceFlags.CanRunInBackground | InputDevice.DeviceFlags.CanRunInBackgroundHasBeenQueried;
 
         internal static void RegisterLayoutsAndAddDevices()
         {
@@ -81,8 +78,7 @@ namespace DynamicOpenVR.BeatSaber.Input
                     }.ToJson(),
                 },
                 true,
-                kHMDProductName,
-                deviceFlags: kDeviceFlags);
+                kHMDProductName);
         }
 
         private static void RegisterController(InputDeviceCharacteristics characteristics, string name)
@@ -98,8 +94,7 @@ namespace DynamicOpenVR.BeatSaber.Input
                     }.ToJson(),
                 },
                 true,
-                $"{kControllerProductName} ({name})",
-                deviceFlags: kDeviceFlags);
+                $"{kControllerProductName} ({name})");
         }
 
         private static void RegisterTracker(InputDeviceTrackerCharacteristics characteristics, string name)
@@ -115,8 +110,7 @@ namespace DynamicOpenVR.BeatSaber.Input
                     }.ToJson(),
                 },
                 true,
-                $"{kTrackerProductName} ({name})",
-                deviceFlags: kDeviceFlags);
+                $"{kTrackerProductName} ({name})");
         }
     }
 }

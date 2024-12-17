@@ -27,7 +27,7 @@ using Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    [InputControlLayout(stateType = typeof(OpenVRInputHMDState))]
+    [InputControlLayout(stateType = typeof(OpenVRInputHMDState), updateBeforeRender = true, canRunInBackground = true)]
     internal class OpenVRInputHMD : XRHMD, IInputUpdateCallbackReceiver
     {
         [InputControl]

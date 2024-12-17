@@ -27,7 +27,7 @@ using Valve.VR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    [InputControlLayout(stateType = typeof(OpenVRTrackerState))]
+    [InputControlLayout(stateType = typeof(OpenVRTrackerState), updateBeforeRender = true, canRunInBackground = true)]
     public class OpenVRTracker : XRTracker, IInputUpdateCallbackReceiver
     {
         private static readonly uint kInputOriginInfoStructSize = (uint)Marshal.SizeOf(typeof(InputOriginInfo_t));

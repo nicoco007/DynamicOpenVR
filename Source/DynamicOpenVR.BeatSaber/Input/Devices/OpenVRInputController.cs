@@ -26,7 +26,7 @@ using UnityEngine.XR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
 {
-    [InputControlLayout(stateType = typeof(OpenVRInputControllerState), commonUsages = new string[] { "LeftHand", "RightHand" })]
+    [InputControlLayout(stateType = typeof(OpenVRInputControllerState), commonUsages = new string[] { "LeftHand", "RightHand" }, updateBeforeRender = true, canRunInBackground = true)]
     internal class OpenVRInputController : XRController, IInputUpdateCallbackReceiver
     {
         private UnityXRActionsHand _actions;

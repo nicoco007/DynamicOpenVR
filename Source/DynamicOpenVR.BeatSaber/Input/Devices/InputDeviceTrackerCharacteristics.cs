@@ -64,23 +64,43 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         TrackerRightKnee = 0x80000u,
 
         /// <summary>
+        /// The user's left wrist.
+        /// </summary>
+        TrackerLeftWrist = 0x100000u,
+
+        /// <summary>
+        /// The user's right wrist.
+        /// </summary>
+        TrackerRightWrist = 0x200000u,
+
+        /// <summary>
+        /// The user's left ankle.
+        /// </summary>
+        TrackerLeftAnkle = 0x400000u,
+
+        /// <summary>
+        /// The user's right ankle.
+        /// </summary>
+        TrackerRightAnkle = 0x800000u,
+
+        /// <summary>
         /// The user's waist.
         /// </summary>
-        TrackerWaist = 0x100000u,
+        TrackerWaist = 0x1000000u,
 
         /// <summary>
         /// The user's chest.
         /// </summary>
-        TrackerChest = 0x200000u,
+        TrackerChest = 0x2000000u,
 
         /// <summary>
         /// A camera.
         /// </summary>
-        TrackerCamera = 0x400000u,
+        TrackerCamera = 0x4000000u,
 
         /// <summary>
         /// A keyboard.
         /// </summary>
-        TrackerKeyboard = 0x800000u,
+        TrackerKeyboard = 0x8000000u,
     }
 }

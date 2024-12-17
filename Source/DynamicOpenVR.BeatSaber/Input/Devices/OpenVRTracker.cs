@@ -36,7 +36,7 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
 
         public void OnUpdate()
         {
-            InputOriginInfo_t originInfo = GetOriginInfo();
+            InputOriginInfo_t originInfo = GetOriginInfo(_handle);
             TrackedDevicePose_t pose = OpenVRLoaderWithInputSystem.currentPoses[originInfo.trackedDeviceIndex]; // TODO: this is kind of lame; is there a way to avoid a static property?
             HmdMatrix34_t matrix = pose.mDeviceToAbsoluteTracking;
 
@@ -106,6 +106,26 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
                 path = OpenVR.k_pchPathUserKneeRight;
                 InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightKnee);
             }
+            else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftWrist))
+            {
+                path = OpenVR.k_pchPathUserWristLeft;
+                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftWrist);
+            }
+            else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightWrist))
+            {
+                path = OpenVR.k_pchPathUserWristRight;
+                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightWrist);
+            }
+            else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftAnkle))
+            {
+                path = OpenVR.k_pchPathUserAnkleLeft;
+                InputSystem.SetDeviceUsage(this, XRTrackerUsages.LeftAnkle);
+            }
+            else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerRightAnkle))
+            {
+                path = OpenVR.k_pchPathUserAnkleRight;
+                InputSystem.SetDeviceUsage(this, XRTrackerUsages.RightAnkle);
+            }
             else if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerWaist))
             {
                 path = OpenVR.k_pchPathUserWaist;
@@ -130,7 +150,7 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
             _handle = GetDeviceHandle(path);
         }
 
-        private ulong GetDeviceHandle(string devicePath)
+        private static ulong GetDeviceHandle(string devicePath)
         {
             ulong handle = 0;
             EVRInputError error = OpenVR.Input.GetInputSourceHandle(devicePath, ref handle);
@@ -144,16 +164,16 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
             return handle;
         }
 
-        private InputOriginInfo_t GetOriginInfo()
+        private static InputOriginInfo_t GetOriginInfo(ulong handle)
         {
             InputOriginInfo_t originInfo = default;
-            EVRInputError error = OpenVR.Input.GetOriginTrackedDeviceInfo(_handle, ref originInfo, kInputOriginInfoStructSize);
+            EVRInputError error = OpenVR.Input.GetOriginTrackedDeviceInfo(handle, ref originInfo, kInputOriginInfoStructSize);
 
             if (error is not EVRInputError.None)
             {
                 if (error is not EVRInputError.NoData and not EVRInputError.InvalidHandle)
                 {
-                    Debug.LogError($"Failed to get origin tracked device info for {_handle}: {error}");
+                    Debug.LogError($"Failed to get origin tracked device info for {handle}: {error}");
                 }
 
                 return default;

@@ -37,23 +37,27 @@ namespace DynamicOpenVR.BeatSaber.Input
             RegisterHMD();
 
             InputSystem.RegisterLayout<OpenVRInputController>(nameof(OpenVRInputController), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kControllerProductName));
-            RegisterController(InputDeviceCharacteristics.Left, "Left");
-            RegisterController(InputDeviceCharacteristics.Right, "Right");
+            RegisterController(InputDeviceCharacteristics.Left);
+            RegisterController(InputDeviceCharacteristics.Right);
 
             InputSystem.RegisterLayout<XRTracker>(nameof(XRTracker));
             InputSystem.RegisterLayout<OpenVRTracker>(nameof(OpenVRTracker), default(InputDeviceMatcher).WithInterface(kInterfaceName).WithProduct(kTrackerProductName));
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftFoot, "Left Foot");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightFoot, "Right Foot");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftShoulder, "Left Shoulder");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightShoulder, "Right Shoulder");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftElbow, "Left Elbow");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightElbow, "Right Elbow");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftKnee, "Left Knee");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightKnee, "Right Knee");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerWaist, "Waist");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerChest, "Chest");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerCamera, "Camera");
-            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerKeyboard, "Keyboard");
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftFoot);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightFoot);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftShoulder);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightShoulder);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftElbow);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightElbow);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftKnee);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightKnee);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftWrist);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightWrist);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerLeftAnkle);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerRightAnkle);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerWaist);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerChest);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerCamera);
+            RegisterTracker(InputDeviceTrackerCharacteristics.TrackerKeyboard);
         }
 
         internal static void RemoveLayouts()
@@ -81,7 +85,7 @@ namespace DynamicOpenVR.BeatSaber.Input
                 kHMDProductName);
         }
 
-        private static void RegisterController(InputDeviceCharacteristics characteristics, string name)
+        private static void RegisterController(InputDeviceCharacteristics characteristics)
         {
             InputSystem.s_Manager.AddDevice(
                 new InputDeviceDescription()
@@ -94,10 +98,10 @@ namespace DynamicOpenVR.BeatSaber.Input
                     }.ToJson(),
                 },
                 true,
-                $"{kControllerProductName} ({name})");
+                $"{kControllerProductName} ({characteristics})");
         }
 
-        private static void RegisterTracker(InputDeviceTrackerCharacteristics characteristics, string name)
+        private static void RegisterTracker(InputDeviceTrackerCharacteristics characteristics)
         {
             InputSystem.s_Manager.AddDevice(
                 new InputDeviceDescription()
@@ -110,7 +114,7 @@ namespace DynamicOpenVR.BeatSaber.Input
                     }.ToJson(),
                 },
                 true,
-                $"{kTrackerProductName} ({name})");
+                $"{kTrackerProductName} ({characteristics.ToString().Substring(7)})");
         }
     }
 }

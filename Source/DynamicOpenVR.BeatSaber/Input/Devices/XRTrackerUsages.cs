@@ -64,6 +64,26 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         public static readonly InternedString RightKnee = new("RightKnee");
 
         /// <summary>
+        /// Device on left wrist.
+        /// </summary>
+        public static readonly InternedString LeftWrist = new("LeftWrist");
+
+        /// <summary>
+        /// Device on right wrist.
+        /// </summary>
+        public static readonly InternedString RightWrist = new("RightWrist");
+
+        /// <summary>
+        /// Device on left ankle.
+        /// </summary>
+        public static readonly InternedString LeftAnkle = new("LeftAnkle");
+
+        /// <summary>
+        /// Device on right ankle.
+        /// </summary>
+        public static readonly InternedString RightAnkle = new("RightAnkle");
+
+        /// <summary>
         /// Device on waist.
         /// </summary>
         public static readonly InternedString Waist = new("Waist");

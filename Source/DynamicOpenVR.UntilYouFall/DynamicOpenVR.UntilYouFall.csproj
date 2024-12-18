@@ -21,6 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>$(GameDir)\BepInEx\core\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(GameDir)\BepInEx\interop\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx.Core">
       <HintPath>$(GameDir)\BepInEx\core\BepInEx.Core.dll</HintPath>
       <Private>false</Private>
@@ -28,6 +34,9 @@
     <Reference Include="BepInEx.IL2CPP">
       <HintPath>$(GameDir)\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
       <Private>false</Private>
+    </Reference>
+    <Reference Include="SG.Core">
+      <HintPath>$(GameDir)\BepInEx\interop\SG.Core.dll</HintPath>
     </Reference>
     <Reference Include="UnhollowerBaseLib">
       <HintPath>$(GameDir)\BepInEx\core\Il2CppInterop.Common.dll</HintPath>

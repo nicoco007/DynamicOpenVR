@@ -28,6 +28,8 @@ using DynamicOpenVR.SteamVR;
 using DynamicOpenVR.SteamVR.VRManifest;
 using HarmonyLib;
 using IPA;
+using IPA.Config;
+using IPA.Config.Stores;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -69,15 +71,18 @@ namespace DynamicOpenVR.BeatSaber
         private AppConfig _updatedAppConfig;
 
         [Init]
-        public Plugin(Logger logger)
+        public Plugin(Logger logger, Config config)
         {
             _logger = logger;
+            settings = config.Generated<Settings>();
             harmony = new Harmony("com.nicoco007.dynamicopenvr.beatsaber");
 
             Logging.Logger.handler = new IPALogHandler(logger);
         }
 
-        public static UnityXRActions unityXRActions { get; private set; }
+        internal static UnityXRActions unityXRActions { get; private set; }
+
+        internal static Settings settings { get; private set; }
 
         internal static Harmony harmony { get; private set; }
 

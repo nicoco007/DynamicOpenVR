@@ -36,6 +36,10 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
 
         public ButtonControl systemTouched { get; private set; }
 
+        public ButtonControl select { get; private set; }
+
+        public ButtonControl menu { get; private set; }
+
         public ButtonControl primaryButton { get; private set; }
 
         public ButtonControl primaryTouched { get; private set; }
@@ -139,31 +143,31 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
                 throw new ArgumentException("Controller must have the Left or Right characteristic");
             }
 
-            system = GetChildControl<ButtonControl>("system");
-            systemTouched = GetChildControl<ButtonControl>("systemTouched");
-            system = GetChildControl<ButtonControl>("select");
-            system = GetChildControl<ButtonControl>("menu");
-            primaryButton = GetChildControl<ButtonControl>("primaryButton");
-            primaryTouched = GetChildControl<ButtonControl>("primaryTouched");
-            secondaryButton = GetChildControl<ButtonControl>("secondaryButton");
-            secondaryTouched = GetChildControl<ButtonControl>("secondaryTouched");
-            grip = GetChildControl<AxisControl>("grip");
-            gripPressed = GetChildControl<ButtonControl>("gripPressed");
-            gripForce = GetChildControl<AxisControl>("gripForce");
-            trigger = GetChildControl<AxisControl>("trigger");
-            triggerPressed = GetChildControl<ButtonControl>("triggerPressed");
-            triggerTouched = GetChildControl<ButtonControl>("triggerTouched");
-            thumbstick = GetChildControl<Vector2Control>("thumbstick");
-            thumbstickClicked = GetChildControl<ButtonControl>("thumbstickClicked");
-            thumbstickTouched = GetChildControl<ButtonControl>("thumbstickTouched");
-            trackpad = GetChildControl<Vector2Control>("trackpad");
-            trackpadClicked = GetChildControl<ButtonControl>("trackpadClicked");
-            trackpadTouched = GetChildControl<ButtonControl>("trackpadTouched");
-            trackpadForce = GetChildControl<AxisControl>("trackpadForce");
-            devicePose = GetChildControl<PoseControl>("devicePose");
-            pointer = GetChildControl<PoseControl>("pointer");
-            pointerPosition = GetChildControl<Vector3Control>("pointerPosition");
-            pointerRotation = GetChildControl<QuaternionControl>("pointerRotation");
+            system = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.system));
+            systemTouched = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.systemTouched));
+            select = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.select));
+            menu = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.menu));
+            primaryButton = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.primaryButton));
+            primaryTouched = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.primaryTouched));
+            secondaryButton = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.secondaryButton));
+            secondaryTouched = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.secondaryTouched));
+            grip = GetChildControl<AxisControl>(nameof(OpenVRInputControllerState.grip));
+            gripPressed = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.gripPressed));
+            gripForce = GetChildControl<AxisControl>(nameof(OpenVRInputControllerState.gripForce));
+            trigger = GetChildControl<AxisControl>(nameof(OpenVRInputControllerState.trigger));
+            triggerPressed = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.triggerPressed));
+            triggerTouched = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.triggerTouched));
+            thumbstick = GetChildControl<Vector2Control>(nameof(OpenVRInputControllerState.thumbstick));
+            thumbstickClicked = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.thumbstickClicked));
+            thumbstickTouched = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.thumbstickTouched));
+            trackpad = GetChildControl<Vector2Control>(nameof(OpenVRInputControllerState.trackpad));
+            trackpadClicked = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.trackpadClicked));
+            trackpadTouched = GetChildControl<ButtonControl>(nameof(OpenVRInputControllerState.trackpadTouched));
+            trackpadForce = GetChildControl<AxisControl>(nameof(OpenVRInputControllerState.trackpadForce));
+            devicePose = GetChildControl<PoseControl>(nameof(OpenVRInputControllerState.devicePose));
+            pointer = GetChildControl<PoseControl>(nameof(OpenVRInputControllerState.pointer));
+            pointerPosition = GetChildControl<Vector3Control>(nameof(OpenVRInputControllerState.pointerPosition));
+            pointerRotation = GetChildControl<QuaternionControl>(nameof(OpenVRInputControllerState.pointerRotation));
         }
     }
 }

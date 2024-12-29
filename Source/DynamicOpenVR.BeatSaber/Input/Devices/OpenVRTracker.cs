@@ -16,6 +16,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -62,17 +63,12 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         {
             base.FinishSetup();
 
-            var descriptor = XRDeviceDescriptor.FromJson(description.capabilities);
-
-            if (descriptor == null)
-            {
-                return;
-            }
+            XRDeviceDescriptor descriptor = XRDeviceDescriptor.FromJson(description.capabilities) ?? throw new ArgumentException("Device must have capabilities defined");
 
             var characteristics = (InputDeviceTrackerCharacteristics)descriptor.characteristics;
 
-            InternedString trackerUsage = default;
-            string path = null;
+            InternedString trackerUsage;
+            string path;
 
             if (characteristics.HasFlag(InputDeviceTrackerCharacteristics.TrackerLeftFoot))
             {
@@ -153,6 +149,10 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
             {
                 path = OpenVR.k_pchPathUserKeyboard;
                 trackerUsage = XRTrackerUsages.Keyboard;
+            }
+            else
+            {
+                throw new ArgumentException("Device is missing a role characteristic");
             }
 
             InputSystem.SetDeviceUsage(this, trackerUsage);

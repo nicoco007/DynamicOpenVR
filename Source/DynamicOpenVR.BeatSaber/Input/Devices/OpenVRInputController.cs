@@ -16,6 +16,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // </copyright>
 
+using System;
 using DynamicOpenVR.BeatSaber.InputCollections;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -121,17 +122,21 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         {
             base.FinishSetup();
 
-            var descriptor = XRDeviceDescriptor.FromJson(description.capabilities);
-            if (descriptor != null)
+            XRDeviceDescriptor descriptor = XRDeviceDescriptor.FromJson(description.capabilities) ?? throw new ArgumentException("Device must have capabilities defined");
+
+            InputDeviceCharacteristics characteristics = descriptor.characteristics;
+
+            if (characteristics.HasFlag(InputDeviceCharacteristics.Left))
             {
-                if ((descriptor.characteristics & InputDeviceCharacteristics.Left) != 0)
-                {
-                    _actions = Plugin.unityXRActions.left;
-                }
-                else if ((descriptor.characteristics & InputDeviceCharacteristics.Right) != 0)
-                {
-                    _actions = Plugin.unityXRActions.right;
-                }
+                _actions = Plugin.unityXRActions.left;
+            }
+            else if (characteristics.HasFlag(InputDeviceCharacteristics.Right))
+            {
+                _actions = Plugin.unityXRActions.right;
+            }
+            else
+            {
+                throw new ArgumentException("Controller must have the Left or Right characteristic");
             }
 
             system = GetChildControl<ButtonControl>("system");

@@ -38,6 +38,12 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         public void OnUpdate()
         {
             InputOriginInfo_t originInfo = GetOriginInfo(_handle);
+
+            if (originInfo.devicePath == default)
+            {
+                return;
+            }
+
             TrackedDevicePose_t pose = OpenVRLoaderWithInputSystem.currentPoses[originInfo.trackedDeviceIndex]; // TODO: this is kind of lame; is there a way to avoid a static property?
             HmdMatrix34_t matrix = pose.mDeviceToAbsoluteTracking;
 

@@ -21,33 +21,56 @@ using DynamicOpenVR.IO;
 
 namespace DynamicOpenVR.BeatSaber.InputCollections
 {
+    /// <summary>
+    /// See <see href="https://docs.unity3d.com/Packages/com.unity.xr.openxr@1.14/manual/input.html#mapping-between-openxr-paths-and-unity-bindings">Mapping between OpenXR paths and Unity bindings</see> for details.
+    /// </summary>
     internal class UnityXRActionsHand : IDisposable
     {
-        public PoseInput pose { get; init; }
+        public BooleanInput system { get; init; }
+
+        public BooleanInput systemTouched { get; init; }
+
+        public BooleanInput select { get; init; }
+
+        public BooleanInput menu { get; init; }
 
         public BooleanInput primaryButton { get; init; }
 
-        public BooleanInput primaryTouch { get; init; }
+        public BooleanInput primaryTouched { get; init; }
 
         public BooleanInput secondaryButton { get; init; }
 
-        public BooleanInput secondaryTouch { get; init; }
+        public BooleanInput secondaryTouched { get; init; }
 
         public VectorInput grip { get; init; }
 
-        public BooleanInput gripButton { get; init; }
+        public BooleanInput gripPressed { get; init; }
+
+        public VectorInput gripForce { get; init; }
 
         public VectorInput trigger { get; init; }
 
-        public BooleanInput triggerButton { get; init; }
+        public BooleanInput triggerPressed { get; init; }
 
-        public BooleanInput menuButton { get; init; }
+        public BooleanInput triggerTouched { get; init; }
 
-        public Vector2Input primary2DAxis { get; init; }
+        public Vector2Input thumbstick { get; init; }
 
-        public BooleanInput primary2DAxisClick { get; init; }
+        public BooleanInput thumbstickClicked { get; init; }
 
-        public BooleanInput primary2DAxisTouch { get; init; }
+        public BooleanInput thumbstickTouched { get; init; }
+
+        public Vector2Input trackpad { get; init; }
+
+        public BooleanInput trackpadClicked { get; init; }
+
+        public BooleanInput trackpadTouched { get; init; }
+
+        public VectorInput trackpadForce { get; init; }
+
+        public PoseInput devicePose { get; init; }
+
+        public PoseInput pointer { get; init; }
 
         public SkeletalInput skeleton { get; init; }
 
@@ -55,19 +78,27 @@ namespace DynamicOpenVR.BeatSaber.InputCollections
 
         public void Dispose()
         {
-            pose?.Dispose();
+            system?.Dispose();
+            systemTouched?.Dispose();
             primaryButton?.Dispose();
-            primaryTouch?.Dispose();
+            primaryTouched?.Dispose();
             secondaryButton?.Dispose();
-            secondaryTouch?.Dispose();
+            secondaryTouched?.Dispose();
             grip?.Dispose();
-            gripButton?.Dispose();
+            gripPressed?.Dispose();
+            gripForce?.Dispose();
             trigger?.Dispose();
-            triggerButton?.Dispose();
-            menuButton?.Dispose();
-            primary2DAxis?.Dispose();
-            primary2DAxisClick?.Dispose();
-            primary2DAxisTouch?.Dispose();
+            triggerPressed?.Dispose();
+            triggerTouched?.Dispose();
+            thumbstick?.Dispose();
+            thumbstickClicked?.Dispose();
+            thumbstickTouched?.Dispose();
+            trackpad?.Dispose();
+            trackpadTouched?.Dispose();
+            trackpadForce?.Dispose();
+            devicePose?.Dispose();
+            pointer?.Dispose();
+            skeleton?.Dispose();
             haptics?.Dispose();
         }
     }

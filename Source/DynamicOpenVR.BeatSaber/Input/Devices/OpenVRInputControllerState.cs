@@ -18,10 +18,10 @@
 
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
 
 namespace DynamicOpenVR.BeatSaber.Input.Devices
@@ -35,6 +35,14 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         [MarshalAs(UnmanagedType.I1)]
         [InputControl(layout = "Button", usage = "MenuTouch")]
         public bool systemTouched;
+
+        [MarshalAs(UnmanagedType.I1)]
+        [InputControl(layout = "Button", aliases = new[] { "SelectButton" }, usage = "PrimaryButton")]
+        public bool select;
+
+        [MarshalAs(UnmanagedType.I1)]
+        [InputControl(layout = "Button", aliases = new[] { "MenuButton" }, usage = "MenuButton")]
+        public bool menu;
 
         [MarshalAs(UnmanagedType.I1)]
         [InputControl(layout = "Button", usage = "PrimaryButton")]
@@ -88,6 +96,10 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         public Vector2 trackpad;
 
         [MarshalAs(UnmanagedType.I1)]
+        [InputControl(layout = "Button", alias = "touchpadTouched", usage = "Secondary2DAxisClick")]
+        public bool trackpadClicked;
+
+        [MarshalAs(UnmanagedType.I1)]
         [InputControl(layout = "Button", alias = "touchpadTouched", usage = "Secondary2DAxisTouch")]
         public bool trackpadTouched;
 
@@ -120,6 +132,48 @@ namespace DynamicOpenVR.BeatSaber.Input.Devices
         [InputControl(layout = "Quaternion", alias = "pointerOrientation")]
         public Quaternion pointerRotation;
 
-        public FourCC format => new('O', 'V', 'R', 'C');
+        public readonly FourCC format => new('O', 'V', 'R', 'C');
+
+        /// <summary>
+        /// This is the same as <see cref="UnityEngine.InputSystem.XR.PoseState"/> but with <see cref="isTracked"/> as a <see cref="byte"/> rather
+        /// than a <see cref="bool"/> so it gets read properly by <see cref="UnityEngine.InputSystem.XR.PoseControl"/>, in which it is read as an
+        /// unsigned byte (due to <c>sizeInBits = 8u</c>) rather than as a single bit (the default for <see cref="bool"/> values in a struct).
+        /// </summary>
+        /// <remarks>
+        /// The struct size, field names, and field offsets are identical to <see cref="UnityEngine.InputSystem.XR.PoseState" />.
+        /// </remarks>
+        [StructLayout(LayoutKind.Explicit, Size = 60)]
+        public readonly struct PoseState : IInputStateTypeInfo
+        {
+            [FieldOffset(0)]
+            public readonly byte isTracked;
+
+            [FieldOffset(4)]
+            public readonly InputTrackingState trackingState;
+
+            [FieldOffset(8)]
+            public readonly Vector3 position;
+
+            [FieldOffset(20)]
+            public readonly Quaternion rotation;
+
+            [FieldOffset(36)]
+            public readonly Vector3 velocity;
+
+            [FieldOffset(48)]
+            public readonly Vector3 angularVelocity;
+
+            public PoseState(bool isTracked, InputTrackingState trackingState, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity)
+            {
+                this.isTracked = isTracked ? byte.MaxValue : byte.MinValue;
+                this.trackingState = trackingState;
+                this.position = position;
+                this.rotation = rotation;
+                this.velocity = velocity;
+                this.angularVelocity = angularVelocity;
+            }
+
+            public FourCC format => new('P', 'o', 's', 'e');
+        }
     }
 }

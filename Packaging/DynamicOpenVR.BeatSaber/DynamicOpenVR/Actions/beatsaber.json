@@ -6,9 +6,24 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/unity/in/left_pose",
-      "requirement": "suggested",
-      "type": "pose"
+      "name": "/actions/unity/in/left_system_button",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/left_system_touch",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/left_select_button",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/left_menu_button",
+      "requirement": "optional",
+      "type": "boolean"
     },
     {
       "name": "/actions/unity/in/left_primary_button",
@@ -41,6 +56,11 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/unity/in/left_grip_force",
+      "requirement": "suggested",
+      "type": "vector1"
+    },
+    {
       "name": "/actions/unity/in/left_trigger",
       "requirement": "suggested",
       "type": "vector1"
@@ -51,8 +71,8 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/unity/in/left_menu_button",
-      "requirement": "optional",
+      "name": "/actions/unity/in/left_trigger_touch",
+      "requirement": "suggested",
       "type": "boolean"
     },
     {
@@ -71,6 +91,36 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/unity/in/left_secondary_2d_axis",
+      "requirement": "suggested",
+      "type": "vector2"
+    },
+    {
+      "name": "/actions/unity/in/left_secondary_2d_axis_click",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/left_secondary_2d_axis_touch",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/left_secondary_2d_axis_force",
+      "requirement": "suggested",
+      "type": "vector1"
+    },
+    {
+      "name": "/actions/unity/in/left_grip_pose",
+      "requirement": "suggested",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/unity/in/left_aim_pose",
+      "requirement": "suggested",
+      "type": "pose"
+    },
+    {
       "name": "/actions/unity/in/left_hand_animation",
       "requirement": "suggested",
       "type": "skeleton",
@@ -82,9 +132,24 @@
       "type": "vibration"
     },
     {
-      "name": "/actions/unity/in/right_pose",
-      "requirement": "suggested",
-      "type": "pose"
+      "name": "/actions/unity/in/right_system_button",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/right_system_touch",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/right_select_button",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/right_menu_button",
+      "requirement": "optional",
+      "type": "boolean"
     },
     {
       "name": "/actions/unity/in/right_primary_button",
@@ -117,6 +182,11 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/unity/in/right_grip_force",
+      "requirement": "suggested",
+      "type": "vector1"
+    },
+    {
       "name": "/actions/unity/in/right_trigger",
       "requirement": "suggested",
       "type": "vector1"
@@ -127,8 +197,8 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/unity/in/right_menu_button",
-      "requirement": "optional",
+      "name": "/actions/unity/in/right_trigger_touch",
+      "requirement": "suggested",
       "type": "boolean"
     },
     {
@@ -145,6 +215,36 @@
       "name": "/actions/unity/in/right_primary_2d_axis_touch",
       "requirement": "optional",
       "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/right_secondary_2d_axis",
+      "requirement": "suggested",
+      "type": "vector2"
+    },
+    {
+      "name": "/actions/unity/in/right_secondary_2d_axis_click",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/right_secondary_2d_axis_touch",
+      "requirement": "optional",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/unity/in/right_secondary_2d_axis_force",
+      "requirement": "suggested",
+      "type": "vector1"
+    },
+    {
+      "name": "/actions/unity/in/right_grip_pose",
+      "requirement": "suggested",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/unity/in/right_aim_pose",
+      "requirement": "suggested",
+      "type": "pose"
     },
     {
       "name": "/actions/unity/in/right_hand_animation",
@@ -168,34 +268,53 @@
     {
       "language_tag": "en_us",
       "/actions/unity": "Unity XR Input",
-      "/actions/unity/in/left_pose": "Left Controller Pose",
+      "/actions/unity/in/headset_on_head": "Headset on Head (Proximity Sensor)",
+      "/actions/unity/in/left_system_button": "Left System Button",
+      "/actions/unity/in/left_system_touch": "Left System Touch",
+      "/actions/unity/in/left_select_button": "Left Select Button",
+      "/actions/unity/in/left_menu_button": "Left Menu Button",
       "/actions/unity/in/left_primary_button": "Left Primary Button",
       "/actions/unity/in/left_primary_touch": "Left Primary Touch",
       "/actions/unity/in/left_secondary_button": "Left Secondary Button",
       "/actions/unity/in/left_secondary_touch": "Left Secondary Touch",
       "/actions/unity/in/left_grip": "Left Grip",
       "/actions/unity/in/left_grip_button": "Left Grip Button",
+      "/actions/unity/in/left_grip_force": "Left Grip Force",
       "/actions/unity/in/left_trigger": "Left Trigger",
       "/actions/unity/in/left_trigger_button": "Left Trigger Button",
-      "/actions/unity/in/left_menu_button": "Left Menu Button",
+      "/actions/unity/in/left_trigger_touch": "Left Trigger Touch",
       "/actions/unity/in/left_primary_2d_axis": "Left Primary 2D Axis",
       "/actions/unity/in/left_primary_2d_axis_click": "Left Primary 2D Axis Click",
       "/actions/unity/in/left_primary_2d_axis_touch": "Left Primary 2D Axis Touch",
+      "/actions/unity/in/left_secondary_2d_axis": "Left Secondary 2D Axis",
+      "/actions/unity/in/left_secondary_2d_axis_touch": "Left Secondary 2D Axis Touch",
+      "/actions/unity/in/left_secondary_2d_axis_force": "Left Secondary 2D Axis Force",
+      "/actions/unity/in/left_grip_pose": "Left Grip Pose",
+      "/actions/unity/in/left_aim_pose": "Left Aim Pose",
       "/actions/unity/in/left_hand_animation": "Left Hand Animation",
       "/actions/unity/out/left_haptics": "Left Haptic Vibration",
-      "/actions/unity/in/right_pose": "Right Controller Pose",
+      "/actions/unity/in/right_system_button": "Right System Button",
+      "/actions/unity/in/right_system_touch": "Right System Touch",
+      "/actions/unity/in/right_select_button": "Right Select Button",
+      "/actions/unity/in/right_menu_button": "Right Menu Button",
       "/actions/unity/in/right_primary_button": "Right Primary Button",
       "/actions/unity/in/right_primary_touch": "Right Primary Touch",
       "/actions/unity/in/right_secondary_button": "Right Secondary Button",
       "/actions/unity/in/right_secondary_touch": "Right Secondary Touch",
       "/actions/unity/in/right_grip": "Right Grip",
       "/actions/unity/in/right_grip_button": "Right Grip Button",
+      "/actions/unity/in/right_grip_force": "Right Grip Force",
       "/actions/unity/in/right_trigger": "Right Trigger",
       "/actions/unity/in/right_trigger_button": "Right Trigger Button",
-      "/actions/unity/in/right_menu_button": "Right Menu Button",
+      "/actions/unity/in/right_trigger_touch": "Right Trigger Touch",
       "/actions/unity/in/right_primary_2d_axis": "Right Primary 2D Axis",
       "/actions/unity/in/right_primary_2d_axis_click": "Right Primary 2D Axis Click",
       "/actions/unity/in/right_primary_2d_axis_touch": "Right Primary 2D Axis Touch",
+      "/actions/unity/in/right_secondary_2d_axis": "Right Secondary 2D Axis",
+      "/actions/unity/in/right_secondary_2d_axis_touch": "Right Secondary 2D Axis Touch",
+      "/actions/unity/in/right_secondary_2d_axis_force": "Right Secondary 2D Axis Force",
+      "/actions/unity/in/right_grip_pose": "Right Grip Pose",
+      "/actions/unity/in/right_aim_pose": "Right Aim Pose",
       "/actions/unity/in/right_hand_animation": "Right Hand Animation",
       "/actions/unity/out/right_haptics": "Right Haptic Vibration"
     }

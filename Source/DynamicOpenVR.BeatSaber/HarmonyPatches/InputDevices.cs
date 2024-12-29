@@ -51,7 +51,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
                 return true;
             }
 
-            if (hand.pose.isActive)
+            if (hand.devicePose.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.devicePosition);
                 featureUsages.Add((InputFeatureUsage)CommonUsages.deviceRotation);
@@ -59,12 +59,17 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
                 featureUsages.Add((InputFeatureUsage)CommonUsages.deviceAngularVelocity);
             }
 
+            if (hand.menu.isActive)
+            {
+                featureUsages.Add((InputFeatureUsage)CommonUsages.menuButton);
+            }
+
             if (hand.primaryButton.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.primaryButton);
             }
 
-            if (hand.primaryTouch.isActive)
+            if (hand.primaryTouched.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.primaryTouch);
             }
@@ -74,7 +79,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
                 featureUsages.Add((InputFeatureUsage)CommonUsages.secondaryButton);
             }
 
-            if (hand.secondaryTouch.isActive)
+            if (hand.secondaryTouched.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.secondaryTouch);
             }
@@ -84,7 +89,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
                 featureUsages.Add((InputFeatureUsage)CommonUsages.grip);
             }
 
-            if (hand.gripButton.isActive)
+            if (hand.gripPressed.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.gripButton);
             }
@@ -94,29 +99,39 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
                 featureUsages.Add((InputFeatureUsage)CommonUsages.trigger);
             }
 
-            if (hand.triggerButton.isActive)
+            if (hand.triggerPressed.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.triggerButton);
             }
 
-            if (hand.menuButton.isActive)
-            {
-                featureUsages.Add((InputFeatureUsage)CommonUsages.menuButton);
-            }
-
-            if (hand.primary2DAxis.isActive)
+            if (hand.thumbstick.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.primary2DAxis);
             }
 
-            if (hand.primary2DAxisClick.isActive)
+            if (hand.thumbstickClicked.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.primary2DAxisClick);
             }
 
-            if (hand.primary2DAxisTouch.isActive)
+            if (hand.thumbstickTouched.isActive)
             {
                 featureUsages.Add((InputFeatureUsage)CommonUsages.primary2DAxisTouch);
+            }
+
+            if (hand.trackpad.isActive)
+            {
+                featureUsages.Add((InputFeatureUsage)CommonUsages.secondary2DAxis);
+            }
+
+            if (hand.trackpadClicked.isActive)
+            {
+                featureUsages.Add((InputFeatureUsage)CommonUsages.secondary2DAxisClick);
+            }
+
+            if (hand.trackpadTouched.isActive)
+            {
+                featureUsages.Add((InputFeatureUsage)CommonUsages.secondary2DAxisTouch);
             }
 
             __result = true;
@@ -137,6 +152,8 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
      * menuButton (bool)
      * primary2DAxisClick (bool)
      * primary2DAxisTouch (bool)
+     * secondary2DAxisClick (bool)
+     * secondary2DAxisTouch (bool)
      */
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureValue), new Type[] { typeof(InputFeatureUsage<bool>), typeof(bool) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
     [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
@@ -166,7 +183,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 
             if (usage == CommonUsages.isTracked)
             {
-                value = hand.pose.isTracking;
+                value = hand.devicePose.isTracking;
             }
             else if (usage == CommonUsages.primaryButton)
             {
@@ -174,7 +191,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
             }
             else if (usage == CommonUsages.primaryTouch)
             {
-                value = hand.primaryTouch.state;
+                value = hand.primaryTouched.state;
             }
             else if (usage == CommonUsages.secondaryButton)
             {
@@ -182,27 +199,35 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
             }
             else if (usage == CommonUsages.secondaryTouch)
             {
-                value = hand.secondaryTouch.state;
+                value = hand.secondaryTouched.state;
             }
             else if (usage == CommonUsages.gripButton)
             {
-                value = hand.gripButton.state;
+                value = hand.gripPressed.state;
             }
             else if (usage == CommonUsages.triggerButton)
             {
-                value = hand.triggerButton.state;
+                value = hand.triggerPressed.state;
             }
             else if (usage == CommonUsages.menuButton)
             {
-                value = hand.menuButton.state;
+                value = hand.menu.state;
             }
             else if (usage == CommonUsages.primary2DAxisClick)
             {
-                value = hand.primary2DAxisClick.state;
+                value = hand.thumbstickClicked.state;
             }
             else if (usage == CommonUsages.primary2DAxisTouch)
             {
-                value = hand.primary2DAxisTouch.state;
+                value = hand.thumbstickTouched.state;
+            }
+            else if (usage == CommonUsages.secondary2DAxisClick)
+            {
+                value = hand.trackpadClicked.state;
+            }
+            else if (usage == CommonUsages.secondary2DAxisTouch)
+            {
+                value = hand.trackpadTouched.state;
             }
             else
             {
@@ -268,6 +293,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
     /*
      * Support the following CommonUsages:
      * primary2DAxis (Vector2)
+     * secondary2DAxis (Vector2)
      */
     [HarmonyPatch(typeof(InputDevice), nameof(InputDevice.TryGetFeatureValue), new Type[] { typeof(InputFeatureUsage<Vector2>), typeof(Vector2) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
     [HarmonyPatchCategory(Plugin.kOpenVRLoaderHarmonyCategory)]
@@ -297,7 +323,11 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 
             if (usage == CommonUsages.primary2DAxis)
             {
-                value = hand.primary2DAxis.vector;
+                value = hand.thumbstick.vector;
+            }
+            else if (usage == CommonUsages.secondary2DAxis)
+            {
+                value = hand.trackpad.vector;
             }
             else
             {
@@ -344,15 +374,15 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 
             if (usage == CommonUsages.devicePosition)
             {
-                value = hand.pose.position;
+                value = hand.devicePose.position;
             }
             else if (usage == CommonUsages.deviceVelocity)
             {
-                value = hand.pose.velocity;
+                value = hand.devicePose.velocity;
             }
             else if (usage == CommonUsages.deviceAngularVelocity)
             {
-                value = hand.pose.angularVelocity;
+                value = hand.devicePose.angularVelocity;
             }
             else
             {
@@ -397,7 +427,7 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 
             if (usage == CommonUsages.deviceRotation)
             {
-                value = hand.pose.rotation;
+                value = hand.devicePose.rotation;
             }
             else
             {

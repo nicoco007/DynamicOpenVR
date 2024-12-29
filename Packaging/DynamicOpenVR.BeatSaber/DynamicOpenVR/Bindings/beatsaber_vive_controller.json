@@ -1,16 +1,7 @@
 {
   "bindings": {
     "/actions/unity": {
-      "haptics": [
-        {
-          "output": "/actions/unity/out/left_haptics",
-          "path": "/user/hand/left/output/haptic"
-        },
-        {
-          "output": "/actions/unity/out/right_haptics",
-          "path": "/user/hand/right/output/haptic"
-        }
-      ],
+      "chords": [],
       "poses": [
         {
           "output": "/actions/unity/in/left_pose",
@@ -21,26 +12,29 @@
           "path": "/user/hand/right/pose/grip"
         }
       ],
+      "haptics": [
+        {
+          "output": "/actions/unity/out/left_haptics",
+          "path": "/user/hand/left/output/haptic"
+        },
+        {
+          "output": "/actions/unity/out/right_haptics",
+          "path": "/user/hand/right/output/haptic"
+        }
+      ],
       "sources": [
         {
+          "path": "/user/hand/left/input/grip",
+          "mode": "button",
           "inputs": {
             "click": {
               "output": "/actions/unity/in/left_grip_button"
             }
-          },
-          "mode": "button",
-          "path": "/user/hand/left/input/grip"
+          }
         },
         {
-          "inputs": {
-            "click": {
-              "output": "/actions/unity/in/left_primary_button"
-            }
-          },
-          "mode": "button",
-          "path": "/user/hand/left/input/application_menu"
-        },
-        {
+          "path": "/user/hand/left/input/trigger",
+          "mode": "trigger",
           "inputs": {
             "click": {
               "output": "/actions/unity/in/left_trigger_button"
@@ -48,11 +42,11 @@
             "pull": {
               "output": "/actions/unity/in/left_trigger"
             }
-          },
-          "mode": "trigger",
-          "path": "/user/hand/left/input/trigger"
+          }
         },
         {
+          "path": "/user/hand/left/input/trackpad",
+          "mode": "trackpad",
           "inputs": {
             "click": {
               "output": "/actions/unity/in/left_primary_2d_axis_click"
@@ -63,29 +57,20 @@
             "touch": {
               "output": "/actions/unity/in/left_primary_2d_axis_touch"
             }
-          },
-          "mode": "trackpad",
-          "path": "/user/hand/left/input/trackpad"
+          }
         },
         {
-          "inputs": {
-            "click": {
-              "output": "/actions/unity/in/right_primary_button"
-            }
-          },
+          "path": "/user/hand/right/input/grip",
           "mode": "button",
-          "path": "/user/hand/right/input/application_menu"
-        },
-        {
           "inputs": {
             "click": {
               "output": "/actions/unity/in/right_grip_button"
             }
-          },
-          "mode": "button",
-          "path": "/user/hand/right/input/grip"
+          }
         },
         {
+          "path": "/user/hand/right/input/trigger",
+          "mode": "trigger",
           "inputs": {
             "click": {
               "output": "/actions/unity/in/right_trigger_button"
@@ -93,11 +78,11 @@
             "pull": {
               "output": "/actions/unity/in/right_trigger"
             }
-          },
-          "mode": "trigger",
-          "path": "/user/hand/right/input/trigger"
+          }
         },
         {
+          "path": "/user/hand/right/input/trackpad",
+          "mode": "trackpad",
           "inputs": {
             "click": {
               "output": "/actions/unity/in/right_primary_2d_axis_click"
@@ -108,9 +93,71 @@
             "touch": {
               "output": "/actions/unity/in/right_primary_2d_axis_touch"
             }
-          },
-          "mode": "trackpad",
-          "path": "/user/hand/right/input/trackpad"
+          }
+        },
+        {
+          "path": "/user/hand/left/input/system",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/unity/in/left_select_button"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/system",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/unity/in/right_select_button"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/grip",
+          "mode": "scalar_constant",
+          "inputs": {
+            "value": {
+              "output": "/actions/unity/in/left_grip"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/grip",
+          "mode": "scalar_constant",
+          "inputs": {
+            "value": {
+              "output": "/actions/unity/in/right_grip"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/application_menu",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/unity/in/left_menu_button"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/right/input/application_menu",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/unity/in/right_menu_button"
+            }
+          }
+        }
+      ],
+      "skeleton": [
+        {
+          "output": "/actions/unity/in/left_hand_animation",
+          "path": "/user/hand/left/input/skeleton/left"
+        },
+        {
+          "output": "/actions/unity/in/right_hand_animation",
+          "path": "/user/hand/right/input/skeleton/right"
         }
       ]
     }

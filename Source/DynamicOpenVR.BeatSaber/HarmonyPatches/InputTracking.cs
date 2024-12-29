@@ -32,13 +32,13 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
         {
             if (node == XRNode.LeftHand)
             {
-                __result = Plugin.unityXRActions.left.pose.position;
+                __result = Plugin.unityXRActions.left.devicePose.position;
                 return false;
             }
 
             if (node == XRNode.RightHand)
             {
-                __result = Plugin.unityXRActions.right.pose.position;
+                __result = Plugin.unityXRActions.right.devicePose.position;
                 return false;
             }
 
@@ -55,13 +55,13 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
         {
             if (node == XRNode.LeftHand)
             {
-                __result = Plugin.unityXRActions.left.pose.rotation;
+                __result = Plugin.unityXRActions.left.devicePose.rotation;
                 return false;
             }
 
             if (node == XRNode.RightHand)
             {
-                __result = Plugin.unityXRActions.right.pose.rotation;
+                __result = Plugin.unityXRActions.right.devicePose.rotation;
                 return false;
             }
 
@@ -83,21 +83,21 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
                 switch (nodeStates[i].nodeType)
                 {
                     case XRNode.LeftHand:
-                        nodeState.position = Plugin.unityXRActions.left.pose.position;
-                        nodeState.rotation = Plugin.unityXRActions.left.pose.rotation;
-                        nodeState.tracked = Plugin.unityXRActions.left.pose.isTracking;
-                        nodeState.velocity = Plugin.unityXRActions.left.pose.velocity;
-                        nodeState.angularVelocity = Plugin.unityXRActions.left.pose.angularVelocity;
+                        nodeState.position = Plugin.unityXRActions.left.devicePose.position;
+                        nodeState.rotation = Plugin.unityXRActions.left.devicePose.rotation;
+                        nodeState.tracked = Plugin.unityXRActions.left.devicePose.isTracking;
+                        nodeState.velocity = Plugin.unityXRActions.left.devicePose.velocity;
+                        nodeState.angularVelocity = Plugin.unityXRActions.left.devicePose.angularVelocity;
                         nodeState.acceleration = Vector3.zero;
                         nodeState.angularAcceleration = Vector3.zero;
                         break;
 
                     case XRNode.RightHand:
-                        nodeState.position = Plugin.unityXRActions.right.pose.position;
-                        nodeState.rotation = Plugin.unityXRActions.right.pose.rotation;
-                        nodeState.tracked = Plugin.unityXRActions.right.pose.isTracking;
-                        nodeState.velocity = Plugin.unityXRActions.right.pose.velocity;
-                        nodeState.angularVelocity = Plugin.unityXRActions.right.pose.angularVelocity;
+                        nodeState.position = Plugin.unityXRActions.right.devicePose.position;
+                        nodeState.rotation = Plugin.unityXRActions.right.devicePose.rotation;
+                        nodeState.tracked = Plugin.unityXRActions.right.devicePose.isTracking;
+                        nodeState.velocity = Plugin.unityXRActions.right.devicePose.velocity;
+                        nodeState.angularVelocity = Plugin.unityXRActions.right.devicePose.angularVelocity;
                         nodeState.acceleration = Vector3.zero;
                         nodeState.angularAcceleration = Vector3.zero;
                         break;

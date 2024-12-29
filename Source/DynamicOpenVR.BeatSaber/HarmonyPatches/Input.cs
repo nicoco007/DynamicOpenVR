@@ -44,22 +44,22 @@ namespace DynamicOpenVR.BeatSaber.HarmonyPatches
 
                 case "HorizontalLeftHand":
                 case "Oculus_CrossPlatform_SecondaryThumbstickHorizontal":
-                    __result = Plugin.unityXRActions.left.primary2DAxis.vector.x;
+                    __result = Plugin.unityXRActions.left.thumbstick.vector.x;
                     break;
 
                 case "HorizontalRightHand":
                 case "Oculus_CrossPlatform_PrimaryThumbstickHorizontal":
-                    __result = Plugin.unityXRActions.right.primary2DAxis.vector.x;
+                    __result = Plugin.unityXRActions.right.thumbstick.vector.x;
                     break;
 
                 case "VerticalLeftHand":
                 case "Oculus_CrossPlatform_SecondaryThumbstickVertical":
-                    __result = Plugin.unityXRActions.left.primary2DAxis.vector.y;
+                    __result = Plugin.unityXRActions.left.thumbstick.vector.y;
                     break;
 
                 case "VerticalRightHand":
                 case "Oculus_CrossPlatform_PrimaryThumbstickVertical":
-                    __result = Plugin.unityXRActions.right.primary2DAxis.vector.y;
+                    __result = Plugin.unityXRActions.right.thumbstick.vector.y;
                     break;
 
                 default:

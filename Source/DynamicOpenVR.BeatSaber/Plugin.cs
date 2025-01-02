@@ -158,13 +158,13 @@ namespace DynamicOpenVR.BeatSaber
             manager.StopSubsystems();
             manager.DeinitializeLoader();
 
-            // This should match the contents of OpenVRSettings.asset since it's read by the native plugin first
             OpenVRSettings settings = ScriptableObject.CreateInstance<OpenVRSettings>();
             settings.name = "OpenVRSettings";
             settings.StereoRenderingMode = OpenVRSettings.StereoRenderingModes.SinglePassInstanced;
             settings.InitializationType = OpenVRSettings.InitializationTypes.Scene;
             settings.ActionManifestFileRelativeFilePath = null;
             settings.MirrorView = OpenVRSettings.MirrorViewModes.Left;
+            settings.DepthSubmissionMode = OpenVRSettings.DepthSubmissionModes.None;
 
             _logger.Trace($"Creating {nameof(OpenVRLoader)}");
 

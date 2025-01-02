@@ -9,14 +9,13 @@
   "version": "0.5.0+dev",
   "dependsOn": {
     "BSIPA": "^4.3.0",
-    "DynamicOpenVR": "^0.5.0"
+    "DynamicOpenVR": "^0.5.0",
+    "OpenVR": "^2.0.0"
   },
   "files": [
-    "Beat Saber_Data\\Managed\\Unity.XR.OpenVR.dll",
-    "Beat Saber_Data\\Plugins\\x86_64\\openvr_api.dll",
+    "Libs\\Unity.XR.OpenVR.dll",
     "Beat Saber_Data\\Plugins\\x86_64\\ucrtbased.dll",
     "Beat Saber_Data\\Plugins\\x86_64\\XRSDKOpenVR.dll",
-    "Beat Saber_Data\\StreamingAssets\\SteamVR\\OpenVRSettings.asset",
     "Beat Saber_Data\\UnitySubsystems\\XRSDKOpenVR\\UnitySubsystemsManifest.json",
     "DynamicOpenVR\\Actions\\beatsaber.json",
     "DynamicOpenVR\\Bindings\\beatsaber_holographic_controller.json",
